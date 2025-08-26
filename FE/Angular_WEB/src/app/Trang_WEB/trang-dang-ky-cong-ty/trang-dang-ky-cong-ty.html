@@ -1,0 +1,107 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg border-0 rounded-4" style="max-width: 700px; width: 100%;">
+    <div class="card-body p-4 p-md-5 bg-white rounded-4">
+      <h2 class="text-center mb-4 fw-bold text-secondary">Đăng ký công ty</h2>
+      
+      <form  #dangKyForm="ngForm" (ngSubmit)="dangKy(dangKyForm)">
+        <div class="mb-3">
+          <label for="tenCongTy" class="form-label text-muted">Tên công ty</label>
+          <input type="text" class="form-control form-control-sm" id="ten_CongTy" name="ten_CongTy"
+                 [(ngModel)]="form.ten_CongTy" placeholder="Nhập tên công ty" required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Tên đăng nhập</label>
+            <input type="text" class="form-control form-control-sm" id="ten_Dn" name="ten_Dn"
+                   [(ngModel)]="form.tenDn" placeholder="Tên đăng nhập" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Mật khẩu</label>
+            <input type="password" class="form-control form-control-sm" id="mat_Khau" name="mat_Khau"
+                   [(ngModel)]="form.matKhau" placeholder="Mật khẩu" required minlength="6">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted">Xác nhận mật khẩu</label>
+          <input type="password" class="form-control form-control-sm" id="xac_Nhan_MatKhau" name="xac_Nhan_MatKhau"
+                 [(ngModel)]="form.xac_Nhan_MatKhau" placeholder="Nhập lại mật khẩu" required>
+          <div *ngIf="form.xac_Nhan_MatKhau && form.mat_Khau !== form.xac_Nhan_MatKhau" 
+               class="text-danger small mt-1">
+            Mật khẩu không khớp!
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted">Người đại diện</label>
+          <input type="text" class="form-control form-control-sm" id="nguoi_DaiDien" name="nguoi_DaiDien"
+                 [(ngModel)]="form.nguoi_DaiDien" placeholder="Họ và tên người đại diện" required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Mã số thuế</label>
+            <input type="text" class="form-control form-control-sm" id="maSo_Thue" name="maSo_Thue"
+                   [(ngModel)]="form.maSo_Thue" placeholder="Mã số thuế" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Ngày thành lập</label>
+            <input type="date" class="form-control form-control-sm" id="ngay_ThanhLap" name="ngay_ThanhLap"
+                   [(ngModel)]="form.ngay_ThanhLap" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted">Địa chỉ</label>
+          <textarea class="form-control form-control-sm" id="dia_Chi" name="dia_Chi"
+                    [(ngModel)]="form.dia_Chi" rows="2" placeholder="Địa chỉ công ty"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Điện thoại</label>
+            <input type="tel" class="form-control form-control-sm" id="dien_Thoai" name="dien_Thoai"
+                   [(ngModel)]="form.dien_Thoai" placeholder="Số điện thoại" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted">Email</label>
+            <input type="email" class="form-control form-control-sm" id="email" name="email"
+                   [(ngModel)]="form.email" placeholder="Email công ty" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-muted">Loại hình công ty</label>
+          <select class="form-select form-control-sm" id="loai_Hinh" name="loai_Hinh"
+                  [(ngModel)]="form.loaiHinh">
+            <option value="CongTyTNHH">Công ty TNHH</option>
+            <option value="CongTyCoPhan">Công ty Cổ phần</option>
+            <option value="DoanhNghiepTuNhan">Doanh nghiệp tư nhân</option>
+            <option value="HopTacXa">Hợp tác xã</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-muted">Thông báo</label>
+          <div class="text-danger small mt-1" id="thong_bao" style="color: red; margin-bottom: 1rem;">
+            {{ thong_bao }}
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-secondary btn-lg rounded-3 shadow-sm"
+                  [disabled]="dangKyForm.invalid || form.matKhau !== form.xacNhanMatKhau">
+            Đăng ký
+          </button>
+        </div>
+        
+        <div class="text-center mt-3">
+          <a [routerLink]="['/dang-nhap']" class="btn btn-login text-decoration-underline" style="color: gray; font-weight: bold;">
+            Đã có tài khoản? Đăng nhập
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

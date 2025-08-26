@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="container" style="max-width: 700px;">
+    <div class="row g-4">
+      
+      <h1 class="text-center fw-bold mb-4 display-5" 
+          style="color: #333; letter-spacing: 0.5px;">
+        Bạn là nhà tuyển dụng hay ứng viên?
+      </h1>
+
+      <div class="col-md-6">
+        <button class="card role-card w-100 shadow-sm"
+                (click)="chonVaiTro('cong-ty')"
+                [disabled]="loading !== ''"
+                style="border-radius: 1rem;">
+          <div class="card-body text-center">
+            <div [ngClass]="{'fade-out': loading === 'cong-ty'}" *ngIf="loading !== 'cong-ty'">
+              <i class="fas fa-building fa-3x text-primary mb-3"></i>
+              <h5 class="fw-bold text-dark">Nhà tuyển dụng</h5>
+            </div>
+            <div [ngClass]="{'fade-in': loading === 'cong-ty'}" *ngIf="loading === 'cong-ty'">
+              <div class="spinner-border text-primary"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Ứng viên -->
+      <div class="col-md-6">
+        <button class="card role-card w-100 shadow-sm"
+                (click)="chonVaiTro('nguoi-tim-viec')"
+                [disabled]="loading !== ''"
+                style="border-radius: 1rem;">
+          <div class="card-body text-center">
+            <div [ngClass]="{'fade-out': loading === 'nguoi-tim-viec'}" *ngIf="loading !== 'nguoi-tim-viec'">
+              <i class="fas fa-user-tie fa-3x text-success mb-3"></i>
+              <h5 class="fw-bold text-dark">Ứng viên</h5>
+            </div>
+            <div [ngClass]="{'fade-in': loading === 'nguoi-tim-viec'}" *ngIf="loading === 'nguoi-tim-viec'">
+              <div class="spinner-border text-success"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

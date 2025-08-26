@@ -1,0 +1,29 @@
+<form id="DangKy" (submit)="kiemTraMatKhau($event)">
+    <label class="title">Đăng Ký</label>
+
+    <div class="form-group">
+        <label for="username_DK">Tên Đăng Ký:</label>
+        <input type="text" id="username_DK" name="username_DK" [(ngModel)]="username_DK" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email_DK">Email Đăng Ký:</label>
+        <input type="email" id="email_DK" name="email_DK" [(ngModel)]="email_DK" required>
+    </div>
+
+    <div class="form-group">
+        <label for="password_DK">Mật Khẩu:</label>
+        <input type="password" id="password_DK" name="password_DK" [(ngModel)]="password_DK" required>
+    </div>
+
+    <div class="form-group">
+        <label for="confirm_password_DK">Xác Nhận Mật Khẩu:</label>
+        <input type="password" id="confirm_password_DK" name="confirm_password_DK" [(ngModel)]="confirm_password_DK" required>
+    </div>
+
+    <p id="thong_bao">{{ thong_bao }}</p>
+
+    <button type="submit" class="btn btn-register">Đăng Ký</button>
+
+    <a [routerLink]="['/dang-nhap']" class="btn btn-login">Đã có tài khoản? Đăng Nhập</a>
+</form>

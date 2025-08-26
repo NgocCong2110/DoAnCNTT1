@@ -1,0 +1,89 @@
+/* Center form trên màn hình */
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: rgb(240, 246, 244);
+    font-family: Arial, sans-serif;
+}
+
+/* Form container */
+#DangKy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+    background-color: white;
+    border-radius: 5%;
+    padding: 2rem 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+#DangKy label.title {
+    font-weight: bold;
+    margin-bottom: 5%;
+    font-size: 2rem;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 1.5rem;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#thong_bao {
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    width: 75%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-register {
+    background-color: gray;
+    color: white;
+    border: none;
+}
+
+.btn-login {
+    background: none;
+    border: none;
+    color: gray;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.btn-login:hover {
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #DangKy {
+        width: 90%;
+    }
+}
