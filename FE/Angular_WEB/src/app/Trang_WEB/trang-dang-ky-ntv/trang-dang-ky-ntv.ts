@@ -20,10 +20,10 @@ export class TrangDangKyNTV {
 
   getThongTinDangKy(){
     return {
-      ten_Nguoi_Dung: this.username_DK,
+      ten_dang_nhap: this.username_DK,
       email: this.email_DK,
-      mat_Khau: this.password_DK,
-      vai_Tro: 'nguoi_Tim_Viec'
+      mat_khau: this.password_DK,
+      vai_tro: 'nguoi_tim_viec'
     };
   }
 

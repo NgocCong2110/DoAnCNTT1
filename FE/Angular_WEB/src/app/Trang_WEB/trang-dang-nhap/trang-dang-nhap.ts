@@ -5,7 +5,7 @@ import { Auth } from '../../services/auth';
 
 interface thongTinDangNhap {
   email: string;
-  password: string;
+  mat_khau: string;
   vai_Tro?: string;
   ten_dang_nhap?: string;
 }
@@ -19,43 +19,62 @@ interface thongTinDangNhap {
 
 export class TrangDangNhap{
   email_DN: string = '';
-  password_DN: string = '';
+  mat_khau: string = '';
   thong_bao: string = '';
   constructor(private router: Router, private auth: Auth) {}
   async dangNhap(event: Event) {
-    event.preventDefault();
-    let thongTin_DangNhap: thongTinDangNhap ={
-      email: this.email_DN,
-      password: this.password_DN
-    }
+  event.preventDefault();
+
+  let thongTin_DangNhap: thongTinDangNhap = {
+    email: this.email_DN,
+    mat_khau: this.mat_khau
+  };
+
+  try {
     const response = await fetch("http://localhost:65001/api/API_WEB/xacThucNguoiDung", {
-      method : "POST",
-      headers: {
-        "Content-Type" : "application/json"
-      },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(thongTin_DangNhap)
-    })
-    const data = await response.json();
-    if(data.success) {
-      thongTin_DangNhap.vai_Tro = data.vai_Tro;
-      thongTin_DangNhap.ten_dang_nhap = data.ten_dang_nhap;
-      this.auth.dangNhap(thongTin_DangNhap);
-      this.router.navigate(['/trang-chu']);
-    }
-    else{
-      const response_qtri = await fetch("http://localhost:65001/api/API_WEB/xacThucQuanTriVien", {
-        method : "POST",
-        headers: {
-          "Content-Type" : "application/json"
-        },
-        body: JSON.stringify(thongTin_DangNhap)
-      })
-      const data_qtri = await response_qtri.json();
-      if(data_qtri.success) {
-        thongTin_DangNhap.vai_Tro = data_qtri.vai_Tro;
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        thongTin_DangNhap.vai_Tro = data.vai_Tro;
+        thongTin_DangNhap.ten_dang_nhap = data.ten_dang_nhap;
         this.auth.dangNhap(thongTin_DangNhap);
-        this.router.navigate(['/trang-chu']);
+        setTimeout(() => {
+          this.router.navigate(['/trang-chu']);
+        }, 1500);
+        return;
       }
+    }
+
+    const response_qtri = await fetch("http://localhost:65001/api/API_WEB/xacThucQuanTriVien", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(thongTin_DangNhap)
+    });
+
+    if (response_qtri.ok) {
+      const data_qtri = await response_qtri.json();
+      if (data_qtri.success) {
+        thongTin_DangNhap.vai_Tro = data_qtri.vai_Tro;
+        thongTin_DangNhap.ten_dang_nhap = data_qtri.ten_dang_nhap;
+        this.auth.dangNhap(thongTin_DangNhap);
+        setTimeout(() => {
+          this.router.navigate(['/trang-chu']);
+        }, 1500);
+        return;
+      }
+    }
+
+    this.thong_bao = "Email hoặc mật khẩu không đúng";
+
+  } 
+  catch (error) {
+    console.error("Lỗi đăng nhập:", error);
+    this.thong_bao = "Không thể kết nối đến máy chủ";
     }
   }
 }

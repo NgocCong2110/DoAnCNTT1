@@ -1,0 +1,32 @@
+<div class="tai-khoan-container">
+
+  <!-- Người tìm việc -->
+  <section class="nguoi-tim-viec">
+    <h2>Thông tin tài khoản</h2>
+    <div class="card">
+      <div class="card-header">
+        <img [src]="thongTin?.nguoi.anh_dai_dien" alt="Ảnh đại diện" class="avatar" />
+        <div class="header-info">
+          <h3>{{ thongTin?.nguoi.ho_ten }}</h3>
+          <p><strong>Tên đăng nhập:</strong> {{ thongTin?.nguoi.ten_dang_nhap }}</p>
+          <p><strong>Email:</strong> {{ thongTin?.nguoi.email }}</p>
+        </div>
+      </div>
+
+      <div class="card-body grid-container">
+        <div class="grid-item"><strong>Điện thoại:</strong> {{ thongTin?.nguoi.dien_thoai }}</div>
+        <div class="grid-item"><strong>Ngày sinh:</strong> {{ thongTin?.nguoi.ngay_sinh | date:'dd/MM/yyyy' }}</div>
+        <div class="grid-item"><strong>Giới tính:</strong> {{ thongTin?.nguoi.gioi_tinh }}</div>
+        <div class="grid-item"><strong>Trình độ học vấn:</strong> {{ thongTin?.nguoi.trinh_do_hoc_van }}</div>
+        <div class="grid-item"><strong>Địa chỉ:</strong> {{ thongTin?.nguoi.dia_chi }}</div>
+        <div class="grid-item"><strong>Quốc tịch:</strong> {{ thongTin?.nguoi.quoc_tich }}</div>
+        <div class="grid-item full-width"><strong>Mô tả:</strong> {{ thongTin?.nguoi.mo_ta }}</div>
+      </div>
+
+      <!-- <div class="card-footer">
+        <button class="btn-edit" (click)="thayDoiThongTin()">Thay đổi thông tin</button>
+      </div> -->
+    </div>
+  </section>
+</div>
+

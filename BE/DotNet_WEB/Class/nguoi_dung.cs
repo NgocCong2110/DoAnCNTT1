@@ -15,11 +15,11 @@ namespace DotNet_WEB.Class
 
         public LoaiNguoiDung loai_nguoi_dung { get; set; } = LoaiNguoiDung.None;
 
-        public int ma_cong_ty { get; set; }
+        public int? ma_cong_ty { get; set; }
         [ForeignKey(nameof(ma_cong_ty))]
         public cong_ty? cong_ty { get; set; }
 
-        public int ma_nguoi_tim_viec { get; set; }
+        public int? ma_nguoi_tim_viec { get; set; }
         [ForeignKey(nameof(ma_nguoi_tim_viec))]
         public nguoi_tim_viec? nguoi_tim_viec { get; set; }
 

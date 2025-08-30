@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { HeaderWEB } from '../Component/header-web/header-web';
 import { SideBarTrangCongTy } from './component-cong-ty/side-bar-trang-cong-ty/side-bar-trang-cong-ty';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-trang-cong-ty',
-  imports: [HeaderWEB, SideBarTrangCongTy, RouterLink],
+  imports: [HeaderWEB, SideBarTrangCongTy, RouterLink, RouterModule],
   templateUrl: './trang-cong-ty.html',
   styleUrls: ['./trang-cong-ty.css']
 })

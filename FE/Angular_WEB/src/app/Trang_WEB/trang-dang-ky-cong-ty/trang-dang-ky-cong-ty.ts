@@ -19,7 +19,7 @@ export class TrangDangKyCongTy {
     mat_Khau: '',
     xac_Nhan_MatKhau: '',
     nguoi_DaiDien: '',
-    ma_SoThue: '',
+    maSo_Thue: '',
     ngay_ThanhLap: '',
     dia_Chi: '',
     dien_Thoai: '',

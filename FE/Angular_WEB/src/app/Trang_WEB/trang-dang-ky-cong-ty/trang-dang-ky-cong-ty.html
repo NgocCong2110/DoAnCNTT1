@@ -14,12 +14,12 @@
           <div class="col-md-6 mb-3">
             <label class="form-label text-muted">Tên đăng nhập</label>
             <input type="text" class="form-control form-control-sm" id="ten_Dn" name="ten_Dn"
-                   [(ngModel)]="form.tenDn" placeholder="Tên đăng nhập" required>
+                   [(ngModel)]="form.ten_Dn" placeholder="Tên đăng nhập" required>
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label text-muted">Mật khẩu</label>
             <input type="password" class="form-control form-control-sm" id="mat_Khau" name="mat_Khau"
-                   [(ngModel)]="form.matKhau" placeholder="Mật khẩu" required minlength="6">
+                   [(ngModel)]="form.mat_Khau" placeholder="Mật khẩu" required minlength="6">
           </div>
         </div>
 
@@ -91,7 +91,7 @@
 
         <div class="d-grid">
           <button type="submit" class="btn btn-secondary btn-lg rounded-3 shadow-sm"
-                  [disabled]="dangKyForm.invalid || form.matKhau !== form.xacNhanMatKhau">
+                  [disabled]="dangKyForm.invalid || form.mat_Khau !== form.xac_Nhan_MatKhau">
             Đăng ký
           </button>
         </div>

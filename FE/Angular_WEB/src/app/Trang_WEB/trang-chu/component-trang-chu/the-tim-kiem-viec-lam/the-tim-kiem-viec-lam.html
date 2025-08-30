@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center align-items-center py-5 bg-light"> 
+  <div class="container" style="max-width: 800px;">
+    <div class="row g-4">
+      
+      <h1 class="text-center fw-bold mb-5 display-5" 
+          style="color: #333; letter-spacing: 0.5px;">
+        Bạn muốn tìm việc theo cách nào?
+      </h1>
+
+      <div class="col-md-6">
+        <button class="card role-card w-100 shadow-sm"
+                (click)="chonCachTim('xung-quanh')"
+                [disabled]="loading !== ''"
+                style="border-radius: 1rem;">
+          <div class="card-body text-center">
+            <div [ngClass]="{'fade-out': loading === 'xung-quanh'}" *ngIf="loading !== 'xung-quanh'">
+              <i class="fas fa-map-marker-alt fa-3x text-danger mb-3"></i>
+              <h5 class="fw-bold text-dark">Tìm việc làm xung quanh bạn</h5>
+            </div>
+            <div [ngClass]="{'fade-in': loading === 'xung-quanh'}" *ngIf="loading === 'xung-quanh'">
+              <div class="spinner-border text-danger"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div class="col-md-6">
+        <button class="card role-card w-100 shadow-sm"
+                (click)="chonCachTim('tu-khoa')"
+                [disabled]="loading !== ''"
+                style="border-radius: 1rem;">
+          <div class="card-body text-center">
+            <div [ngClass]="{'fade-out': loading === 'tu-khoa'}" *ngIf="loading !== 'tu-khoa'">
+              <i class="fas fa-search fa-3x text-primary mb-3"></i>
+              <h5 class="fw-bold text-dark">Tìm việc làm theo từ khóa</h5>
+            </div>
+            <div [ngClass]="{'fade-in': loading === 'tu-khoa'}" *ngIf="loading === 'tu-khoa'">
+              <div class="spinner-border text-danger"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem; /* khoảng cách giữa các post ~ 2-3 đơn vị */
+}
+
+.post {
+  width: 90%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem; /* padding tổng */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem; /* khoảng cách top ~ 3 đơn vị */
+  padding: 0.5rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.post-footer button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.post-footer button:hover {
+  color: #1877f2;
+}

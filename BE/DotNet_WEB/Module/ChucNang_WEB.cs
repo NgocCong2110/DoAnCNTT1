@@ -19,7 +19,7 @@ namespace DotNet_WEB.Module
             using var conn = new MySqlConnection(chuoi_KetNoi);
             conn.Open();
 
-            using var transaction = conn.BeginTransaction(); 
+            using var transaction = conn.BeginTransaction();
 
             try
             {
@@ -65,7 +65,7 @@ namespace DotNet_WEB.Module
             using var conn = new MySqlConnection(chuoi_KetNoi);
             conn.Open();
 
-            using var transaction = conn.BeginTransaction(); 
+            using var transaction = conn.BeginTransaction();
 
             try
             {
@@ -101,6 +101,48 @@ namespace DotNet_WEB.Module
                 transaction.Rollback();
                 return false;
             }
+        }
+        public static List<nguoi_dung> layThongTinNguoiDung(string email)
+        {
+            using var conn = new MySqlConnection(chuoi_KetNoi);
+            conn.Open();
+            string layThongTin = "select * from nguoi_dung where email = @email";
+            using var cmd = new MySqlCommand(layThongTin, conn);
+            cmd.Parameters.AddWithValue("@email", email);
+            using var reader = cmd.ExecuteReader();
+            var danhSachNguoiDung = new List<nguoi_dung>();
+            while (reader.Read())
+            {
+                var nguoiDung = new nguoi_dung
+                {
+                    loai_nguoi_dung = Enum.Parse<LoaiNguoiDung>(reader.GetString("loai_nguoi_dung")),
+                    email = reader.GetString("email"),
+                    ten_dang_nhap = reader.GetString("ten_dang_nhap"),
+                };
+                danhSachNguoiDung.Add(nguoiDung);
+            }
+            return danhSachNguoiDung;
+        }
+        public static List<quan_tri> layThongTinQuanTri(string email)
+        {
+            using var conn = new MySqlConnection(chuoi_KetNoi);
+            conn.Open();
+            string layThongTin = "select * from quan_tri where email = @email";
+            using var cmd = new MySqlCommand(layThongTin, conn);
+            cmd.Parameters.AddWithValue("@email", email);
+            using var reader = cmd.ExecuteReader();
+            var danhSachQuanTri = new List<quan_tri>();
+            while (reader.Read())
+            {
+                var quan_tri = new quan_tri
+                {
+                    vai_tro = Enum.Parse<VaiTro>(reader.GetString("vai_tro")),
+                    email = reader.GetString("email"),
+                    ten_dang_nhap = reader.GetString("ten_dang_nhap"),
+                };
+                danhSachQuanTri.Add(quan_tri);
+            }
+            return danhSachQuanTri;
         }
     }
 }

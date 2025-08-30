@@ -59,3 +59,4 @@ C:\Users\Lenovo\OneDrive\Desktop\DoAnCNTT\BE\DotNet_WEB\obj\Debug\net9.0\refint\
 C:\Users\Lenovo\OneDrive\Desktop\DoAnCNTT\BE\DotNet_WEB\obj\Debug\net9.0\DotNet_WEB.pdb
 C:\Users\Lenovo\OneDrive\Desktop\DoAnCNTT\BE\DotNet_WEB\obj\Debug\net9.0\DotNet_WEB.genruntimeconfig.cache
 C:\Users\Lenovo\OneDrive\Desktop\DoAnCNTT\BE\DotNet_WEB\obj\Debug\net9.0\ref\DotNet_WEB.dll
+C:\Users\Lenovo\OneDrive\Desktop\DoAnCNTT\BE\DotNet_WEB\obj\Debug\net9.0\DotNet_WEB.sourcelink.json

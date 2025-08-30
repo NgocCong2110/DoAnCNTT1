@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace DotNet_WEB.Class
 {
@@ -91,12 +92,10 @@ namespace DotNet_WEB.Class
     public enum LoaiBai
     {
         None = 0,
-        [Display(Name = "Hồ Sơ")]
-        ho_So = 1,
-        [Display(Name = "Chia Sẻ")]
-        chia_Se = 2,
-        [Display(Name = "Hỗ Trợ")]
-        ho_Tro = 3
+        [Display(Name = "Tuyển Dụng")]
+        tuyen_Dung = 1,
+        [Display(Name = "Tìm Việc")]
+        tim_Viec = 2
     }
 
     public enum TrangThaiBai
@@ -114,9 +113,9 @@ namespace DotNet_WEB.Class
     {
         None = 0,
         [Display(Name = "Quản Trị Viên")]
-        Admin = 1,
+        quan_Tri_Vien = 1,
         [Display(Name = "Điều Hành Viên")]
-        Moderator = 2
+        dieu_Hanh_Vien = 2
     }
 
     public enum TrangThaiCongTy

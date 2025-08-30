@@ -43,28 +43,31 @@ namespace DotNet_WEB
         [HttpPost("xacThucNguoiDung")]
         public IActionResult xacThucNguoiDung([FromBody] nguoi_dung nguoi_Dung)
         {
-            HashCode hashCode = new HashCode();
-            hashCode.Add(nguoi_Dung.mat_khau);
-            string matKhauDaMaHoa = hashCode.ToHashCode().ToString();
-            bool ket_Qua = XacThuc_ND.xacThucNguoiDung(nguoi_Dung.ten_dang_nhap, matKhauDaMaHoa);
+            string matKhauDaMaHoa = XacThuc_ND.maHoaMatKhau(nguoi_Dung.mat_khau);
+            bool ket_Qua = XacThuc_ND.xacThucNguoiDung(nguoi_Dung.email, matKhauDaMaHoa);
             if (ket_Qua)
             {
                 return Ok(new { success = true, email = nguoi_Dung.email, vai_tro = nguoi_Dung.loai_nguoi_dung, ten_dang_nhap = nguoi_Dung.ten_dang_nhap });
             }
-            return BadRequest(new { success = false, message = "Đăng nhập thất bại." });
+            return Unauthorized(new { success = false, message = "Đăng nhập thất bại." });
         }
         [HttpPost("xacThucQuanTriVien")]
         public IActionResult xacThucQuanTriVien([FromBody] quan_tri quan_Tri)
         {
-            HashCode hashCode = new HashCode();
-            hashCode.Add(quan_Tri.mat_khau);
-            string matKhauDaMaHoa = hashCode.ToHashCode().ToString();
-            bool ket_Qua = XacThuc_ND.xacThucQuanTriVien(quan_Tri.ten_dang_nhap, matKhauDaMaHoa);
+            string matKhauDaMaHoa = XacThuc_ND.maHoaMatKhau(quan_Tri.mat_khau);
+            bool ket_Qua = XacThuc_ND.xacThucQuanTriVien(quan_Tri.email, matKhauDaMaHoa);
+            var thong_tin = ChucNang_WEB.layThongTinQuanTri(quan_Tri.email);
             if (ket_Qua)
             {
-                return Ok(new { success = true, email = quan_Tri.email, vai_tro = quan_Tri.vai_tro });
+                return Ok(new
+                {
+                    success = true,
+                    ten_dang_nhap = thong_tin[0].ten_dang_nhap ?? "",
+                    email = thong_tin[0].email,
+                    vai_tro = thong_tin[0].vai_tro
+                });
             }
-            return BadRequest(new { success = false, message = "Đăng nhập thất bại." });
+            return Unauthorized(new { success = false, message = "Đăng nhập thất bại." });
         }
 
         //Them Thong Tin Nguoi Dung
