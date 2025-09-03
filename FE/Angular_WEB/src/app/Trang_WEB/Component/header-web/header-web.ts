@@ -22,14 +22,14 @@ export class HeaderWEB {
   //Lay vai tro nguoi dung
   vaiTro(){
     this.nguoi_Dung = this.auth.layThongTinNguoiDung();
-    let vaiTro = this.nguoi_Dung?.vai_Tro;
-    if(vaiTro == "admin") {
+    let kieu_nguoi_dung = this.nguoi_Dung?.kieu_nguoi_dung;
+    if(kieu_nguoi_dung == "quan_Tri_Vien") {
       this.router.navigate(['/trang-quan-tri']);
     }
-    else if(vaiTro == "nguoi_Tim_Viec") {
+    else if(kieu_nguoi_dung == "nguoi_Tim_Viec") {
       this.router.navigate(['/trang-nguoi-tim-viec']);
     }
-    else if(vaiTro == "cong_Ty"){
+    else if(kieu_nguoi_dung == "cong_Ty"){
       this.router.navigate(['/trang-cong-ty']);
     }
   }

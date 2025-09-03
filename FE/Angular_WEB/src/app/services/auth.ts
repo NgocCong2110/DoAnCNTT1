@@ -15,11 +15,7 @@ export class Auth {
 
   dangNhap(user: any): void {
     try {
-      this.cookieService.delete(this.USER_KEY);
-
-      this.cookieService.delete(this.USER_KEY, '/');
-
-      this.cookieService.deleteAll('/');
+      this.dangXuat();
 
       const userJson = JSON.stringify(user);
       this.cookieService.set(this.USER_KEY, userJson, 7, '/');
@@ -29,11 +25,15 @@ export class Auth {
   }
 
   dangXuat(): void {
-    this.cookieService.delete(this.USER_KEY);
+    const cookies = document.cookie.split(';');
 
-    this.cookieService.delete(this.USER_KEY, '/');
+    cookies.forEach(cookie => {
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
 
-    this.cookieService.deleteAll('/');
+      this.cookieService.delete(name, '/');
+      this.cookieService.delete(name, '');
+    });
   }
 
   layThongTinNguoiDung(): any | null {

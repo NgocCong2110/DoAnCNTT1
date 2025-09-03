@@ -6,7 +6,7 @@
       thong bao -->
 
 
-  <!-- thong tin ca nhan -->
+  <!-- tai khoan -->
   <div>
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
@@ -16,9 +16,7 @@
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/thong-tin-tai-khoan']">Thông tin tài khoản</a>
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/doi-mat-khau']">Đổi mật khẩu / Bảo mật</a>
+        [routerLink]="['trang-nguoi-tim-viec', 'thong-tin-tai-khoan-ntv']">Thông tin tài khoản</a>
     </div>
   </div>
 
@@ -33,13 +31,13 @@
       </button>
       <div class="mt-2 ms-3 collapse" [class.show]="trangThai_HoSo">
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/thong-tin-ca-nhan']">Thông tin cá nhân</a>
+          [routerLink]="['/trang-nguoi-tim-viec','trang-thong-tin-ca-nhan-ntv']">Thông tin cá nhân</a>
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/cv']">CV</a>
+          [routerLink]="['/trang-nguoi-tim-viec','trang-cv-ntv']">CV</a>
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/chung-chi-portfolio']">Chứng chỉ / Portfolio</a>
+          [routerLink]="['/trang-nguoi-tim-viec','trang-danh-sach-chung-chi']">Chứng chỉ</a>
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/lich-su-ung-tuyen']">Lịch sử ứng tuyển</a>
+          [routerLink]="['/trang-nguoi-tim-viec','trang-lich-su-ung-tuyen']">Lịch sử ứng tuyển</a>
       </div>
     </div>
 
@@ -47,16 +45,9 @@
     <div>
       <button
         class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-        type="button" (click)="chuyenDoi_TTThongBao()">
-        <span><i class="bi bi-bell-fill me-2 text-warning"></i> Thông báo <span>{{ trangThai_ThongBao ? '▾' : '▸'
-            }}</span></span>
+        type="button" [routerLink]="['/trang-nguoi-tim-viec','trang-thong-bao-ntv']">
+        <span><i class="bi bi-bell-fill me-2 text-warning"></i> Thông báo </span>
       </button>
-      <div class="mt-2 ms-3 collapse" [class.show]="trangThai_ThongBao">
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/thong-bao']">Xem thông báo</a>
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/goi-y-viec-lam']">Gợi ý việc làm</a>
-      </div>
     </div>
 
   </div>

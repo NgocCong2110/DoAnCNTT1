@@ -8,6 +8,7 @@ interface thongTinDangNhap {
   mat_khau: string;
   vai_Tro?: string;
   ten_dang_nhap?: string;
+  kieu_nguoi_dung?: string;
 }
 
 @Component({
@@ -40,8 +41,13 @@ export class TrangDangNhap{
     if (response.ok) {
       const data = await response.json();
       if (data.success) {
-        thongTin_DangNhap.vai_Tro = data.vai_Tro;
         thongTin_DangNhap.ten_dang_nhap = data.ten_dang_nhap;
+        if(data.vai_Tro === 1){
+          thongTin_DangNhap.kieu_nguoi_dung = "nguoi_Tim_Viec";
+        }
+        else if(data.vai_Tro === 2){
+          thongTin_DangNhap.kieu_nguoi_dung = "cong_Ty";
+        }
         this.auth.dangNhap(thongTin_DangNhap);
         setTimeout(() => {
           this.router.navigate(['/trang-chu']);
@@ -59,7 +65,9 @@ export class TrangDangNhap{
     if (response_qtri.ok) {
       const data_qtri = await response_qtri.json();
       if (data_qtri.success) {
-        thongTin_DangNhap.vai_Tro = data_qtri.vai_Tro;
+        if(data_qtri.vai_Tro === 1){
+          thongTin_DangNhap.kieu_nguoi_dung = "quan_Tri_Vien";
+        }
         thongTin_DangNhap.ten_dang_nhap = data_qtri.ten_dang_nhap;
         this.auth.dangNhap(thongTin_DangNhap);
         setTimeout(() => {
