@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../../services/auth';
 import { BaiDang } from '../../../../../services/bai-dang-service/bai-dang';
 import { Subscription } from 'rxjs';
 import { BaiDangComponent } from '../bai-dang.model';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-tin-tuyen-dung',
@@ -21,13 +22,19 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   thongTin: any;
   pop_up_ung_tuyen = false;
 
-  constructor(public baiDangService: BaiDang, public auth: Auth) { 
+  constructor(
+    public baiDangService: BaiDang,
+    public auth: Auth,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) { 
     this.thongTin = this.auth.layThongTinNguoiDung();
   }
 
   ngOnInit(): void {
     this.sub = this.baiDangService.bai_dang_duoc_chon$.subscribe(bai_dang => {
       this.bai_dang_duoc_chon = bai_dang;
+      this.cdr.detectChanges();
     });
   }
 
@@ -46,83 +53,88 @@ export class TinTuyenDung implements OnInit, OnDestroy {
     return this.loaiHinhMap[loaiHinh] || 'Không xác định';
   }
 
-  // huyLuaChon() {
-  //   this.baiDangService.chonBaiDang(null);
-  // }
-
   themBaiDang(a: string, b: string) {
     console.log("skibidi");
   }
 
-  async baoCaoBaiDang(){
+  baoCaoBaiDang() {
     const ma_Nguoi_Bao_Cao = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
-    const response = await fetch("http://localhost:65001/api/API_WEB/baoCaoBaiDang", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+
+    this.http.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", {
+      ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
+      ten_nguoi_dang: this.bai_dang_duoc_chon?.ten_nguoi_dang,
+      tieu_de: this.bai_dang_duoc_chon?.tieu_de,
+      noi_dung: this.bai_dang_duoc_chon?.noi_dung,
+      ma_nguoi_bao_cao: ma_Nguoi_Bao_Cao,
+      noi_dung_bao_cao: this.noi_dung_bao_cao,
+      ngay_bao_cao: new Date()
+    }).subscribe({
+      next: (data) => {
+        if (data.success) {
+          alert("Báo cáo bài đăng thành công.");
+          this.pop_up_bao_cao = false;
+          this.noi_dung_bao_cao = '';
+        } else {
+          alert("Báo cáo bài đăng thất bại. Vui lòng thử lại.");
+        }
+        this.cdr.detectChanges();
       },
-      body: JSON.stringify({
-        ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
-        ten_nguoi_dang: this.bai_dang_duoc_chon?.ten_nguoi_dang,
-        tieu_de: this.bai_dang_duoc_chon?.tieu_de,
-        noi_dung: this.bai_dang_duoc_chon?.noi_dung,
-        ma_nguoi_bao_cao: ma_Nguoi_Bao_Cao,
-        noi_dung_bao_cao: this.noi_dung_bao_cao,
-        ngay_bao_cao: Date.now,
-      })
+      error: () => {
+        alert("Có lỗi xảy ra khi gửi báo cáo.");
+      }
     });
-    const data = await response.json();
-    if (data.success) {
-      alert("Báo cáo bài đăng thành công.");
-      this.pop_up_bao_cao = false;
-      this.noi_dung_bao_cao = '';
-    } else {
-      alert("Báo cáo bài đăng thất bại. Vui lòng thử lại.");
-    }
   }
 
-  async luuBaiDang(){
+  luuBaiDang() {
     const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
-    const response = await fetch("http://localhost:65001/api/API_WEB/luuBaiDang", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+
+    this.http.post("http://localhost:65001/api/API_WEB/luuBaiDang", {
+      ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
+      ma_nguoi_luu: ma_Nguoi_Luu
+    }).subscribe({
+      next: () => {
+        alert("Đã lưu bài đăng.");
+        this.cdr.detectChanges();
       },
-      body: JSON.stringify({
-        ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
-        ma_nguoi_luu: ma_Nguoi_Luu,
-      })
+      error: () => {
+        alert("Không thể lưu bài đăng.");
+      }
     });
   }
 
-  async ungTuyenCongViec(){
-    const ma_Nguoi_Ung_Tuyen = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
-    const response = await fetch("http://localhost:65001/api/API_WEB/ungTuyenCongViec", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+  ungTuyenCongViec() {
+    const ma_Nguoi_Ung_Tuyen = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+
+    this.http.post<any>("http://localhost:65001/api/API_WEB/ungTuyenCongViec", {
+      ma_viec: this.bai_dang_duoc_chon?.viec_lam?.ma_viec,
+      ma_cong_ty: this.bai_dang_duoc_chon?.ma_nguoi_dang,
+      ma_nguoi_tim_viec: ma_Nguoi_Ung_Tuyen,
+    }).subscribe({
+      next: (data) => {
+        if (data.success) {
+          this.pop_up_ung_tuyen = true;
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.pop_up_ung_tuyen = false;
+            this.cdr.detectChanges();
+          }, 2000);
+        }
       },
-      body: JSON.stringify({
-        ma_viec: this.bai_dang_duoc_chon?.viec_lam?.ma_viec,
-        ma_cong_ty: this.bai_dang_duoc_chon?.ma_nguoi_dang,
-        ma_nguoi_tim_viec: ma_Nguoi_Ung_Tuyen,
-      })
+      error: () => {
+        alert("Ứng tuyển thất bại.");
+      }
     });
-    const data = await response.json();
-    if(data.success){
-      this.pop_up_ung_tuyen = true;
-      setTimeout(() => {
-        this.pop_up_ung_tuyen = false;
-      },2000)
-    }
   }
-  moPopUpBaoCao(){
+
+  moPopUpBaoCao() {
     this.pop_up_bao_cao = true;
     this.noi_dung_bao_cao = "";
+    this.cdr.detectChanges();
   }
 
   huyBaoCao() {
-  this.pop_up_bao_cao = false;
-  this.noi_dung_bao_cao = '';
-}
+    this.pop_up_bao_cao = false;
+    this.noi_dung_bao_cao = '';
+    this.cdr.detectChanges();
+  }
 }

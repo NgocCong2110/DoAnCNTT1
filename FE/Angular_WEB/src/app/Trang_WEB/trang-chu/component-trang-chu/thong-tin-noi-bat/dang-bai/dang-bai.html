@@ -96,3 +96,32 @@
     </div>
   </div>
 </div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3"
+     *ngIf="pop_up_dang_bai_thanh_cong">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Đăng bài thành công!
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              (click)="pop_up_dang_bai_thanh_cong=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3"
+     *ngIf="pop_up_dang_bai_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Đăng bài thất bại. Vui lòng thử lại!
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              (click)="pop_up_dang_bai_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+

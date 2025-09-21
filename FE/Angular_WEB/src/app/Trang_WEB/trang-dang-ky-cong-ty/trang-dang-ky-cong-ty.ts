@@ -3,6 +3,7 @@ import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderWEB } from '../Component/header-web/header-web';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-trang-dang-ky-cong-ty',
@@ -12,7 +13,10 @@ import { HeaderWEB } from '../Component/header-web/header-web';
 })
 export class TrangDangKyCongTy {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) { }
 
   form = {
     ten_CongTy: '',
@@ -27,6 +31,9 @@ export class TrangDangKyCongTy {
     email: '',
     loaiHinh: 'CongTyTNHH'
   };
+
+  thong_bao: string = '';
+  hien_thong_bao = false;
 
   getThongTinDangKy() {
     return {
@@ -43,43 +50,46 @@ export class TrangDangKyCongTy {
     }
   }
 
-  thong_bao: string = '';
-  hien_thong_bao = false;
-
-  async kiemTraEmail() {
-    const response = await fetch("http://localhost:65001/api/API_WEB/xacThucGmail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+  kiemTraEmail() {
+    this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucGmail', {
+      email: this.form.email
+    }).subscribe({
+      next: (data) => {
+        if (data.success) {
+          this.http.post<any>('http://localhost:65001/api/API_WEB/themThongTinCongTy',
+            this.getThongTinDangKy()
+          ).subscribe({
+            next: (data2) => {
+              if (data2.success) {
+                this.thong_bao = 'Đăng ký thông tin công ty thành công!';
+                this.hien_thong_bao = true;
+                setTimeout(() => {
+                  this.hien_thong_bao = false;
+                  this.router.navigate(['/trang-chu']);
+                }, 2000);
+              } else {
+                this.thong_bao = 'Đăng ký thông tin công ty thất bại!';
+                this.hien_thong_bao = true;
+                setTimeout(() => this.hien_thong_bao = false, 1500);
+              }
+            },
+            error: () => {
+              this.thong_bao = 'Lỗi khi thêm thông tin công ty!';
+              this.hien_thong_bao = true;
+              setTimeout(() => this.hien_thong_bao = false, 1500);
+            }
+          });
+        } else {
+          this.thong_bao = 'Email không hợp lệ hoặc đã tồn tại!';
+          this.hien_thong_bao = true;
+          setTimeout(() => this.hien_thong_bao = false, 1500);
+        }
       },
-      body: JSON.stringify({
-        email: this.form.email,
-      })
-    });
-    const data = await response.json();
-    if (data.success) {
-      const themThongTin_CongTy = await fetch("http://localhost:65001/api/API_WEB/themThongTinCongTy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.getThongTinDangKy())
-      });
-      const data2 = await themThongTin_CongTy.json();
-      if (data2.success) {
-        this.thong_bao = 'Đăng ký thông tin công ty thành công!';
+      error: () => {
+        this.thong_bao = 'Lỗi khi kiểm tra email!';
         this.hien_thong_bao = true;
-        setTimeout(() => {
-          this.hien_thong_bao = false;
-          this.router.navigate(['/trang-chu']);
-        }, 2000);
-      } else {
-        this.thong_bao = 'Đăng ký thông tin công ty thất bại!';
-        this.hien_thong_bao = true;
-        setTimeout(() => {
-          this.hien_thong_bao = false;
-        })
+        setTimeout(() => this.hien_thong_bao = false, 1500);
       }
-    }
+    });
   }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Auth } from '../../../services/auth';
 import { HeaderWEB } from '../../Component/header-web/header-web';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface API_RESPONSE {
   success: boolean;
@@ -17,13 +18,15 @@ interface API_RESPONSE {
 })
 export class TrangThongBao implements OnInit{
 
-  constructor(public auth: Auth, public httpclient: HttpClient) {}
+  constructor(public auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) {}
 
   danh_sach_thong_bao: any[] = [];
 
   pop_up_lay_thong_tin_that_bai = false;
 
   loading = true;
+
+  error = false;  
 
   ngOnInit(): void {
     this.danhSachThongBao();
@@ -43,8 +46,9 @@ export class TrangThongBao implements OnInit{
           this.pop_up_lay_thong_tin_that_bai = true;
             setTimeout(() => {
               this.pop_up_lay_thong_tin_that_bai = false;
-            },1500)
+            },1500);
         }
+        this.cd.detectChanges();
       }
     });
   }
@@ -58,7 +62,7 @@ export class TrangThongBao implements OnInit{
       return;
     }
     const value_num = Number(value);
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num})
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num })
       .subscribe({
         next: (data) => {
           this.loading = false;
@@ -69,8 +73,9 @@ export class TrangThongBao implements OnInit{
             this.pop_up_lay_thong_tin_that_bai = true;
             setTimeout(() => {
               this.pop_up_lay_thong_tin_that_bai = false;
-            },1500)
+            },1500);
           }
+          this.cd.detectChanges();
         }
       });
   }

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+interface API_RESPONSE {
+  success: boolean;
+}
 
 @Component({
   selector: 'app-trang-tao-tai-khoan-quan-tri',
@@ -8,24 +13,22 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './trang-tao-tai-khoan-quan-tri.css'
 })
 export class TrangTaoTaiKhoanQuanTri {
+
+  constructor(public httpclient: HttpClient) { }
+
   email_quan_tri: string = '';
   matkhau_quan_tri: string = '';
-  async taoTaiKhoanQuanTri() {
-    const response = await fetch('http://localhost:65001/api/API_WEB/themThongTinQuanTriVien', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: this.email_quan_tri,
-        matkhau: this.matkhau_quan_tri
+  taoTaiKhoanQuanTri() {
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/themThongTinQuanTriVien', {email: this.email_quan_tri, mat_khau: this.matkhau_quan_tri})
+      .subscribe({
+        next: (data) => {
+          if(data.success){
+            alert("Thêm thông tin quản trị mới thành công");
+          }
+          else{
+            alert("Thêm thông tin quản trị mới không thành công");
+          }
+        }
       })
-    });
-    const data = await response.json();
-    if(data.success) {
-      alert("ok baybi")
-    } else {
-      alert("Lỗi: " + data.message);
     }
-  }
 }

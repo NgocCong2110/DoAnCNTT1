@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
+
+interface API_RESPONSE{
+  success: boolean;
+  danh_sach: any[];
+}
 
 @Component({
   selector: 'app-trang-danh-sach-cong-ty',
@@ -9,8 +16,11 @@ import { CommonModule, DatePipe } from '@angular/common';
   styleUrls: ['./trang-danh-sach-cong-ty.css']
 })
 export class TrangDanhSachCongTy implements OnInit {
-  danh_sach_cong_ty_full: any[] = []; 
-  danh_sach_cong_ty: any[] = [];     
+
+  constructor(public httpclient: HttpClient, public cd: ChangeDetectorRef) { }
+
+  danh_sach_cong_ty_full: any[] = [];
+  danh_sach_cong_ty: any[] = [];
   loading = true;
   error = '';
 
@@ -18,30 +28,30 @@ export class TrangDanhSachCongTy implements OnInit {
   soLuongMoiTrang = 10;
   tongTrang = 1;
 
-  async ngOnInit() {
-    await this.layDanhSachCongTy();
+  ngOnInit() {
+    this.layDanhSachCongTy();
   }
 
-  async layDanhSachCongTy() {
-    try {
-      const response = await fetch('http://localhost:65001/api/API_WEB/layDanhSachCongTy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+  layDanhSachCongTy() {
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachCongTy', {})
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_cong_ty_full = data.danh_sach;
+            this.tongTrang = Math.ceil(this.danh_sach_cong_ty_full.length / this.soLuongMoiTrang);
+            this.loadTrang(this.trangHienTai);
+          } else {
+            this.error = 'Lỗi khi tải dữ liệu';
+          }
+          this.loading = false;
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          this.error = err.message || 'Không thể kết nối API';
+          this.loading = false;
+          this.cd.markForCheck();
+        }
       });
-
-      const data = await response.json();
-      if (data.success) {
-        this.danh_sach_cong_ty_full = data.danh_sach;
-        this.tongTrang = Math.ceil(this.danh_sach_cong_ty_full.length / this.soLuongMoiTrang);
-        this.loadTrang(this.trangHienTai);
-      } else {
-        this.error = data.message || 'Lỗi khi tải dữ liệu';
-      }
-    } catch (err: any) {
-      this.error = err.message || 'Không thể kết nối API';
-    } finally {
-      this.loading = false;
-    }
   }
 
   loadTrang(trang: number) {
@@ -54,5 +64,6 @@ export class TrangDanhSachCongTy implements OnInit {
   chuyenTrang(trang: number) {
     if (trang < 1 || trang > this.tongTrang) return;
     this.loadTrang(trang);
+    this.cd.markForCheck();
   }
 }

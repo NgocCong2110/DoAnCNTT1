@@ -1,18 +1,28 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../../../../services/auth';
+import { HttpClient } from '@angular/common/http';
 
 declare var bootstrap: any;
 
+interface API_RESPONSE {
+  success: boolean;
+}
+
 @Component({
   selector: 'app-dang-bai',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './dang-bai.html',
-  styleUrl: './dang-bai.css'
+  styleUrls: ['./dang-bai.css']
 })
 export class DangBai {
-  constructor(public auth: Auth) {}
+  constructor(
+    public auth: Auth,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   @ViewChild('modalDangBai') modalDangBai!: ElementRef;
 
@@ -30,6 +40,9 @@ export class DangBai {
   kinh_nghiem = '';
   loai_hinh = 'full_Time';
 
+  pop_up_dang_bai_thanh_cong: boolean = false;
+  pop_up_dang_bai_that_bai: boolean = false;
+
   moPopup() {
     const modal = new bootstrap.Modal(this.modalDangBai.nativeElement);
     modal.show();
@@ -39,7 +52,7 @@ export class DangBai {
     this.thongTinBaiDang();
   }
 
-  async thongTinBaiDang() {
+  thongTinBaiDang() {
     const nguoiDung = this.auth.layThongTinNguoiDung();
     if (!nguoiDung) {
       alert('Bạn cần đăng nhập để đăng bài!');
@@ -72,24 +85,38 @@ export class DangBai {
       }
     };
 
-    try {
-      const response = await fetch('http://localhost:65001/api/API_WEB/themBaiDangMoi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(duLieu)
-      });
+    this.http.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/themBaiDangMoi', duLieu)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.pop_up_dang_bai_thanh_cong = true;
+            this.cdr.detectChanges();
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Thêm thành công:', data);
-        alert('Đăng bài thành công!');
-      } else {
-        console.error('Lỗi khi thêm bài đăng:', response.statusText);
-        alert('Có lỗi xảy ra khi đăng bài');
-      }
-    } catch (error) {
-      console.error('Exception khi gọi API:', error);
-      alert('Không thể kết nối đến server');
-    }
+            const modal = bootstrap.Modal.getInstance(this.modalDangBai.nativeElement);
+            modal?.hide();
+
+            setTimeout(() => {
+              this.pop_up_dang_bai_thanh_cong = false;
+              this.cdr.detectChanges();
+            }, 1500);
+          } else {
+            this.pop_up_dang_bai_that_bai = true;
+            this.cdr.detectChanges();
+            setTimeout(() => {
+              this.pop_up_dang_bai_that_bai = false;
+              this.cdr.detectChanges();
+            }, 1500);
+          }
+        },
+        error: (err) => {
+          console.error('Lỗi khi thêm bài đăng:', err);
+          this.pop_up_dang_bai_that_bai = true;
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.pop_up_dang_bai_that_bai = false;
+            this.cdr.detectChanges();
+          }, 1500);
+        }
+      });
   }
 }

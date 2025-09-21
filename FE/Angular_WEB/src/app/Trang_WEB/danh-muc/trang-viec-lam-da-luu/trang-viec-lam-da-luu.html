@@ -2,15 +2,49 @@
   <app-header-web></app-header-web>
 
   <div class="container py-3">
-    <div *ngIf="loading">Đang tải dữ liệu...</div>
-    <div *ngIf="error" class="text-danger">{{ error }}</div>
 
-    <div *ngIf="!loading && !error">
-      <div *ngFor="let bai of danh_sach_bai_dang_da_luu" class="card my-4 p-2 border rounded">
-        <h3>{{ bai?.tieu_de }}</h3>
-        <p><b>Người đăng:</b> {{ bai?.ten_nguoi_dang }}</p>
+    <div class="card shadow-sm p-4 rounded-3">
+      <h3 class="mb-3 text-center">Danh sách bài đăng đã lưu</h3>
+
+      <div *ngIf="loading" class="text-center mt-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Đang tải...</span>
+        </div>
+        <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
+      </div>
+
+      <div *ngIf="!loading && danh_sach_bai_dang_da_luu.length > 0" class="mt-4">
+        <div class="list-group">
+          <div class="list-group-item list-group-item-action"
+               *ngFor="let bai of danh_sach_bai_dang_da_luu">
+            <h5 class="mb-1">{{ bai?.tieu_de }}</h5>
+            <p class="mb-1"><b>Người đăng:</b> {{ bai?.ten_nguoi_dang }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && danh_sach_bai_dang_da_luu.length === 0"
+           class="text-center text-muted mt-4">
+        Không có bài đăng nào được lưu.
+      </div>
+
+      <div *ngIf="error" class="text-center text-danger mt-3">
+        {{ error }}
       </div>
     </div>
   </div>
+</div>
 
+<div class="toast-container position-fixed top-0 end-0 p-3"
+     *ngIf="pop_up_lay_thong_tin_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Lấy thông tin thất bại!
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+    </div>
+  </div>
 </div>

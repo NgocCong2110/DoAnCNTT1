@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 interface CvForm {
   hoTen: string;
@@ -22,6 +23,7 @@ interface CvForm {
   imports: [FormsModule, CommonModule],
   templateUrl: './trang-cv-ntv.html',
   styleUrls: ['./trang-cv-ntv.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrangCvNtv {
   uploadedFileName: string = '';
@@ -48,10 +50,13 @@ export class TrangCvNtv {
   allBlocks = ['thongTinCoBan', 'hocVan', 'kinhNghiem', 'kyNang', 'duAn', 'mucTieu'];
   blocks: string[] = [];
 
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+
   moForm() {
     this.hienModal = true;
-    this.blocks = [...this.allBlocks]; 
+    this.blocks = [...this.allBlocks];
     console.log('Modal opened, all blocks loaded:', this.blocks);
+    this.cdr.markForCheck(); 
   }
 
   dongForm() {
@@ -70,65 +75,63 @@ export class TrangCvNtv {
       duAn: '',
       mucTieu: '',
     };
+    this.cdr.markForCheck();
   }
 
   onFileSelected(event: any) {
     this.dang_tai_file = event.target.files[0];
     if (this.dang_tai_file) this.uploadedFileName = this.dang_tai_file.name;
+    this.cdr.markForCheck();
   }
 
-  async dangTaiForm() {
-    if (!this.dang_tai_file) return alert('Chưa chọn file!');
+  dangTaiForm() {
+    if (!this.dang_tai_file) {
+      alert('Chưa chọn file!');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('cvFile', this.dang_tai_file);
     formData.append('userId', this.ma_nguoi_dung.toString());
 
-    try {
-      const response = await fetch('https://localhost:7290/api/API_WEB/upload', {
-        method: 'POST',
-        body: formData,
+    this.http.post('https://localhost:65001/api/API_WEB/upload', formData)
+      .subscribe({
+        next: () => {
+          alert('Upload CV thành công!');
+          this.loadCvs();
+        },
+        error: (err) => {
+          alert(`Upload lỗi: ${err.message}`);
+        }
       });
-      if (response.ok) {
-        alert('Upload CV thành công!');
-        this.loadCvs();
-      } else {
-        alert(`Upload lỗi: ${response.statusText}`);
-      }
-    } catch (error) {
-      alert(`Upload lỗi: ${error}`);
-    }
   }
 
-  async luuCV() {
+  luuCV() {
     const body = { ...this.formCv, userId: this.ma_nguoi_dung };
-    try {
-      const response = await fetch('https://localhost:7290/api/API_WEB/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+
+    this.http.post('https://localhost:65001/api/API_WEB/create', body)
+      .subscribe({
+        next: () => {
+          alert('CV online lưu thành công!');
+          this.loadCvs();
+          this.dongForm();
+        },
+        error: (err) => {
+          alert(`Lưu lỗi: ${err.message}`);
+        }
       });
-      if (response.ok) {
-        alert('CV online lưu thành công!');
-        this.loadCvs();
-        this.dongForm();
-      } else {
-        alert(`Lưu lỗi: ${response.statusText}`);
-      }
-    } catch (error) {
-      alert(`Lưu lỗi: ${error}`);
-    }
   }
 
-  async loadCvs() {
-    try {
-      const response = await fetch(`https://localhost:7290/api/API_WEB/user/${this.ma_nguoi_dung}`);
-      if (response.ok) {
-        this.cvs = await response.json();
-      } else {
-        console.error('Lỗi khi tải CV:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Lỗi khi tải CV:', error);
-    }
+  loadCvs() {
+    this.http.get<any[]>(`https://localhost:65001/api/API_WEB/user/${this.ma_nguoi_dung}`)
+      .subscribe({
+        next: (data) => {
+          this.cvs = data;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error('Lỗi khi tải CV:', err);
+        }
+      });
   }
 }
