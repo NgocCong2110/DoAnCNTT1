@@ -1,0 +1,98 @@
+<div class="card-body py-2 px-3">
+  <div class="d-flex flex-column gap-2">
+    <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" 
+      class="form-control border-0 border-bottom shadow-none py-1"
+      placeholder="Tiêu đề tin tuyển dụng" style="font-size: 14px;">
+
+    <div class="d-flex align-items-start gap-2">
+      <img src="anh_WEB/anh_Logo.png" alt="avatar" class="rounded-circle" 
+        style="width:32px; height:32px;">
+      <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" 
+        class="form-control border-0 shadow-none py-1" rows="1"
+        placeholder="Mô tả ngắn..." style="font-size: 14px; resize: none;"></textarea>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-2" 
+       *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty' 
+           || auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">
+    <button class="btn d-flex align-items-center gap-1 px-3 py-1" 
+            (click)="moPopup()"
+      style="background-color: #6c757d; border-color: #6c757d; color: white; font-size: 13px; border-radius: 6px;">
+      <span style="font-size: 14px;">+</span> Đăng bài
+    </button>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="modalDangBai" #modalDangBai>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h5 class="modal-title">Đăng tin tuyển dụng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label>Tiêu đề</label>
+            <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Mô tả công việc</label>
+            <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" rows="3" class="form-control"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Yêu cầu ứng viên</label>
+            <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Địa điểm làm việc</label>
+            <input [(ngModel)]="dia_diem_moi" name="dia_diem" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Mức lương</label>
+            <input [(ngModel)]="muc_luong" name="muc_luong" type="text" class="form-control">
+          </div>
+
+          <!-- Thêm field tùy chọn -->
+          <div class="mb-3">
+            <label>Ngành nghề</label>
+            <input [(ngModel)]="nganh_nghe" name="nganh_nghe" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Vị trí tuyển dụng</label>
+            <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Kinh nghiệm</label>
+            <input [(ngModel)]="kinh_nghiem" name="kinh_nghiem" type="text" class="form-control">
+          </div>
+
+
+          <!-- coi cho nay -->
+          <div class="mb-3">
+            <label>Loại hình</label>
+            <select [(ngModel)]="loai_hinh" name="loai_hinh" class="form-select">
+              <option value="full_Time">Toàn thời gian</option>
+              <option value="part_Time">Bán thời gian</option>
+              <option value="remote">Remote</option>
+            </select>
+          </div>
+          
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button class="btn btn-primary" (click)="themBaiDang()">Đăng bài</button>
+      </div>
+    </div>
+  </div>
+</div>

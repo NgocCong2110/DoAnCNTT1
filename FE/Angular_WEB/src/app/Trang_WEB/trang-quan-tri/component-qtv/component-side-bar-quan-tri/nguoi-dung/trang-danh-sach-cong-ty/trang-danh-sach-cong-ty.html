@@ -1,1 +1,55 @@
-<p>trang-danh-sach-cong-ty works!</p>
+<div class="container ds-congty-container">
+  <h2 class="ds-congty-title">Danh sách công ty</h2>
+
+  <div *ngIf="loading">Đang tải dữ liệu...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && !error">
+    <table class="table table-bordered table-striped ds-congty-table">
+      <thead class="ds-congty-thead">
+        <tr>
+          <th>Mã công ty</th>
+          <th>Tên công ty</th>
+          <th>Tên đăng nhập</th>
+          <th>Email</th>
+          <th>Người đại diện</th>
+          <th>Địa chỉ</th>
+          <th>Điện thoại</th>
+          <th>Ngày thành lập</th>
+          <th>Ngày tạo</th>
+          <th>Ngày cập nhật</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cong_ty of danh_sach_cong_ty">
+          <td>{{ cong_ty.ma_cong_ty }}</td>
+          <td>{{ cong_ty.ten_cong_ty }}</td>
+          <td>{{ cong_ty.ten_dn_cong_ty }}</td>
+          <td>{{ cong_ty.email }}</td>
+          <td>{{ cong_ty.nguoi_dai_dien }}</td>
+          <td>{{ cong_ty.dia_chi }}</td>
+          <td>{{ cong_ty.dien_thoai }}</td>
+          <td>{{ cong_ty.ngay_thanh_lap | date:'dd/MM/yyyy' }}</td>
+          <td>{{ cong_ty.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ cong_ty.ngay_cap_nhat | date:'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="tongTrang > 1">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="trangHienTai === 1">
+          <a class="page-link" (click)="chuyenTrang(trangHienTai - 1)">Trước</a>
+        </li>
+        <li class="page-item" 
+            *ngFor="let t of [].constructor(tongTrang); let i = index"
+            [class.active]="trangHienTai === i + 1">
+          <a class="page-link" (click)="chuyenTrang(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="trangHienTai === tongTrang">
+          <a class="page-link" (click)="chuyenTrang(trangHienTai + 1)">Sau</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

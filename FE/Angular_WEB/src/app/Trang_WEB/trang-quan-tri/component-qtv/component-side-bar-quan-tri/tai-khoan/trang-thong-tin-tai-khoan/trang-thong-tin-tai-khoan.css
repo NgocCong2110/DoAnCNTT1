@@ -63,3 +63,38 @@
 .btn-edit:hover {
   background-color: #0056b3;
 }
+
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  min-width: 280px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popup-form input,
+.popup-form select,
+.popup-form textarea {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

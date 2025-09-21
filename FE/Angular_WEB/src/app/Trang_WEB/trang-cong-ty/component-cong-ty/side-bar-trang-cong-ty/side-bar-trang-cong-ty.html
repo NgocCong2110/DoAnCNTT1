@@ -10,7 +10,7 @@
 
 
   <!-- tai khoan cong ty -->
-  <div>
+  <div class="mb-3">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTTaiKhoan()">
@@ -19,66 +19,65 @@
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/thong-tin-tai-khoan']">Thông tin tài khoản</a>
+        [routerLink]="['/trang-cong-ty', 'trang-thong-tin-tai-khoan-cong-ty']">Thông tin tài khoản</a>
     </div>
   </div>
 
   <!-- danh sach ung vien ung tuyen -->
-  <div class="nav flex-column gap-3">
-    <div>
-      <button
-        class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-        type="button" (click)="chuyenDoi_TTUngVien()">
-        <span><i class="bi bi-people-fill me-2 text-primary"></i> Quản lý ứng viên <span>{{ trangThai_UngVien ? '▾' :
-            '▸'
-            }}</span></span>
-      </button>
-      <div class="mt-2 ms-3 collapse" [class.show]="trangThai_UngVien">
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/ung-vien']">Danh sách ứng viên</a>
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/thong-ke']">Thống kê & Báo cáo</a>
-      </div>
-    </div>
-
-    <!-- danh sach bai dang -->
-    <div>
-      <button
-        class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-        type="button" (click)="chuyenDoi_TTBaiDang()">
-        <span><i class="bi bi-building me-2 text-info"></i> Quản lý bài đăng <span>{{ trangThai_BaiDang ? '▾' : '▸'
-            }}</span></span>
-
-      </button>
-      <div class="mt-2 ms-3 collapse" [class.show]="trangThai_BaiDang">
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/danh-sach-bai-dang']">Danh sách bài đăng</a>
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/bai-dang-da-xoa']">Bài đăng đã xóa</a>
-      </div>
-    </div>
-
-    <!-- thong bao -->
-    <div>
-      <button
-        class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-        type="button" [routerLink]="['/thong-bao']">
-        <span><i class="bi bi-bell-fill me-2 text-warning"></i> Thông báo </span>
-
-      </button>
-    </div>
-
-    <!-- dich vu  -->
-    <div>
-      <button
-        class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-        type="button" (click)="chuyenDoi_TTDichVu()">
-        <span><i class="bi bi-credit-card-2-front me-2 text-success"></i> Dịch vụ <span>{{ trangThai_DichVu ? '▾' : '▸'
-            }}</span></span>
-      </button>
-      <div class="mt-2 ms-3 collapse" [class.show]="trangThai_DichVu">
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/thanh-toan']">Danh sách gói dịch vụ</a>
-      </div>
+  <div class="mb-3">
+    <button
+      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
+      type="button" (click)="chuyenDoi_TTUngVien()">
+      <span><i class="bi bi-people-fill me-2 text-primary"></i> Quản lý ứng viên <span>{{ trangThai_UngVien ? '▾' :
+          '▸'
+          }}</span></span>
+    </button>
+    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_UngVien">
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-danh-sach-ung-vien']">Danh sách ứng viên</a>
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-thong-ke-bao-cao-ung-vien']">Thống kê & Báo cáo</a>
     </div>
   </div>
+
+  <!-- danh sach bai dang -->
+  <div class="mb-3">
+    <button
+      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
+      type="button" (click)="chuyenDoi_TTBaiDang()">
+      <span><i class="bi bi-building me-2 text-info"></i> Quản lý bài đăng <span>{{ trangThai_BaiDang ? '▾' : '▸'
+          }}</span></span>
+
+    </button>
+    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_BaiDang">
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-danh-sach-bai-dang-cong-ty']">Danh sách bài đăng</a>
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-bai-dang-da-xoa']">Bài đăng đã xóa</a>
+    </div>
+  </div>
+
+  <!-- thong bao -->
+  <div class="mb-3">
+    <button
+      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
+      type="button" [routerLink]="['/trang-cong-ty', 'trang-thong-bao-cong-ty']">
+      <span><i class="bi bi-bell-fill me-2 text-warning"></i> Thông báo </span>
+
+    </button>
+  </div>
+
+  <!-- dich vu  -->
+  <div class="mb-3">
+    <button
+      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
+      type="button" (click)="chuyenDoi_TTDichVu()">
+      <span><i class="bi bi-credit-card-2-front me-2 text-success"></i> Dịch vụ <span>{{ trangThai_DichVu ? '▾' : '▸'
+          }}</span></span>
+    </button>
+    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_DichVu">
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-danh-sach-goi-dich-vu-cong-ty']">Danh sách gói dịch vụ</a>
+    </div>
+  </div>
+</div>

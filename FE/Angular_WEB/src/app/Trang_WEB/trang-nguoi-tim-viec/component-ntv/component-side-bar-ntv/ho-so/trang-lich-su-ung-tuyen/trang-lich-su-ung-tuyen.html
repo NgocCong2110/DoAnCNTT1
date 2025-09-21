@@ -1,1 +1,45 @@
-<p>trang-lich-su-ung-tuyen works!</p>
+<div class="container mt-4">
+    <h2 class="mb-4">Danh sách ứng viên</h2>
+
+    <div *ngIf="loading">Đang tải dữ liệu...</div>
+    <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+    <div *ngIf="!loading && !error">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Vị trí ứng tuyển</th>
+                    <th>Ngành nghề</th>
+                    <th>Mức lương</th>
+                    <th>Kinh nghiệm</th>
+                    <th>Địa điểm</th>
+                    <th>Ngày ứng tuyển</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ls of danh_sach_lich_su_ung_tuyen; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ ls.viec_Lam?.vi_tri }}</td>
+                    <td>{{ ls.viec_Lam?.nganh_nghe }}</td>
+                    <td>{{ ls.viec_Lam?.muc_luong }}</td>
+                    <td>{{ ls.viec_Lam?.kinh_nghiem }}</td>
+                    <td>{{ ls.cong_Ty?.dia_chi }}</td>
+                    <td>{{ ls.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
+    <div class="toast show text-bg-danger border-0">
+        <div class="d-flex">
+            <div class="toast-body">
+                ❌ Lấy thông tin thông báo thất bại!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+        </div>
+    </div>
+</div>

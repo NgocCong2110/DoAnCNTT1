@@ -1,1 +1,41 @@
-<p>trang-danh-sach-chung-chi works!</p>
+<div class="page-wrapper">
+  <div class="upload-card">
+    <h3>📑 Upload chứng chỉ</h3>
+
+    <label class="file-input">
+      <span>Chọn chứng chỉ (PDF / JPG / PNG)</span>
+      <input 
+        type="file" 
+        multiple 
+        (change)="chonFile($event)" 
+        accept=".pdf, image/*"
+        hidden
+      />
+    </label>
+
+    <div class="cert-list" *ngIf="danh_sach_chung_chi.length > 0">
+      <div class="cert-item" *ngFor="let cert of danh_sach_chung_chi; let i = index">
+        <div class="cert-preview" *ngIf="cert.preview; else pdfIcon">
+          <img [src]="cert.preview" alt="preview" />
+        </div>
+        <ng-template #pdfIcon>
+          <div class="cert-preview pdf">PDF</div>
+        </ng-template>
+
+        <div class="cert-info">
+          <p class="name">{{ cert.file.name }}</p>
+          <p class="size">{{ (cert.file.size / 1024).toFixed(1) }} KB</p>
+        </div>
+
+        <button class="btn-remove" (click)="xoaChungChi(i)">✖</button>
+      </div>
+    </div>
+
+    <button 
+      class="btn-upload" 
+      [disabled]="danh_sach_chung_chi.length === 0"
+      (click)="taiLen()">
+      🚀 Tải lên
+    </button>
+  </div>
+</div>

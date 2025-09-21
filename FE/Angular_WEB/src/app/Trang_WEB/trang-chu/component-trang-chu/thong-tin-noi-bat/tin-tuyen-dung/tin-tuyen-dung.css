@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem; /* khoảng cách giữa các post ~ 2-3 đơn vị */
+  gap: 1.5rem; 
 }
 
 .post {
@@ -10,14 +10,14 @@
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 1rem; /* padding tổng */
+  padding: 1rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem; /* khoảng cách top ~ 3 đơn vị */
+  margin-bottom: 1rem; 
   padding: 0.5rem;
 }
 
@@ -37,4 +37,31 @@
 
 .post-footer button:hover {
   color: #1877f2;
+}
+
+#bao-cao-btn:hover {
+  transform: translateY(-1px);
+  scale: 1.05;
+  transition: all 0.3s ease;
+}
+
+#ung-tuyen-btn:hover {
+  transform: translateY(-1px);
+  scale: 1.05;
+  transition: all 0.3s ease;
+}
+
+.popup-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.popup-content {
+  background: white;
+  width: 400px;
+  max-width: 90%;
 }

@@ -1,0 +1,12 @@
+.charts-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.chart {
+  width: 45%;
+  min-width: 300px;
+}

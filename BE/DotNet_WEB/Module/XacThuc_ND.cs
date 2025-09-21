@@ -52,14 +52,14 @@
             }
 
 
-            public static bool kiemTraMaSoThue(string maSo_Thue)
+            public static async Task<bool> kiemTraMaSoThue(string maSo_Thue)
             {
                 string url = $"https://api.vietqr.io/v2/business/{maSo_Thue}";
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    HttpResponseMessage response = await client.GetAsync(url);
                     response.EnsureSuccessStatusCode();
-                    string responseBody = response.Content.ReadAsStringAsync().Result;
+                    string responseBody = await response.Content.ReadAsStringAsync();
                     using (JsonDocument doc = JsonDocument.Parse(responseBody))
                     {
                         var root = doc.RootElement;
@@ -82,11 +82,10 @@
             {
                 using var conn = new MySqlConnection(chuoi_KetNoi);
                 conn.Open();
-                string mat_khau_maHoa = maHoaMatKhau(matKhau);
                 string sql = "SELECT COUNT(*) FROM nguoi_dung WHERE email = @Email AND mat_khau = @MatKhau";
                 using var cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Email", email);
-                cmd.Parameters.AddWithValue("@MatKhau", mat_khau_maHoa);
+                cmd.Parameters.AddWithValue("@MatKhau", matKhau);
                 int count = Convert.ToInt32(cmd.ExecuteScalar());
                 if (count > 0)
                 {

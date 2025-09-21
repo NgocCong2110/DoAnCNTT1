@@ -12,10 +12,14 @@ namespace DotNet_WEB.Class
         [Key]
         public int ma_ung_tuyen { get; set; }
         public int ma_viec { get; set; }
+        [ForeignKey(nameof(ma_viec))]
+        public viec_lam? viec_Lam { get; set; }
         public int ma_nguoi_tim_viec { get; set; }
         [ForeignKey(nameof(ma_nguoi_tim_viec))]
         public nguoi_tim_viec? nguoi_tim_viec { get; set; }
-        public int ma_cong_ty { get; set; }
+        public int? ma_cong_ty { get; set; }
+        [ForeignKey(nameof(ma_cong_ty))]
+        public cong_ty? cong_Ty { get; set; }
         public TrangThaiUngTuyen trang_thai { get; set; } = TrangThaiUngTuyen.dang_Cho;
         public DateTime ngay_ung_tuyen { get; set; } = DateTime.Now;
     }

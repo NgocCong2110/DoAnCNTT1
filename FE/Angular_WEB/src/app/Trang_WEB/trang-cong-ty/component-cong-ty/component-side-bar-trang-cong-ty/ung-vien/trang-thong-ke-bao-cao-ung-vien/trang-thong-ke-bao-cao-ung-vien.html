@@ -1,1 +1,17 @@
-<p>trang-thong-ke-bao-cao-ung-vien works!</p>
+<div class="charts-container">
+  <div class="chart">
+    <canvas baseChart
+            [data]="barChartData"
+            [options]="chartOptions"
+            [type]="'bar'">
+    </canvas>
+  </div>
+
+  <div class="chart">
+    <canvas baseChart
+            [data]="lineChartData"
+            [options]="chartOptions"
+            [type]="'line'">
+    </canvas>
+  </div>
+</div>

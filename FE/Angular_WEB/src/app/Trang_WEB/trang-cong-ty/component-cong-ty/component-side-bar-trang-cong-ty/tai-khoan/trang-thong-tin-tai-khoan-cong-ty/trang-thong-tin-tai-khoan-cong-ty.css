@@ -1,0 +1,65 @@
+.cong-ty-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #f9f9f9;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 16px;
+  border-radius: 50%;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.grid-item.full-width {
+  grid-column: span 2;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+button {
+  margin-left: 8px;
+}

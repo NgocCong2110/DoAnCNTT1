@@ -29,6 +29,5 @@ namespace DotNet_WEB.Class
 
         public DateTime ngay_tao { get; set; } = DateTime.Now;
         public DateTime ngay_cap_nhat { get; set; } = DateTime.Now;
-
     }
 }

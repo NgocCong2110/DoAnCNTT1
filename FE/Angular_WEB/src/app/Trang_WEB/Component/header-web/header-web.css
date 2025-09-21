@@ -1,0 +1,11 @@
+.navbar-nav .dropdown-item,
+.offcanvas-body .nav-link {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-nav .dropdown-item:hover,
+.offcanvas-body .nav-link:hover {
+  background-color: #f0f0f0; 
+  color: #007bff;            
+  border-radius: 5px;      
+}

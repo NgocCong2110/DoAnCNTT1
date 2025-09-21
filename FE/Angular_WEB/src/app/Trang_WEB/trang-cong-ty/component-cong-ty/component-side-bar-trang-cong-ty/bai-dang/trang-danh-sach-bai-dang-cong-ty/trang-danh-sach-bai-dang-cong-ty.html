@@ -1,1 +1,6 @@
-<p>trang-danh-sach-bai-dang-cong-ty works!</p>
+<h3 style="text-align: center;">Danh sách bài đăng đã đăng</h3>
+<div *ngFor="let bai of danhSachBaiDang" class="card my-4 p-2 border rounded">
+  <p><b>Tiêu đề:</b> {{ bai.tieu_de }}</p>
+  <p><b>Nội dung:</b> {{ bai.noi_dung }}</p>
+  <p><b>Ngày tạo:</b> {{ bai.ngay_tao || 'Chưa có thông tin' }}</p>
+</div>

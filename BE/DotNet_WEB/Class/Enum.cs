@@ -52,19 +52,6 @@ namespace DotNet_WEB.Class
         Khac = 5
     }
 
-    public enum TrangThaiViecLam
-    {
-        None = 0,
-        [Display(Name = "Đang Hiển Thị")]
-        dang_Hien_Thi = 1,
-        [Display(Name = "Tạm Ẩn")]
-        tam_An = 2,
-        [Display(Name = "Đã Hết Hạn")]
-        da_Het_Han = 3,
-        [Display(Name = "Chờ Duyệt")]
-        cho_Duyet = 4
-    }
-
     public enum LoaiHinhViecLam
     {
         None = 0,
@@ -129,5 +116,25 @@ namespace DotNet_WEB.Class
         giai_The = 3,
         [Display(Name = "Chờ Duyệt")]
         cho_Duyet = 4
+    }
+
+    public enum LoaiThongBao
+    {
+        None = 0,
+        [Display(Name = "Toàn server")]
+        toan_Server = 1,
+        [Display(Name = "Việc làm mới")]
+        viec_Lam_Moi = 2,
+        [Display(Name = "Thư mời phỏng vấn")]
+        thu_Moi_Phong_Van = 3
+    }
+
+    public enum TrangThaiDoc
+    {
+        None = 0,
+        [Display(Name = "Đã đọc")]
+        da_Doc = 1,
+        [Display(Name = "Chưa đọc")]
+        chua_Doc = 2
     }
 }

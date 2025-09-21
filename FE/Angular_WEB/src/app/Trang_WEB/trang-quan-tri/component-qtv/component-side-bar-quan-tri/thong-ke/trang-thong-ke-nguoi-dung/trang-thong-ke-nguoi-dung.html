@@ -1,1 +1,17 @@
-<p>trang-thong-ke-nguoi-dung works!</p>
+<div class="charts-container">
+  <div class="chart">
+    <canvas baseChart
+            [data]="barChartData"
+            [options]="chartOptions"
+            [type]="'bar'">
+    </canvas>
+  </div>
+
+  <div class="chart">
+    <canvas baseChart
+            [data]="lineChartData"
+            [options]="chartOptions"
+            [type]="'line'">
+    </canvas>
+  </div>
+</div>

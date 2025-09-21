@@ -1,1 +1,87 @@
-<p>trang-thong-tin-tai-khoan-cong-ty works!</p>
+<div class="cong-ty-container">
+  <section class="thong-tin-cong-ty">
+    <h2>Thông tin công ty</h2>
+    <div class="card">
+      <div class="card-header">
+        <img [src]="thongTin?.logo" alt="Logo công ty" class="avatar" />
+        <div class="header-info">
+          <h3>{{ thongTin?.ten_cong_ty }}</h3>
+          <p><strong>Tên đăng nhập:</strong> {{ thongTin?.ten_dn_cong_ty }}</p>
+          <p><strong>Email:</strong> {{ thongTin?.email }}
+            <button (click)="moForm('email')">✏️</button>
+          </p>
+        </div>
+      </div>
+
+      <div class="card-body grid-container">
+        <div class="grid-item">
+          <strong>Người đại diện:</strong> {{ thongTin?.nguoi_dai_dien }}
+          <button (click)="moForm('nguoi_dai_dien')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Mã số thuế:</strong> {{ thongTin?.ma_so_thue }}
+          <button (click)="moForm('ma_so_thue')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Điện thoại:</strong> {{ thongTin?.dien_thoai }}
+          <button (click)="moForm('dien_thoai')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Website:</strong> {{ thongTin?.website }}
+          <button (click)="moForm('website')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Địa chỉ:</strong> {{ thongTin?.dia_chi }}
+          <button (click)="moForm('dia_chi')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Quy mô:</strong> {{ thongTin?.quy_mo }}
+          <button (click)="moForm('quy_mo')">✏️</button>
+        </div>
+        <div class="grid-item">
+          <strong>Năm thành lập:</strong> {{ thongTin?.nam_thanh_lap }}
+          <button (click)="moForm('nam_thanh_lap')">✏️</button>
+        </div>
+        <div class="grid-item full-width">
+          <strong>Mô tả:</strong> {{ thongTin?.mo_ta }}
+          <button (click)="moForm('mo_ta')">✏️</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="popup" *ngIf="formDangMo">
+  <form class="popup-form" (ngSubmit)="luuForm()">
+    <h3>Chỉnh sửa {{ duLieuSua }}</h3>
+
+    <ng-container [ngSwitch]="duLieuSua">
+
+      <input *ngSwitchCase="'email'" [(ngModel)]="giaTriMoi" name="email" type="email" required />
+
+      <input *ngSwitchCase="'dien_thoai'" [(ngModel)]="giaTriMoi" name="dien_thoai" />
+
+      <input *ngSwitchCase="'website'" [(ngModel)]="giaTriMoi" name="website" />
+
+      <input *ngSwitchCase="'nguoi_dai_dien'" [(ngModel)]="giaTriMoi" name="nguoi_dai_dien" />
+
+      <input *ngSwitchCase="'ma_so_thue'" [(ngModel)]="giaTriMoi" name="ma_so_thue" />
+
+      <input *ngSwitchCase="'dia_chi'" [(ngModel)]="giaTriMoi" name="dia_chi" />
+
+      <input *ngSwitchCase="'quy_mo'" [(ngModel)]="giaTriMoi" name="quy_mo" />
+
+      <input *ngSwitchCase="'nam_thanh_lap'" [(ngModel)]="giaTriMoi" name="nam_thanh_lap" type="number" />
+
+      <textarea *ngSwitchCase="'mo_ta'" [(ngModel)]="giaTriMoi" name="mo_ta"></textarea>
+
+      <input *ngSwitchDefault [(ngModel)]="giaTriMoi" [name]="duLieuSua" />
+
+    </ng-container>
+
+    <div class="popup-actions">
+      <button type="submit">Lưu</button>
+      <button type="button" (click)="dongForm()">Hủy</button>
+    </div>
+  </form>
+</div>

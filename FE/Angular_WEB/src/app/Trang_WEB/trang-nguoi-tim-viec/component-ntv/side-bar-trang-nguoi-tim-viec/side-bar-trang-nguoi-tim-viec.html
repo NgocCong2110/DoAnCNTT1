@@ -7,7 +7,7 @@
 
 
   <!-- tai khoan -->
-  <div>
+  <div class="mb-3">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTTaiKhoan()">
@@ -16,7 +16,7 @@
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['trang-nguoi-tim-viec', 'thong-tin-tai-khoan-ntv']">Thông tin tài khoản</a>
+        [routerLink]="['/trang-nguoi-tim-viec', 'trang-thong-tin-tai-khoan-ntv']">Thông tin tài khoản</a>
     </div>
   </div>
 
@@ -30,8 +30,6 @@
             '▸' }}</span></span>
       </button>
       <div class="mt-2 ms-3 collapse" [class.show]="trangThai_HoSo">
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/trang-nguoi-tim-viec','trang-thong-tin-ca-nhan-ntv']">Thông tin cá nhân</a>
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
           [routerLink]="['/trang-nguoi-tim-viec','trang-cv-ntv']">CV</a>
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"

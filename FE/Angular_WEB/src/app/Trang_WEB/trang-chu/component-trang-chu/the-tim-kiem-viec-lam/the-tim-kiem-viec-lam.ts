@@ -12,13 +12,16 @@ import { FormsModule } from '@angular/forms';
 export class TheTimKiemViecLam {
   constructor(private router: Router) { }
   loading: string = '';
-  chonCachTim(cachTim: string) {
-    this.loading = cachTim;
-    if(cachTim === 'xung-quanh') {
-      this.router.navigate(['/trang-tim-viec-xung-quanh']);
-    }
-    else if(cachTim === 'tu-khoa') {
-      this.router.navigate(['/trang-tim-viec-theo-tu-khoa']);
-    }
+  chonCachTim(cach: string) {
+    this.loading = cach;
+
+    setTimeout(() => {
+      if (cach === 'tu-khoa') {
+        this.router.navigate(['/trang-tim-viec-theo-tu-khoa']);
+      } else if (cach === 'xung-quanh') {
+        this.router.navigate(['/trang-tim-viec-xung-quanh']);
+      }
+      this.loading = '';
+    }, 1000);
   }
 }

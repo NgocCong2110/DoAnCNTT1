@@ -1,58 +1,86 @@
-<div class="d-flex justify-content-center mb-4">
-  <button class="btn btn-primary d-flex align-items-center gap-2" (click)="openNewPostPopup()">
-    <span class="fs-5">+</span> Đăng bài
-  </button>
-</div>
-
-<div class="posts py-5">
-  <div class="post py-3" *ngFor="let post of posts" (click)="openPopup(post)" style="cursor: pointer;">
-    <div class="post-header d-flex align-items-center mb-2 p-2">
-      <img [src]="post.avatar" alt="Avatar" class="avatar me-2">
-      <div>
-        <h6 class="m-0">{{ post.userName }}</h6>
-        <small class="text-muted">{{ post.timeAgo }}</small>
-      </div>
+<div *ngIf="bai_dang_duoc_chon" class="p-3 border rounded shadow-sm">
+  <div class="d-flex justify-content-between align-items-start">
+    <h3 class="mb-1">{{ bai_dang_duoc_chon.tieu_de }}</h3>
+    <div class="dropdown">
+      <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+        style="background: none; border: none; font-size: 1.2rem; font-weight: bold;">
+        .
+        .
+        .
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <a class="dropdown-item" (click)="luuBaiDang()">
+            <img src="anh_WEB/anh_icon_WEB/anh_icon_luu_bai.webp" style="width:16px;height:16px;margin-right:5px;">
+            Lưu bài đăng
+          </a>
+        </li>
+      </ul>
     </div>
 
-    <div class="post-content mb-2" style="height: 1rem; overflow: hidden;">
-      {{ post.content }}
+  </div>
+  <p class="mb-1"><b>Người đăng:</b> {{ bai_dang_duoc_chon.ten_nguoi_dang }}</p>
+  <p class="mb-1"><b>Ngày đăng:</b> {{ bai_dang_duoc_chon.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</p>
+  <hr>
+  <div class="noi-dung mb-3">
+    <p style="white-space: pre-wrap;">{{ bai_dang_duoc_chon.noi_dung }}</p>
+  </div>
+  <div *ngIf="bai_dang_duoc_chon.viec_lam" class="border p-3 rounded mb-3">
+    <h3>Thông tin công việc</h3>
+
+    <h5>Ngành nghề</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.nganh_nghe }}</p>
+
+    <h5>Vị trí</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.vi_tri }}</p>
+
+    <h5>Kinh nghiệm</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.kinh_nghiem }}</p>
+
+    <h5>Mức lương</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.muc_luong }}</p>
+
+    <h5>Địa điểm</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.dia_diem }}</p>
+
+    <h5>Loại hình</h5>
+    <p>{{ layLoaiHinh(bai_dang_duoc_chon.viec_lam.loai_hinh) }}</p>
+
+    <h5>Mô tả</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.mo_ta }}</p>
+
+    <h5>Yêu cầu</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.yeu_cau }}</p>
+  </div>
+  <div class="d-flex justify-content-center align-items-center p-3">
+    <button class="btn btn-primary mx-2" style="background-color: gray; border: 0;" *ngIf="auth.layThongTinNguoiDung()"
+      (click)="moPopUpBaoCao()">Báo cáo
+      bài đăng</button>
+    <button class="btn btn-primary mx-2" style="background-color: #007BFF; border: 0;"
+      *ngIf="auth.layThongTinNguoiDung()" (click)="ungTuyenCongViec()">Ứng tuyển công việc
+    </button>
+  </div>
+</div>
+
+<div *ngIf="pop_up_bao_cao" class="popup-backdrop">
+  <div class="popup-content p-3 border rounded shadow-sm">
+    <h5>Báo cáo bài đăng: {{ bai_dang_duoc_chon?.tieu_de }}</h5>
+    <textarea [(ngModel)]="noi_dung_bao_cao" rows="4" class="form-control mb-2"
+      placeholder="Nhập lý do báo cáo"></textarea>
+    <div class="text-end">
+      <button class="btn btn-secondary mx-1" (click)="huyBaoCao()">Hủy</button>
+      <button class="btn btn-primary mx-1" (click)="baoCaoBaiDang()">Gửi báo cáo</button>
     </div>
   </div>
 </div>
 
-<!-- Popup Modal cho bài hiện tại -->
-<div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade show" tabindex="-1" *ngIf="pop_up_ung_tuyen"
+  style="display: block; background: rgba(0,0,0,0.5);">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ selectedPost?.userName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+    <div class="modal-content p-3">
+      <h5 class="modal-title text-success">Ứng tuyển thành công!</h5>
       <div class="modal-body">
-        <p>{{ selectedPost?.content }}</p>
-        <div class="d-flex justify-content-start gap-3 mt-3">
-          <button (click)="like(selectedPost)">Like {{selectedPost?.likes}}</button>
-          <button (click)="comment(selectedPost)">Comment {{selectedPost?.comments}}</button>
-          <button (click)="share(selectedPost)">Share</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Popup Modal cho đăng bài mới -->
-<div class="modal fade" id="newPostModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Đăng bài mới</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <textarea [(ngModel)]="newPostContent" class="form-control" rows="4" placeholder="Nhập nội dung bài viết..."></textarea>
-        <div class="mt-3 d-flex justify-content-end">
-          <button class="btn btn-success" (click)="addPost()">Đăng</button>
-        </div>
+        <p>Bạn đã ứng tuyển vào công việc này.</p>
       </div>
     </div>
   </div>

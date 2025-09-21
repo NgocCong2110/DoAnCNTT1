@@ -1,0 +1,53 @@
+<div class="bg-light">
+  <app-header-web></app-header-web>
+
+  <div class="container py-3">
+    <div class="card shadow-sm p-4 rounded-3">
+      <h3 class="mb-3 text-center">Chọn loại thông báo</h3>
+
+      <select class="form-select" id="thongBaoSelect" (change)="chonThongBao($event)">
+        <option selected disabled>-- Vui lòng chọn --</option>
+        <option value="toan_Bo">Toàn bộ thông báo</option>
+        <option value="1">Thông báo từ server</option>
+        <option value="2">Việc làm mới</option>
+        <option value="3"
+          *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">
+          Thư mời phỏng vấn
+        </option>
+      </select>
+    </div>
+
+    <div *ngIf="loading" class="text-center mt-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Đang tải...</span>
+      </div>
+      <p class="mt-2 text-muted">Đang tải thông báo...</p>
+    </div>
+
+    <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="mt-4">
+      <div class="list-group">
+        <div class="list-group-item list-group-item-action" *ngFor="let tb of danh_sach_thong_bao">
+          <h5 class="mb-1">{{ tb.tieu_de }}</h5>
+          <p class="mb-1">{{ tb.noi_dung }}</p>
+          <small class="text-muted">{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && danh_sach_thong_bao.length === 0" class="text-center text-muted mt-4">
+      Không có thông báo nào.
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Lấy thông tin thông báo thất bại!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+    </div>
+  </div>
+</div>

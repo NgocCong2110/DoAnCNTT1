@@ -1,1 +1,26 @@
-<p>trang-tao-tai-khoan-quan-tri works!</p>
+<div class="tao-tkqt-container d-flex justify-content-center align-items-center min-vh-100">
+	<div class="card shadow tao-tkqt-card p-4">
+		<h1 class="fw-bold mb-4 text-center tao-tkqt-title">
+			<i class="bi bi-person-plus-fill me-2"></i> Tạo tài khoản quản trị
+		</h1>
+		<form>
+			<div class="mb-3">
+				<label for="email_quan_tri" class="form-label">Nhập email quản trị</label>
+				<div class="input-group">
+					<span class="input-group-text"><i class="bi bi-envelope"></i></span>
+					<input type="email" id="email_quan_tri" class="form-control" placeholder="Email quản trị" [(ngModel)]="email_quan_tri" name="email_quan_tri">
+				</div>
+			</div>
+			<div class="mb-4">
+				<label for="matkhau_quan_tri" class="form-label">Nhập mật khẩu quản trị</label>
+				<div class="input-group">
+					<span class="input-group-text"><i class="bi bi-lock"></i></span>
+					<input type="password" id="matkhau_quan_tri" class="form-control" placeholder="Mật khẩu quản trị" [(ngModel)]="matkhau_quan_tri" name="matkhau_quan_tri">
+				</div>
+			</div>
+			<button type="submit" class="w-100 tao-tkqt-btn" style="background-color: gray; color: white;">
+				<i class="bi bi-person-check me-2"></i> Tạo tài khoản
+			</button>
+		</form>
+	</div>
+</div>

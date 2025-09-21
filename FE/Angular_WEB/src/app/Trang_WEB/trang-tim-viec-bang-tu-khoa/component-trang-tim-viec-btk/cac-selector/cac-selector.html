@@ -1,0 +1,119 @@
+<div class="card p-3 shadow-sm bg-light rounded-3">
+  <div class="d-flex flex-wrap gap-2">
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ nganh_nghe_label || 'Ngành nghề' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of nganhNgheList">
+          <button class="dropdown-item" type="button" 
+                  (click)="nganh_nghe = gia_tri.value; nganh_nghe_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ dia_diem_label || 'Địa điểm' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of diaDiemList">
+          <button class="dropdown-item" type="button" 
+                  (click)="dia_diem = gia_tri.value; dia_diem_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ muc_luong_label || 'Mức lương' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of mucLuongList">
+          <button class="dropdown-item" type="button" 
+                  (click)="muc_luong = gia_tri.value; muc_luong_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ kinh_nghiem_label || 'Kinh nghiệm' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of kinhNghiemList">
+          <button class="dropdown-item" type="button" 
+                  (click)="kinh_nghiem = gia_tri.value; kinh_nghiem_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ hinh_thuc_label || 'Hình thức' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of hinhThucList">
+          <button class="dropdown-item" type="button" 
+                  (click)="hinh_thuc = gia_tri.value; hinh_thuc_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ chuc_vu_label || 'Chức vụ' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of chucVuList">
+          <button class="dropdown-item" type="button" 
+                  (click)="chuc_vu = gia_tri.value; chuc_vu_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ phuc_loi_label || 'Phúc lợi' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of phucLoiList">
+          <button class="dropdown-item" type="button" 
+                  (click)="phuc_loi = gia_tri.value; phuc_loi_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ quy_mo_cong_ty_label || 'Quy mô công ty' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngFor="let gia_tri of quyMoCongTyList">
+          <button class="dropdown-item" type="button" 
+                  (click)="quy_mo_cong_ty = gia_tri.value; quy_mo_cong_ty_label = gia_tri.label">
+            {{ gia_tri.label }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-secondary px-4 flex-shrink-0" (click)="locCongViec()">Lọc</button>
+
+  </div>
+</div>

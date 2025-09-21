@@ -1,1 +1,70 @@
-<p>trang-gui-thong-bao works!</p>
+<div class = "d-flex flex-column justify-content-center align-items-center h-100">
+    <h3 style="text-align: center; font-weight: bold;">Gửi thông báo tới trang web</h3>
+    <button class = "btn btn-primary" (click)="moPopUpThemThongBao()">Thêm thông báo</button>
+</div>
+
+<div class="modal fade" [class.show]="pop_up_them" [style.display]="pop_up_them ? 'block' : 'none'">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm thông báo</h5>
+        <button type="button" class="btn-close" (click)="dongPopUp()"></button>
+      </div>
+      <div class="modal-body">
+        <form #formThongBao="ngForm">
+
+          <div class="mb-3">
+            <label class="form-label">Tiêu đề</label>
+            <input type="text" class="form-control" [(ngModel)]="du_lieu_thong_bao_server.tieu_de" name="tieu_de" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nội dung</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="du_lieu_thong_bao_server.noi_dung" name="noi_dung" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Loại thông báo</label>
+            <select class="form-select" [(ngModel)]="du_lieu_thong_bao_server.loai_thong_bao" name="loai_thong_bao" required>
+              <option value="toan_Server" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">Toàn Server</option>
+              <option value="viec_Lam_Moi" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Việc làm mới</option>
+              <option value="thu_Moi_Phong_Van" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thư mời phỏng vấn</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Người nhận (ID)</label>
+            <input type="number" class="form-control" [(ngModel)]="du_lieu_thong_bao_server.ma_nguoi_nhan" name="ma_nguoi_nhan" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="dongPopUp()">Đóng</button>
+        <button class="btn btn-primary" (click)="guiThongBao()">Gửi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_them_thanh_cong">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Thêm thông báo thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_them_thanh_cong=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_them_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Thêm thông báo thất bại!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_them_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+

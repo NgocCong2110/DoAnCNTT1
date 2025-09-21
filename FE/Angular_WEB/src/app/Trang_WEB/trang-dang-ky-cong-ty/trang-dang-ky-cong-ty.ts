@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderWEB } from '../Component/header-web/header-web';
 
 @Component({
   selector: 'app-trang-dang-ky-cong-ty',
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, HeaderWEB],
   templateUrl: './trang-dang-ky-cong-ty.html',
   styleUrl: './trang-dang-ky-cong-ty.css'
 })
@@ -15,7 +16,7 @@ export class TrangDangKyCongTy {
 
   form = {
     ten_CongTy: '',
-    ten_Dn: '',
+    ten_Dang_Ky: '',
     mat_Khau: '',
     xac_Nhan_MatKhau: '',
     nguoi_DaiDien: '',
@@ -30,7 +31,7 @@ export class TrangDangKyCongTy {
   getThongTinDangKy() {
     return {
       ten_Cong_Ty: this.form.ten_CongTy,
-      ten_Dn: this.form.ten_Dn,
+      ten_Dn: this.form.ten_Dang_Ky,
       mat_Khau: this.form.mat_Khau,
       vai_Tro: 'cong_Ty'
     };
@@ -43,6 +44,7 @@ export class TrangDangKyCongTy {
   }
 
   thong_bao: string = '';
+  hien_thong_bao = false;
 
   async kiemTraEmail() {
     const response = await fetch("http://localhost:65001/api/API_WEB/xacThucGmail", {
@@ -65,12 +67,18 @@ export class TrangDangKyCongTy {
       });
       const data2 = await themThongTin_CongTy.json();
       if (data2.success) {
-        this.thong_bao = 'Thêm thông tin công ty thành công!';
+        this.thong_bao = 'Đăng ký thông tin công ty thành công!';
+        this.hien_thong_bao = true;
         setTimeout(() => {
+          this.hien_thong_bao = false;
           this.router.navigate(['/trang-chu']);
         }, 2000);
       } else {
-        this.thong_bao = 'Thêm thông tin công ty thất bại!';
+        this.thong_bao = 'Đăng ký thông tin công ty thất bại!';
+        this.hien_thong_bao = true;
+        setTimeout(() => {
+          this.hien_thong_bao = false;
+        })
       }
     }
   }

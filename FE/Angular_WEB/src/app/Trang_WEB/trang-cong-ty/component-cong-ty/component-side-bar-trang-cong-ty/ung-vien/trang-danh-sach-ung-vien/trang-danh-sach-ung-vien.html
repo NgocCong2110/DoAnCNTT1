@@ -1,1 +1,59 @@
-<p>trang-danh-sach-ung-vien works!</p>
+<div class="container mt-4">
+  <h2 class="mb-4">Danh sách ứng viên</h2>
+
+  <div *ngIf="loading">Đang tải dữ liệu...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && !error">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Vị trí ứng tuyển</th>
+          <th>Tiêu đề tuyển dụng</th>
+          <th>Mức lương</th>
+          <th>Địa điểm</th>
+
+          <th>Ngày ứng tuyển</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>Điện thoại</th>
+          <th>Trình độ học vấn</th>
+          <th>Ngày sinh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let uv of danh_sach_ung_vien; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ uv.viec_Lam?.vi_tri }}</td>
+          <td>{{ uv.viec_Lam?.tieu_de }}</td>
+          <td>{{ uv.viec_Lam?.muc_luong }}</td>
+          <td>{{ uv.viec_Lam?.dia_diem }}</td>
+          
+          <td>{{ uv.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ uv.nguoi_tim_viec?.ho_ten }}</td>
+          <td>{{ uv.nguoi_tim_viec?.email }}</td>
+          <td>{{ uv.nguoi_tim_viec?.dien_thoai || 'Chưa có' }}</td>
+          <td>{{ uv.nguoi_tim_viec?.trinh_do_hoc_van }}</td>
+          <td>{{ uv.nguoi_tim_viec?.ngay_sinh | date:'dd/MM/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="tongTrang > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="trangHienTai === 1">
+          <a class="page-link" (click)="chuyenTrang(trangHienTai - 1)">Trước</a>
+        </li>
+        <li class="page-item" 
+            *ngFor="let t of [].constructor(tongTrang); let i = index"
+            [class.active]="trangHienTai === i + 1">
+          <a class="page-link" (click)="chuyenTrang(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="trangHienTai === tongTrang">
+          <a class="page-link" (click)="chuyenTrang(trangHienTai + 1)">Sau</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

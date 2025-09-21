@@ -1,1 +1,25 @@
-<p>trang-tim-viec-xung-quanh works!</p>
+<div class="container-fluid" style="background-color: #f0f0f0; min-height: 100vh; padding: 1rem;">
+  <div class="row g-3">
+    <div class="col-12 col-md-3">
+      <div class="p-3 bg-light rounded shadow-sm mb-3">
+        <form (ngSubmit)="timKiem()" class="d-flex flex-column gap-2">
+          <label>Ngành nghề:</label>
+          <select [(ngModel)]="nganh_nghe" name="nganh" class="form-select w-100">
+            <option value="">-- Tất cả --</option>
+            <option value="cong_nghe_thong_tin">Công nghệ thông tin</option>
+            <option value="ke_toan">Kế toán</option>
+          </select>
+
+          <label>Bán kính (km):</label>
+          <input [(ngModel)]="ban_kinh" name="radius" type="number" class="form-control w-100" />
+
+          <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+      <div id="map" class="rounded shadow-sm" style="height: 500px;"></div>
+    </div>
+  </div>
+</div>

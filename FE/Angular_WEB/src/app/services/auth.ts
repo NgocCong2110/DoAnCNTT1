@@ -13,12 +13,11 @@ export class Auth {
     return this.cookieService.check(this.USER_KEY);
   }
 
-  dangNhap(user: any): void {
+  dangNhap(thong_tin: any): void {
     try {
       this.dangXuat();
-
-      const userJson = JSON.stringify(user);
-      this.cookieService.set(this.USER_KEY, userJson, 7, '/');
+      const nguoi_dung_json = JSON.stringify(thong_tin);
+      this.cookieService.set(this.USER_KEY, nguoi_dung_json, 7, '/');
     } catch (e) {
       console.error('Không thể lưu thông tin người dùng:', e);
     }

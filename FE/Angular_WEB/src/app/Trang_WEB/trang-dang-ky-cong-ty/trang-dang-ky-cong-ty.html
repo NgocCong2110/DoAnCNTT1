@@ -1,3 +1,4 @@
+<app-header-web></app-header-web>
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
   <div class="card shadow-lg border-0 rounded-4" style="max-width: 700px; width: 100%;">
     <div class="card-body p-4 p-md-5 bg-white rounded-4">
@@ -12,9 +13,9 @@
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label text-muted">Tên đăng nhập</label>
-            <input type="text" class="form-control form-control-sm" id="ten_Dn" name="ten_Dn"
-                   [(ngModel)]="form.ten_Dn" placeholder="Tên đăng nhập" required>
+            <label class="form-label text-muted">Tên đăng ký</label>
+            <input type="text" class="form-control form-control-sm" id="ten_Dang_Ky" name="ten_Dang_Ky"
+                   [(ngModel)]="form.ten_Dang_Ky" placeholder="Tên đăng nhập" required>
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label text-muted">Mật khẩu</label>
@@ -82,7 +83,7 @@
           </select>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4" *ngIf="hien_thong_bao" class="popup">
           <label class="form-label text-muted">Thông báo</label>
           <div class="text-danger small mt-1" id="thong_bao" style="color: red; margin-bottom: 1rem;">
             {{ thong_bao }}

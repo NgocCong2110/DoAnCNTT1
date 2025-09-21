@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BangXepHang } from './bang-xep-hang';
+import { DangBai } from './dang-bai';
 
-describe('BangXepHang', () => {
-  let component: BangXepHang;
-  let fixture: ComponentFixture<BangXepHang>;
+describe('DangBai', () => {
+  let component: DangBai;
+  let fixture: ComponentFixture<DangBai>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BangXepHang]
+      imports: [DangBai]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BangXepHang);
+    fixture = TestBed.createComponent(DangBai);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,28 @@
+.btn:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  background-color: #545b62 !important;
+  border-color: #4e555b !important;
+  transform: translateY(0);
+}
+
+.form-control:focus {
+  border-color: #6c757d !important;
+  box-shadow: 0 0 0 0.1rem rgba(108, 117, 125, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: #adb5bd;
+  font-size: 13px;
+}
+
+.rounded-circle {
+  object-fit: cover;
+  border: 1px solid #e9ecef;
+}

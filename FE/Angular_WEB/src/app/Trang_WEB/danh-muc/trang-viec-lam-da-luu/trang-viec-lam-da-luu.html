@@ -1,0 +1,16 @@
+<div class="bg-light">
+  <app-header-web></app-header-web>
+
+  <div class="container py-3">
+    <div *ngIf="loading">Đang tải dữ liệu...</div>
+    <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+    <div *ngIf="!loading && !error">
+      <div *ngFor="let bai of danh_sach_bai_dang_da_luu" class="card my-4 p-2 border rounded">
+        <h3>{{ bai?.tieu_de }}</h3>
+        <p><b>Người đăng:</b> {{ bai?.ten_nguoi_dang }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>

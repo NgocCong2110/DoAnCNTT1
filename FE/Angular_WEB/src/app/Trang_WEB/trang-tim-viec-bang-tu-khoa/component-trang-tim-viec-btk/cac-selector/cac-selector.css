@@ -1,0 +1,18 @@
+.card {
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa; 
+}
+
+.form-select {
+  border-radius: 8px;
+}
+
+button {
+  border-radius: 8px;
+  background-color: #6c757d;
+  color: white;
+}
+
+button:hover {
+  background-color: #5a6268;
+}
