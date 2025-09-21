@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Auth } from '../../../../../../services/auth';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 interface API_RESPONSE
 {
@@ -25,7 +25,7 @@ export class TrangLichSuUngTuyen implements OnInit{
 
   error = true;
 
-  constructor(public auth: Auth, public httpclient: HttpClient) {
+  constructor(public auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) {
     this.thongTin = this.auth.layThongTinNguoiDung();
   }
 
@@ -52,8 +52,9 @@ export class TrangLichSuUngTuyen implements OnInit{
             this.pop_up_lay_thong_tin_that_bai = true;
             setTimeout(() => {
               this.pop_up_lay_thong_tin_that_bai = false;
-            },1500)
+            },1500);
           }
+          this.cd.detectChanges();
         }
       })
   }

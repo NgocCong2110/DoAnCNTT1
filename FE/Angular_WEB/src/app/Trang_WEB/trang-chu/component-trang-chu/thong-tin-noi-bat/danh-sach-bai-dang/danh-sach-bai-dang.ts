@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BaiDang } from '../../../../../services/bai-dang-service/bai-dang';
 import { BaiDangComponent } from '../bai-dang.model';
@@ -25,11 +25,15 @@ export class DanhSachBaiDang implements OnInit, OnDestroy {
   private sub1?: Subscription;
   private sub2?: Subscription;
 
-  constructor(private baiDangService: BaiDang) {}
+  constructor(
+    private baiDangService: BaiDang,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.sub1 = this.baiDangService.bai_dang_duoc_chon$.subscribe(baiDang => {
       this.baiDangDangChon = baiDang;
+      this.cd.detectChanges(); 
     });
 
     this.sub2 = this.baiDangService.danhSach$.subscribe(danhSach => {
@@ -37,11 +41,13 @@ export class DanhSachBaiDang implements OnInit, OnDestroy {
       this.tongTrang = Math.ceil(this.danhSachBaiDangFull.length / this.soLuongMoiTrang);
       this.loadTrang(this.trangHienTai);
       this.loading = false;
+      this.cd.detectChanges();
     });
 
     this.baiDangService.layDanhSachBaiDang().catch(err => {
       this.error = err.message;
       this.loading = false;
+      this.cd.detectChanges();
     });
   }
 
@@ -50,6 +56,7 @@ export class DanhSachBaiDang implements OnInit, OnDestroy {
     const start = (trang - 1) * this.soLuongMoiTrang;
     const end = start + this.soLuongMoiTrang;
     this.danhSachBaiDang = this.danhSachBaiDangFull.slice(start, end);
+    this.cd.detectChanges(); 
   }
 
   chuyenTrang(trang: number) {
