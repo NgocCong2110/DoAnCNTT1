@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../../../services/auth';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-trang-thong-tin-tai-khoan-ntv',
@@ -18,7 +20,7 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
   giaTriMoi: any = '';
   giaTriCu: any = '';
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const duLieu = this.auth.layThongTinNguoiDung();
@@ -39,9 +41,10 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
     this.giaTriCu = '';
   }
 
-  async luuForm() {
+  luuForm() {
     if (!this.thongTin) return;
 
+    // cập nhật tạm thời trên view
     this.thongTin[this.duLieuSua] = this.giaTriMoi;
 
     const payload = {
@@ -49,29 +52,27 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
       [this.duLieuSua]: this.giaTriMoi
     };
 
-    try {
-      const response = await fetch("http://localhost:65001/api/API_WEB/capNhatThongTinNguoiTimViec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert(`Cập nhật ${this.duLieuSua} thành công!`);
-      } else {
+    this.httpclient.post<any>(
+      "http://localhost:65001/api/API_WEB/capNhatThongTinNguoiTimViec",
+      payload
+    ).subscribe({
+      next: (data) => {
+        if (data.success) {
+          alert(`Cập nhật ${this.duLieuSua} thành công!`);
+        } else {
+          this.thongTin[this.duLieuSua] = this.giaTriCu;
+          alert(`Cập nhật ${this.duLieuSua} thất bại. Vui lòng thử lại.`);
+        }
+        this.cd.detectChanges(); 
+        this.dongForm();
+      },
+      error: (err) => {
+        console.error("Lỗi kết nối:", err);
         this.thongTin[this.duLieuSua] = this.giaTriCu;
-        alert(`Cập nhật ${this.duLieuSua} thất bại. Vui lòng thử lại.`);
+        alert("Không kết nối được server!");
+        this.cd.detectChanges(); // cập nhật view
+        this.dongForm();
       }
-    } catch (err) {
-      console.error("Lỗi kết nối:", err);
-      this.thongTin[this.duLieuSua] = this.giaTriCu;
-      alert("Không kết nối được server!");
-    }
-
-    this.dongForm();
+    });
   }
 }

@@ -31,7 +31,7 @@ namespace DotNet_WEB.Class
         cao_Dang = 2,
         [Display(Name = "Đại Học")]
         dai_Hoc = 3,
-        [Display(Name = "Sau Đại Học")]
+        [Display(Name = "Tốt nghiệp")]
         tot_Nghiep = 4,
         [Display(Name = "Khác")]
         khac = 5
@@ -136,5 +136,27 @@ namespace DotNet_WEB.Class
         da_Doc = 1,
         [Display(Name = "Chưa đọc")]
         chua_Doc = 2
+    }
+
+    public enum TrangThaiDonHang
+    {
+        None = 0,
+        [Display(Name = "Chờ thanh toán")]
+        cho_Thanh_Toan = 1,
+        [Display(Name = "Đã thanh toán")]
+        da_Thanh_Toan = 2,
+        [Display(Name = "Thanh toán thất bại")]
+        that_Bai = 3,
+        [Display(Name = "Đã hủy")]
+        da_Huy = 4
+    }   
+
+    public enum TrangThaiThanhToan
+    {
+        None = 0,
+        [Display(Name = "Thanh toán thành công")]
+        thanh_Cong = 1,
+        [Display(Name = "Thanh toán thất bại")]
+        that_Bai = 2
     }
 }

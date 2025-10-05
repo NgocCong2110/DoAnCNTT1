@@ -1,1 +1,14 @@
-<p>trang-danh-sach-goi-dich-vu-cong-ty works!</p>
+<div class="container mt-4">
+  <h3 class="mb-3">Danh sách dịch vụ</h3>
+
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngFor="let dv of danh_sach_dich_vu">
+      <div class="card shadow-sm p-3">
+        <h5>{{ dv?.ten_dich_vu }}</h5>
+        <p>{{ dv?.mo_ta }}</p>
+        <strong>{{ dv?.gia | number }} VND</strong>
+        <button class="btn btn-primary mt-2" (click)="chonDichVu(dv)">Chọn dịch vụ</button>
+      </div>
+    </div>
+  </div>
+</div>

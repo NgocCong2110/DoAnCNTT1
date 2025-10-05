@@ -35,7 +35,12 @@ export class TrangThongBao implements OnInit{
   danhSachThongBao(){
     this.danh_sach_thong_bao = [];
     this.loading = true;
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao',{})
+    const thong_tin = {
+      kieu_nguoi_dung: this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung ?? 'nguoi_tim_viec',
+      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec ?? null
+    }
+    
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao', thong_tin )
     .subscribe({
       next: (data) =>{
         this.loading = false;

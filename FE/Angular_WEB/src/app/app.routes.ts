@@ -36,7 +36,10 @@ import { TrangThongBaoCongTy } from './Trang_WEB/trang-cong-ty/component-cong-ty
 import { TrangDanhSachGoiDichVuCongTy } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/dich-vu/trang-danh-sach-goi-dich-vu-cong-ty/trang-danh-sach-goi-dich-vu-cong-ty';
 import { TrangViecLamDaLuu } from './Trang_WEB/danh-muc/trang-viec-lam-da-luu/trang-viec-lam-da-luu';
 import { TrangThongBao } from './Trang_WEB/danh-muc/trang-thong-bao/trang-thong-bao';
-
+import { TrangChiTietViecLam } from './Trang_WEB/trang-tim-viec-bang-tu-khoa/component-trang-tim-viec-btk/trang-chi-tiet-viec-lam/trang-chi-tiet-viec-lam';
+import { TrangKetQuaThanhToan } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/dich-vu/trang-danh-sach-goi-dich-vu-cong-ty/trang-ket-qua-thanh-toan/trang-ket-qua-thanh-toan';
+import { TrangQuenMatKhau } from './Trang_WEB/trang-dang-nhap/trang-quen-mat-khau/trang-quen-mat-khau';
+import { TrangDoiMatKhau } from './Trang_WEB/trang-doi-mat-khau/trang-doi-mat-khau';
 
 // ==== thang nao import vao trang cha thi khoi can import vao trang nay ====
 export const routes: Routes = [
@@ -50,6 +53,10 @@ export const routes: Routes = [
     { path: 'trang-tim-viec-theo-tu-khoa', component: TrangTimViecBangTuKhoa },
     { path: 'trang-viec-lam-da-luu', component: TrangViecLamDaLuu},
     { path: 'trang-thong-bao', component: TrangThongBao},
+    { path: 'trang-ket-qua-thanh-toan', component: TrangKetQuaThanhToan},
+    { path: 'trang-chi-tiet-viec-lam/:ma_bai_dang', component: TrangChiTietViecLam},
+    { path: 'trang-quen-mat-khau', component: TrangQuenMatKhau},
+    { path: 'trang-doi-mat-khau/:email', component: TrangDoiMatKhau},
     {
 
         // component trang nguoi tim viec

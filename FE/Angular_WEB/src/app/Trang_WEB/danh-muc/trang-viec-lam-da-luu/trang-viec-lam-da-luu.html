@@ -13,7 +13,7 @@
         <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
       </div>
 
-      <div *ngIf="!loading && danh_sach_bai_dang_da_luu.length > 0" class="mt-4">
+      <div *ngIf="danh_sach_bai_dang_da_luu.length > 0" class="mt-4">
         <div class="list-group">
           <div class="list-group-item list-group-item-action"
                *ngFor="let bai of danh_sach_bai_dang_da_luu">
@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div *ngIf="!loading && danh_sach_bai_dang_da_luu.length === 0"
+      <div *ngIf="danh_sach_bai_dang_da_luu.length === 0"
            class="text-center text-muted mt-4">
         Không có bài đăng nào được lưu.
       </div>

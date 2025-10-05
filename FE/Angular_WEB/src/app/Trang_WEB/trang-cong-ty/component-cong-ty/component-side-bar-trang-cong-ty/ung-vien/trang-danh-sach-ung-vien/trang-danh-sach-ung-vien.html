@@ -18,8 +18,8 @@
           <th>Họ tên</th>
           <th>Email</th>
           <th>Điện thoại</th>
-          <th>Trình độ học vấn</th>
-          <th>Ngày sinh</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -29,13 +29,21 @@
           <td>{{ uv.viec_Lam?.tieu_de }}</td>
           <td>{{ uv.viec_Lam?.muc_luong }}</td>
           <td>{{ uv.viec_Lam?.dia_diem }}</td>
-          
+
           <td>{{ uv.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ uv.nguoi_tim_viec?.ho_ten }}</td>
           <td>{{ uv.nguoi_tim_viec?.email }}</td>
           <td>{{ uv.nguoi_tim_viec?.dien_thoai || 'Chưa có' }}</td>
-          <td>{{ uv.nguoi_tim_viec?.trinh_do_hoc_van }}</td>
-          <td>{{ uv.nguoi_tim_viec?.ngay_sinh | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" style="border: none;" (click)="moFormUV(uv)">
+              Xem chi tiết
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm" style="background-color: red; border: none;" (click)="moXacNhanXoa(uv, i)">
+              Xóa ứng viên
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -45,9 +53,8 @@
         <li class="page-item" [class.disabled]="trangHienTai === 1">
           <a class="page-link" (click)="chuyenTrang(trangHienTai - 1)">Trước</a>
         </li>
-        <li class="page-item" 
-            *ngFor="let t of [].constructor(tongTrang); let i = index"
-            [class.active]="trangHienTai === i + 1">
+        <li class="page-item" *ngFor="let t of [].constructor(tongTrang); let i = index"
+          [class.active]="trangHienTai === i + 1">
           <a class="page-link" (click)="chuyenTrang(i + 1)">{{ i + 1 }}</a>
         </li>
         <li class="page-item" [class.disabled]="trangHienTai === tongTrang">
@@ -59,16 +66,130 @@
 </div>
 
 
-<div class="toast-container position-fixed top-0 end-0 p-3"
-     *ngIf="pop_up_lay_thong_tin_that_bai">
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
   <div class="toast show text-bg-danger border-0">
     <div class="d-flex">
       <div class="toast-body">
         ❌ Lấy thông tin thất bại!
       </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar" [class.open]="uvDangChon" *ngIf="uvDangChon">
+  <div class="sidebar-header">
+    <h5>Thông tin ứng viên</h5>
+    <button class="btn-close" (click)="dongForm()"></button>
+  </div>
+
+  <div class="sidebar-body" *ngIf="!themThongTinPhongVan">
+    <p><strong>Họ tên:</strong> {{ uvDangChon.nguoi_tim_viec.ho_ten }}</p>
+    <p><strong>Email:</strong> {{ uvDangChon.nguoi_tim_viec.email }}</p>
+    <p><strong>Điện thoại:</strong> {{ uvDangChon.nguoi_tim_viec.dien_thoai || 'Chưa có' }}</p>
+    <p><strong>Ngày sinh:</strong> {{ uvDangChon.nguoi_tim_viec.ngay_sinh | date:'dd/MM/yyyy' }}</p>
+    <p><strong>CV:</strong></p>
+    <iframe [src]="uvDangChon.safeCvUrl" width="100%" height="300px"></iframe>
+  </div>
+
+  <div class="sidebar-body" *ngIf="themThongTinPhongVan">
+    <h6>Mời phỏng vấn</h6>
+    <div class="mb-3">
+      <label>Thời gian:</label>
+      <input type="datetime-local" class="form-control" [(ngModel)]="thoiGianPhongVan">
+    </div>
+    <div class="mb-3">
+      <label>Địa điểm:</label>
+      <input type="text" class="form-control" [(ngModel)]="diaDiemPhongVan">
+    </div>
+    <div class="mb-3">
+      <label>Nội dung mời phỏng vấn:</label>
+      <textarea class="form-control" rows="4" [(ngModel)]="noiDungPhongVan"></textarea>
+    </div>
+  </div>
+
+  <div class="sidebar-footer d-flex justify-content-between mt-3">
+    <button *ngIf="!themThongTinPhongVan" class="btn btn-success" (click)="b1ChapNhan()">Chấp nhận</button>
+    <button *ngIf="!themThongTinPhongVan" class="btn btn-danger" (click)="tuChoiUV()">Từ chối</button>
+
+    <button *ngIf="themThongTinPhongVan" class="btn btn-primary" (click)="guiMoiPhongVan()">Gửi lời mời</button>
+    <button *ngIf="themThongTinPhongVan" class="btn btn-secondary" (click)="huyMoiPhongVan()">Hủy</button>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_xoa_thanh_cong">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Xóa ứng viên thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_xoa_thanh_cong=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_xoa_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Xóa ứng viên thất bại!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_xoa_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_moi_phong_van_thanh_cong">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Mời phỏng vấn ứng viên thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_moi_phong_van_thanh_cong=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_moi_phong_van_that_bai">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Mời phỏng vấn ứng viên thất bại!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_moi_phong_van_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_tu_choi_that_bai">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Thao tác không thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_tu_choi_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" [class.show]="showXacNhanXoa">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận</h5>
+        <button type="button" class="btn-close" (click)="dongXacNhanXoa()"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Bạn có chắc muốn xóa ứng viên 
+          <strong>{{ uvMuonXoa?.nguoi_tim_viec?.ho_ten }}</strong> không?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="dongXacNhanXoa()">Hủy</button>
+        <button class="btn btn-danger" (click)="xoaUngVien()">Đồng ý</button>
+      </div>
     </div>
   </div>
 </div>

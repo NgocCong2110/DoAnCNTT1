@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
+using System.Text.Json.Nodes;
+using Mysqlx.Crud;
+using Newtonsoft.Json.Linq;
 
 namespace DotNet_WEB.Module
 {
@@ -125,8 +128,128 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
             }
             return danh_sach;
         }
+
+        public static bool guiThuMoiPhongVan(thong_tin_phong_van ttpv)
+        {
+            try
+            {
+                using var coon = new MySqlConnection(chuoi_KetNoi);
+                coon.Open();
+                using var trans = coon.BeginTransaction();
+                try
+                {
+                    int ma_thong_bao = 0;
+                    string them_thong_bao = "insert into thong_bao(tieu_de, noi_dung, loai_thong_bao, ma_cong_ty, ma_nguoi_tim_viec, ngay_tao) values(@td, @nd, @ltb, @ma_ct, @ma_ntv, @ngay_tao)";
+                    using (var cmd = new MySqlCommand(them_thong_bao, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@td", "Thư mời phỏng vấn");
+                        cmd.Parameters.AddWithValue("@nd", ttpv.noi_dung);
+                        cmd.Parameters.AddWithValue("@ltb", "thu_Moi_Phong_Van");
+                        cmd.Parameters.AddWithValue("@ma_ct", ttpv.ma_cong_ty);
+                        cmd.Parameters.AddWithValue("@ma_ntv", ttpv.ma_nguoi_tim_viec);
+                        cmd.Parameters.AddWithValue("@ngay_tao", DateTime.Now);
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "SELECT LAST_INSERT_ID();";
+                        cmd.Parameters.Clear();
+                        ma_thong_bao = Convert.ToInt32(cmd.ExecuteScalar()); // lay id ma thong bao moi insert
+                    }
+
+
+                    string chi_tiet_tm = "insert into chi_tiet_thu_moi(ma_thong_bao, ma_cong_ty, thoi_gian, dia_diem, noi_dung, ma_nguoi_tim_viec) values(@ma_tb, @ma_ct, @thoi_gian, @dia_diem, @nd, @ma_ntv)";
+                    using (var cmd = new MySqlCommand(chi_tiet_tm, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@ma_tb", ma_thong_bao);
+                        cmd.Parameters.AddWithValue("@ma_ct", ttpv.ma_cong_ty);
+                        cmd.Parameters.AddWithValue("@thoi_gian", ttpv.thoi_gian);
+                        cmd.Parameters.AddWithValue("@dia_diem", ttpv.dia_diem);
+                        cmd.Parameters.AddWithValue("@nd", ttpv.noi_dung);
+                        cmd.Parameters.AddWithValue("@ma_ntv", ttpv.ma_nguoi_tim_viec);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_Thai where ma_nguoi_tim_viec = @ma_ntv";
+                    using (var cmd = new MySqlCommand(cap_nhat_trang_thai, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@trang_Thai", ttpv.trang_thai);
+                        cmd.Parameters.AddWithValue("@ma_ntv", ttpv.ma_nguoi_tim_viec);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    trans.Commit();
+                    return true;
+                }
+                catch
+                {
+                    trans.Rollback();
+                    throw;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool tuChoiUngVien(int ma_Nguoi_Tim_Viec)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = 'tu_Choi' where ma_nguoi_tim_viec = @ma_ntv";
+            using var cmd = new MySqlCommand(cap_nhat_trang_thai, coon);
+            cmd.Parameters.AddWithValue("@ma_ntv", ma_Nguoi_Tim_Viec);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
+        public static bool xoaUngVien(ung_tuyen ung_Tuyen)
+        {
+            try
+            {
+                using var coon = new MySqlConnection(chuoi_KetNoi);
+                coon.Open();
+                string sql = "DELETE FROM ung_tuyen WHERE ma_cong_ty = @ma_Cong_Ty AND ma_nguoi_tim_viec = @ma_Nguoi_Tim_Viec";
+                using var cmd = new MySqlCommand(sql, coon);
+                cmd.Parameters.AddWithValue("@ma_Cong_Ty", ung_Tuyen.ma_cong_ty);
+                cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ung_Tuyen.ma_nguoi_tim_viec);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi xóa ứng viên: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static List<dich_vu> layDanhSachDichVu()
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = @"Select * from dich_vu";
+            using var cmd = new MySqlCommand(sql, coon);
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<dich_vu>();
+            while (reader.Read())
+            {
+                var dv = new dich_vu
+                {
+                    ma_dich_vu = reader.GetInt32("ma_dich_vu"),
+                    ten_dich_vu = reader.GetString("ten_dich_vu"),
+                    mo_ta = reader.GetString("mo_ta"),
+                    gia = reader.GetDecimal("gia"),
+                };
+
+                danh_sach.Add(dv);
+            }
+            return danh_sach;
+        }
     }
 }
+
+
+
+
 public class thong_ke_ung_vien
 {
     public int so_luong_ung_vien { get; set; }

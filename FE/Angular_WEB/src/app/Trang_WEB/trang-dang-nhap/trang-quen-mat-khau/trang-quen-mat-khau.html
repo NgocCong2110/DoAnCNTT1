@@ -1,0 +1,28 @@
+<div class="wrapper">
+    <div class="container" *ngIf="buoc === 1">
+        <h2>Nhập email của bạn</h2>
+        <form [formGroup]="emailForm" (ngSubmit)="guiOtp()" novalidate>
+            <input type="email" formControlName="email" placeholder="Nhập email" />
+            <button type="submit" [disabled]="emailForm.invalid">Gửi OTP</button>
+        </form>
+    </div>
+
+    <div class="container" *ngIf="buoc === 2">
+        <h2>Nhập mã OTP</h2>
+        <h4>OTP đã được gửi tới gmail của bạn</h4>
+        <form [formGroup]="otpForm" (ngSubmit)="xacThucOtp()" novalidate>
+            <div class="otp-group">
+                <input #otpInput maxlength="1" type="text" formControlName="d1" (input)="chuyenO($event,0)" />
+                <input #otpInput maxlength="1" type="text" formControlName="d2" (input)="chuyenO($event,1)" />
+                <input #otpInput maxlength="1" type="text" formControlName="d3" (input)="chuyenO($event,2)" />
+                <input #otpInput maxlength="1" type="text" formControlName="d4" (input)="chuyenO($event,3)" />
+                <input #otpInput maxlength="1" type="text" formControlName="d5" (input)="chuyenO($event,4)" />
+                <input #otpInput maxlength="1" type="text" formControlName="d6" (input)="chuyenO($event,5)" />
+            </div>
+
+            <button type="submit" [disabled]="otpForm.invalid || isVerifying">
+                {{ isVerifying ? "Đang xác thực..." : "Xác thực" }}
+            </button>
+        </form>
+    </div>
+</div>

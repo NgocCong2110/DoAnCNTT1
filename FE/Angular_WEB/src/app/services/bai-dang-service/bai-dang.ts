@@ -15,11 +15,11 @@ export class BaiDang {
 
   private daLoad = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async layDanhSachBaiDang() {
     if (this.daLoad && this.danhSachSubject.value.length > 0) {
-      return { danh_sach_bai_dang: this.danhSachSubject.value };
+      return { danh_sach: this.danhSachSubject.value };
     }
 
     try {
@@ -27,17 +27,42 @@ export class BaiDang {
         this.http.post(this.apiUrl, {}, { headers: { 'Content-Type': 'application/json' } })
       );
 
-      const ds = data?.danh_sach_bai_dang ?? [];
+      const ds = data?.danh_sach ?? [];
 
       this.danhSachSubject.next(ds);
       this.daLoad = true;
 
-      return { danh_sach_bai_dang: ds };
+      return { danh_sach: ds };
     } catch (err: any) {
       console.error('Lỗi API:', err);
       throw err;
     }
   }
+
+  async xoaBaiDang(ma_bai_dang: number) {
+    try {
+      const result: any = await firstValueFrom(
+        this.http.post(
+          'http://localhost:65001/api/API_WEB/xoaBaiDang',
+          { ma_bai_dang },
+          { headers: { 'Content-Type': 'application/json' } }
+        )
+      );
+
+      if (result?.success) {
+        this.danhSachSubject.next([]);
+        this.daLoad = false;
+
+        await this.layDanhSachBaiDang();
+      }
+
+      return result;
+    } catch (err) {
+      console.error('Lỗi xoá bài đăng:', err);
+      throw err;
+    }
+  }
+
 
   chonBaiDang(baiDang: BaiDangComponent | null) {
     this.bai_dang_duoc_chon.next(baiDang);

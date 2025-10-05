@@ -1,23 +1,19 @@
 <div class="card-body py-2 px-3">
   <div class="d-flex flex-column gap-2">
-    <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" 
-      class="form-control border-0 border-bottom shadow-none py-1"
-      placeholder="Tiêu đề tin tuyển dụng" style="font-size: 14px;">
+    <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text"
+      class="form-control border-0 border-bottom shadow-none py-1" placeholder="Tiêu đề tin tuyển dụng"
+      style="font-size: 14px;">
 
     <div class="d-flex align-items-start gap-2">
-      <img src="anh_WEB/anh_Logo.png" alt="avatar" class="rounded-circle" 
-        style="width:32px; height:32px;">
-      <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" 
-        class="form-control border-0 shadow-none py-1" rows="1"
+      <img src="anh_WEB/anh_Logo.png" alt="avatar" class="rounded-circle" style="width:32px; height:32px;">
+      <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" class="form-control border-0 shadow-none py-1" rows="1"
         placeholder="Mô tả ngắn..." style="font-size: 14px; resize: none;"></textarea>
     </div>
   </div>
 
-  <div class="d-flex justify-content-end mt-2" 
-       *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty' 
+  <div class="d-flex justify-content-end mt-2" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty' 
            || auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">
-    <button class="btn d-flex align-items-center gap-1 px-3 py-1" 
-            (click)="moPopup()"
+    <button class="btn d-flex align-items-center gap-1 px-3 py-1" (click)="moPopup()"
       style="background-color: #6c757d; border-color: #6c757d; color: white; font-size: 13px; border-radius: 6px;">
       <span style="font-size: 14px;">+</span> Đăng bài
     </button>
@@ -36,56 +32,88 @@
         <form>
           <div class="mb-3">
             <label>Tiêu đề</label>
-            <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" class="form-control">
+            <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" class="form-control"
+              placeholder="Ví dụ: Tuyển lập trình viên Java">
           </div>
 
+          <!-- Mô tả công việc -->
           <div class="mb-3">
             <label>Mô tả công việc</label>
-            <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" rows="3" class="form-control"></textarea>
+            <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" rows="3" class="form-control"
+              placeholder="Mô tả ngắn gọn trách nhiệm và công việc..."></textarea>
           </div>
 
+          <!-- Yêu cầu ứng viên -->
           <div class="mb-3">
             <label>Yêu cầu ứng viên</label>
-            <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"></textarea>
+            <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"
+              placeholder="Trình độ, kỹ năng, kinh nghiệm..."></textarea>
           </div>
 
+          <!-- Địa điểm -->
           <div class="mb-3">
             <label>Địa điểm làm việc</label>
-            <input [(ngModel)]="dia_diem_moi" name="dia_diem" type="text" class="form-control">
+            <input [(ngModel)]="dia_diem_moi" name="dia_diem" type="text" class="form-control"
+              placeholder="Ví dụ: Hà Nội, TP. HCM...">
           </div>
 
+          <!-- Mức lương -->
           <div class="mb-3">
             <label>Mức lương</label>
-            <input [(ngModel)]="muc_luong" name="muc_luong" type="text" class="form-control">
+            <select [(ngModel)]="muc_luong" name="muc_luong" class="form-select">
+              <option value="duoi_7">Dưới 7 triệu</option>
+              <option value="7_10">7 – 10 triệu</option>
+              <option value="10_15">10 – 15 triệu</option>
+              <option value="15_20">15 – 20 triệu</option>
+              <option value="20_30">20 – 30 triệu</option>
+              <option value="tren_30">Trên 30 triệu</option>
+              <option value="thoathuan">Thỏa thuận</option>
+            </select>
           </div>
 
-          <!-- Thêm field tùy chọn -->
+          <!-- Ngành nghề -->
           <div class="mb-3">
             <label>Ngành nghề</label>
-            <input [(ngModel)]="nganh_nghe" name="nganh_nghe" type="text" class="form-control">
+            <select [(ngModel)]="nganh_nghe" name="nganh_nghe" class="form-select">
+              <option value="it">Công nghệ thông tin</option>
+              <option value="ke_toan">Kế toán / Tài chính</option>
+              <option value="marketing">Marketing</option>
+              <option value="ban_hang">Bán hàng</option>
+              <option value="san_xuat">Sản xuất</option>
+              <option value="khac">Khác</option>
+            </select>
           </div>
 
+          <!-- Vị trí tuyển dụng -->
           <div class="mb-3">
             <label>Vị trí tuyển dụng</label>
-            <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control">
+            <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control"
+              placeholder="Ví dụ: Nhân viên, Trưởng phòng, Quản lý...">
           </div>
 
+          <!-- Kinh nghiệm -->
           <div class="mb-3">
             <label>Kinh nghiệm</label>
-            <input [(ngModel)]="kinh_nghiem" name="kinh_nghiem" type="text" class="form-control">
+            <select [(ngModel)]="kinh_nghiem" name="kinh_nghiem" class="form-select">
+              <option value="none">Không yêu cầu</option>
+              <option value="1nam">1 năm</option>
+              <option value="2_3nam">2 – 3 năm</option>
+              <option value="3_5nam">3 – 5 năm</option>
+              <option value="tren_5nam">Trên 5 năm</option>
+            </select>
           </div>
 
-
-          <!-- coi cho nay -->
+          <!-- Loại hình -->
           <div class="mb-3">
             <label>Loại hình</label>
             <select [(ngModel)]="loai_hinh" name="loai_hinh" class="form-select">
-              <option value="full_Time">Toàn thời gian</option>
-              <option value="part_Time">Bán thời gian</option>
+              <option value="full_time">Toàn thời gian</option>
+              <option value="part_time">Bán thời gian</option>
               <option value="remote">Remote</option>
+              <option value="thuc_tap">Thực tập</option>
             </select>
           </div>
-          
+
         </form>
       </div>
 
@@ -97,31 +125,26 @@
   </div>
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3"
-     *ngIf="pop_up_dang_bai_thanh_cong">
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_thanh_cong">
   <div class="toast show text-bg-success border-0">
     <div class="d-flex">
       <div class="toast-body">
         ✅ Đăng bài thành công!
       </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_dang_bai_thanh_cong=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_dang_bai_thanh_cong=false"></button>
     </div>
   </div>
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3"
-     *ngIf="pop_up_dang_bai_that_bai">
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_that_bai">
   <div class="toast show text-bg-danger border-0">
     <div class="d-flex">
       <div class="toast-body">
         ❌ Đăng bài thất bại. Vui lòng thử lại!
       </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_dang_bai_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_dang_bai_that_bai=false"></button>
     </div>
   </div>
 </div>
-

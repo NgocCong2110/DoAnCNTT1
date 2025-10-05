@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Auth } from '../../../../../../services/auth';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface API_RESPONSE {
   success: boolean;
@@ -15,7 +17,7 @@ interface API_RESPONSE {
 })
 export class TrangDanhSachThongBao implements OnInit{
 
-  constructor(public httpclient: HttpClient) {}
+  constructor(public httpclient: HttpClient, public auth: Auth, public cd: ChangeDetectorRef) {}
 
   danh_sach_thong_bao: any[] = [];
   loading = true;
@@ -35,7 +37,12 @@ export class TrangDanhSachThongBao implements OnInit{
   danhSachThongBao(){
     this.danh_sach_thong_bao = [];
     this.loading = true;
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao',{})
+    const thong_tin = {
+      kieu_nguoi_dung: this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung || null,
+      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec || null
+    }
+    
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao', thong_tin )
     .subscribe({
       next: (data) =>{
         this.loading = false;
@@ -46,8 +53,9 @@ export class TrangDanhSachThongBao implements OnInit{
           this.pop_up_lay_thong_tin_that_bai = true;
             setTimeout(() => {
               this.pop_up_lay_thong_tin_that_bai = false;
-            },1500)
+            },1500);
         }
+        this.cd.detectChanges();
       }
     });
   }

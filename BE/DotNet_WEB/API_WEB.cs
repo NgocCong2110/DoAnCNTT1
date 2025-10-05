@@ -7,6 +7,10 @@ using System.Net;
 using System.Net.Mail;
 using DotNet_WEB.Module;
 using DotNet_WEB.Class;
+using Newtonsoft.Json.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DotNet_WEB
 {
@@ -53,7 +57,7 @@ namespace DotNet_WEB
         {
             if (nguoi_Dung.mat_khau == null || nguoi_Dung.email == null)
             {
-                return BadRequest(new { success = false, message = "Mật khẩu và email không được để trống." });
+                return Ok(new { success = false, message = "Mật khẩu và email không được để trống." });
             }
             string matKhauDaMaHoa = XacThuc_ND.maHoaMatKhau(nguoi_Dung.mat_khau);
             bool ket_Qua = XacThuc_ND.xacThucNguoiDung(nguoi_Dung.email, matKhauDaMaHoa);
@@ -62,14 +66,14 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, email = nguoi_Dung.email, thong_tin });
             }
-            return Unauthorized(new { success = false, message = "Đăng nhập thất bại." });
+            return Ok(new { success = false, message = "Đăng nhập thất bại." });
         }
         [HttpPost("xacThucQuanTriVien")]
         public IActionResult xacThucQuanTriVien([FromBody] quan_tri quan_Tri)
         {
             if (quan_Tri.mat_khau == null || quan_Tri.email == null)
             {
-                return BadRequest(new { success = false, message = "Mật khẩu và email không được để trống." });
+                return Ok(new { success = false, message = "Mật khẩu và email không được để trống." });
             }
             string matKhauDaMaHoa = XacThuc_ND.maHoaMatKhau(quan_Tri.mat_khau);
             bool ket_Qua = XacThuc_ND.xacThucQuanTriVien(quan_Tri.email, matKhauDaMaHoa);
@@ -86,8 +90,16 @@ namespace DotNet_WEB
                     vai_tro = thong_tin[0].vai_tro
                 });
             }
-            return Unauthorized(new { success = false, message = "Đăng nhập thất bại." });
+            return Ok(new { success = false, message = "Đăng nhập thất bại." });
         }
+
+
+
+
+
+
+
+
 
 
 
@@ -133,6 +145,13 @@ namespace DotNet_WEB
 
 
 
+
+
+
+
+
+
+
         // Module Quan Tri Vien
         // In danh sach nguoi dung
         [HttpPost("layDanhSachNguoiTimViec")]
@@ -150,7 +169,7 @@ namespace DotNet_WEB
         public IActionResult layDanhSachCongTy()
         {
             var danh_sach = Module_QTV.layDanhSachCongTy();
-            if (danh_sach != null)
+            if (danh_sach != null && danh_sach.Any())
             {
                 return Ok(new { success = true, danh_sach });
             }
@@ -172,12 +191,60 @@ namespace DotNet_WEB
         public IActionResult layDanhSachViPham()
         {
             var danh_sach = Module_QTV.layDanhSachViPham();
-            if (danh_sach != null)
+            if (danh_sach != null && danh_sach.Any())
             {
                 return Ok(new { success = true, danh_sach });
             }
             return BadRequest(new { success = false, message = "Lấy danh sách vi phạm thất bại." });
         }
+
+        [HttpPost("layLichSuThanhToan")]
+        public IActionResult layLichSuThanhToan()
+        {
+            var danh_sach = Module_QTV.layLichSuThanhToan();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return BadRequest(new { success = false, message = "Lấy danh sách thất bại." });
+        }
+
+        [HttpPost("taoDichVuMoi")]
+        public IActionResult taoDichVuMoi([FromBody] dich_vu dich_Vu)
+        {
+            bool ket_qua = Module_QTV.taoDichVuMoi(dich_Vu);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = "Thêm dịch vụ mới thất bại" });
+        }
+
+        [HttpPost("xoaCongTy")]
+        public IActionResult xoaCongTy([FromBody] int ma_cong_ty)
+        {
+            bool ket_qua = Module_QTV.xoaCongTy(ma_cong_ty);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = "Xóa công ty thất bại" });
+        }
+
+        [HttpPost("xoaNguoiTimViec")]
+        public IActionResult xoaNguoiTimViec([FromBody] int ma_nguoi_tim_viec)
+        {
+            bool ket_qua = Module_QTV.xoaNguoiTimViec(ma_nguoi_tim_viec);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = "Xóa công ty thất bại" });
+        }
+
+
+
+
 
 
 
@@ -218,6 +285,53 @@ namespace DotNet_WEB
             return BadRequest(new { success = false, message = "Lấy số lượng ứng viên thất bại." });
         }
 
+        [HttpPost("guiThuMoiPhongVan")]
+        public IActionResult guiThuMoiPhongVan([FromBody] thong_tin_phong_van ttpv)
+        {
+            bool ket_qua = Module_CTY.guiThuMoiPhongVan(ttpv);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = " Gửi thư mời không thành công " });
+        }
+
+
+        [HttpPost("tuChoiUngVien")]
+        public IActionResult tuChoiUngVien([FromBody] ung_tuyen ung_Tuyen)
+        {
+            bool ket_qua = Module_CTY.tuChoiUngVien(ung_Tuyen.ma_nguoi_tim_viec);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = " Có lỗi trong quá trình " });
+        }
+
+        [HttpPost("xoaUngVien")]
+        public IActionResult xoaUngVien([FromBody] ung_tuyen ung_Tuyen)
+        {
+            bool ket_qua = Module_CTY.xoaUngVien(ung_Tuyen);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = " Có lỗi trong quá trình " });
+        }
+
+        [HttpPost("layDanhSachDichVu")]
+        public IActionResult layDanhSachDichVu()
+        {
+            var danh_sach = Module_CTY.layDanhSachDichVu();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return BadRequest(new { success = false, message = " Không lấy được danh sách dịch vụ " });
+        }
+
+
+
 
 
 
@@ -226,16 +340,38 @@ namespace DotNet_WEB
 
 
         //Chuc nang cua web
+        [HttpPost("kiemTraTaiKhoanDangKy")]
+        public IActionResult kiemTraTaiKhoanDangKy([FromBody] nguoi_dung nguoi_Dung)
+        {
+            bool ket_qua = ChucNang_WEB.kiemTraTaiKhoanDangKy(nguoi_Dung);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = "Email đã tồn tại" });
+        }
+
+        [HttpPost("doiMatKhauMoi")]
+        public IActionResult doiMatKhauMoi([FromBody] nguoi_dung nguoi_Dung)
+        {
+            bool ket_qua = ChucNang_WEB.doiMatKhauMoi(nguoi_Dung);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false });
+        }
+
         [HttpPost("layDanhSachBaiDang")]
         public IActionResult LayDanhSachBaiDang()
         {
-            var danh_sach_bai_dang = ChucNang_WEB.layDanhSachBaiDang();
-            if (danh_sach_bai_dang == null || !danh_sach_bai_dang.Any())
+            var danh_sach = ChucNang_WEB.layDanhSachBaiDang();
+            if (danh_sach == null || !danh_sach.Any())
             {
                 return BadRequest(new { success = false, message = "Không lấy được danh sách bài đăng" });
             }
 
-            var ket_qua = danh_sach_bai_dang.Select(bd => new
+            var ket_qua = danh_sach.Select(bd => new
             {
                 bd.ma_bai_dang,
                 bd.ma_nguoi_dang,
@@ -249,7 +385,7 @@ namespace DotNet_WEB
                 viec_lam = ChucNang_WEB.layViecLamTheoBaiDang(bd.ma_bai_dang)
             });
 
-            return Ok(new { success = true, danh_sach_bai_dang = ket_qua });
+            return Ok(new { success = true, danh_sach = ket_qua });
         }
 
 
@@ -275,12 +411,23 @@ namespace DotNet_WEB
         [HttpPost("baoCaoBaiDang")]
         public IActionResult baoCaoBaiDang([FromBody] bai_dang_vi_pham bai_Dang_Vi_Pham)
         {
-            bool baoCaoBaiDang = ChucNang_WEB.luuBaiDangViPham(bai_Dang_Vi_Pham);
-            if (baoCaoBaiDang)
+            bool bao_cao_bai_dang = ChucNang_WEB.luuBaiDangViPham(bai_Dang_Vi_Pham);
+            if (bao_cao_bai_dang)
             {
                 return Ok(new { success = true, message = "Báo cáo bài đăng thành công." });
             }
             return BadRequest(new { success = false, message = "Báo cáo bài đăng không thành công." });
+        }
+
+        [HttpPost("xoaBaiDang")]
+        public IActionResult xoaBaiDang([FromBody] bai_dang bai_Dang)
+        {
+            bool xoa_bai_dang = ChucNang_WEB.xoaBaiDang(bai_Dang.ma_bai_dang);
+            if (xoa_bai_dang)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false });
         }
 
         [HttpPost("luuBaiDang")]
@@ -317,9 +464,9 @@ namespace DotNet_WEB
         }
 
         [HttpPost("layDanhSachThongBao")]
-        public IActionResult layDanhSachThongBao([FromBody] thong_bao thong_Bao)
+        public IActionResult layDanhSachThongBao([FromBody] thong_bao_kieu_nguoi_dung tb_knd)
         {
-            var danh_sach = ChucNang_WEB.layDanhSachThongBao();
+            var danh_sach = ChucNang_WEB.layDanhSachThongBao(tb_knd);
             if (danh_sach != null)
             {
                 return Ok(new { success = true, danh_sach });
@@ -338,6 +485,174 @@ namespace DotNet_WEB
             return BadRequest(new { success = false, message = "Lấy danh sách thông báo thất bại" });
         }
 
+        [HttpPost("deXuatViecLamSelector")]
+        public IActionResult deXuatViecLamSelector([FromBody] viec_lam viec_Lam)
+        {
+            var danh_sach = ChucNang_WEB.deXuatViecLamSelector(viec_Lam);
+            if (danh_sach != null)
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return BadRequest(new { success = false, message = "Không lấy được danh sách" });
+        }
+
+        [HttpPost("layChiTietViecLam")]
+        public IActionResult LayChiTietViecLam([FromBody] bai_dang bai_Dang)
+        {
+            var danh_sach_bai_dang = ChucNang_WEB.layBaiDangTheoMa(bai_Dang.ma_bai_dang);
+            var bai_dang = danh_sach_bai_dang.FirstOrDefault();
+
+            if (bai_dang == null)
+            {
+                return NotFound(new { success = false, message = "Không tìm thấy bài đăng" });
+            }
+
+            var viec_Lam = ChucNang_WEB.layViecLamTheoBaiDang(bai_Dang.ma_bai_dang);
+
+            var chi_tiet = new
+            {
+                bai_dang.ma_bai_dang,
+                bai_dang.ma_nguoi_dang,
+                bai_dang.ten_nguoi_dang,
+                bai_dang.tieu_de,
+                bai_dang.noi_dung,
+                bai_dang.loai_bai,
+                bai_dang.trang_thai,
+                bai_dang.ngay_tao,
+                bai_dang.ngay_cap_nhat,
+                viec_lam = viec_Lam
+            };
+
+            return Ok(new { success = true, chi_tiet });
+        }
+
+        [HttpPost("layDanhSachViecLam")]
+        public IActionResult layDanhSachViecLam()
+        {
+            var danh_sach = ChucNang_WEB.layDanhSachBaiDang();
+            if (danh_sach == null || !danh_sach.Any())
+            {
+                return BadRequest(new { success = false, message = "Không lấy được danh sách bài đăng" });
+            }
+
+            var ket_qua = danh_sach.Select(bd => new
+            {
+                bd.ma_bai_dang,
+                bd.ma_nguoi_dang,
+                bd.ten_nguoi_dang,
+                bd.tieu_de,
+                bd.noi_dung,
+                bd.loai_bai,
+                bd.trang_thai,
+                bd.ngay_tao,
+                bd.ngay_cap_nhat,
+                viec_lam = ChucNang_WEB.layViecLamTheoBaiDang(bd.ma_bai_dang)
+            });
+
+            return Ok(new { success = true, danh_sach = ket_qua });
+        }
+
+        [HttpPost("duaRaDeXuat")]
+        public IActionResult duaRaDeXuat([FromBody] string tu_khoa_tim_kiem)
+        {
+            var thong_tin = ChucNang_WEB.duaRaDanhSachDeXuat(tu_khoa_tim_kiem);
+            if (thong_tin != null && thong_tin.Any())
+            {
+                return Ok(new { success = true, thong_tin });
+            }
+            return BadRequest(new { success = false, message = "Không có thông tin việc làm" });
+        }
+
+        [HttpPost("guiThongBaoMoi")]
+        public IActionResult guiThongBaoMoi([FromBody] thong_bao thong_Bao)
+        {
+            bool ket_qua = ChucNang_WEB.guiThongBaoMoi(thong_Bao);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return BadRequest(new { success = false, message = "Gửi thông báo thất bại" });
+        }
+
+        [HttpPost("guiYeuCauOTP")]
+        public async Task<IActionResult> guiYeuCauOTP([FromBody] string email_yeu_cau)
+        {
+            bool ket_qua = ChucNang_WEB.kiemTraOTPTonTai(email_yeu_cau);
+            if(ket_qua)
+            {
+                int otp = ChucNang_WEB.taoOTPMoi(email_yeu_cau);
+                if(otp >= 100000 && otp <= 999999)
+                {
+                    bool kq_gui_otp = await XacThuc_ND.guiMaOTP(otp, email_yeu_cau);
+                    if(kq_gui_otp)
+                    {
+                        return Ok( new { success = true });
+                    }
+                }
+            }
+            return BadRequest(new { success = false, message = "Tạo otp không thành công "});
+        }
+
+        [HttpPost("xacNhanOTP")]
+        public IActionResult xacNhanOTP([FromBody] ma_otp ma_Otp)
+        {
+            bool ket_qua = XacThuc_ND.xacNhanOTP(ma_Otp);
+            if(ket_qua)
+            {
+                return Ok( new { success = true });
+            }
+            return BadRequest( new { success = false, message = "OTP sai"});
+        }
+
+        [HttpPost("thanhToanVNPAY")]
+        public IActionResult thanhToanVNPAY([FromBody] tao_don_hang don_hang_thong_tin)
+        {
+            var urlThanhToan = ChucNang_WEB.taoDonHang(don_hang_thong_tin);
+            if (!string.IsNullOrEmpty(urlThanhToan))
+            {
+                return Ok(new { success = true, urlThanhToan });
+            }
+            return BadRequest(new { success = false, message = "Không tạo được url" });
+        }
+        [HttpGet("VNPayReturn")]
+        public IActionResult VNPayReturn()
+        {
+            var query = Request.Query;
+            string? vnp_SecureHash = query["vnp_SecureHash"];
+            string? vnp_TxnRef = query["vnp_TxnRef"];
+            string? vnp_Amount = query["vnp_Amount"];
+            string? vnp_ResponseCode = query["vnp_ResponseCode"];
+
+            var fields = query.Where(kv => kv.Key.StartsWith("vnp_") && kv.Key != "vnp_SecureHash" && kv.Key != "vnp_SecureHashType")
+            .OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
+            var hashData = string.Join("&", fields.Select(kv => $"{kv.Key}={kv.Value}"));
+            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("I7LL3FX1ZJQZ6OCXQ9EGY9DVT0W0Q3EE"));
+            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(hashData));
+            var calculatedHash = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
+            if (calculatedHash != vnp_SecureHash)
+                return BadRequest("Sai hash, không hợp lệ");
+            if (vnp_ResponseCode != "00")
+                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={vnp_TxnRef}");
+            int ma_don_hang = int.Parse(vnp_TxnRef);
+            decimal so_tien = Convert.ToDecimal(vnp_Amount) / 100m;
+            bool ket_qua = ChucNang_WEB.capNhatTrangThaiDonHang(ma_don_hang, so_tien, vnp_ResponseCode);
+            if (ket_qua)
+            {
+                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=true&ma_don_hang={ma_don_hang}");
+            } 
+            return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={ma_don_hang}");
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -354,5 +669,69 @@ namespace DotNet_WEB
             }
             return BadRequest(new { success = false, message = "Lấy thông tin thất bại" });
         }
+
+        [HttpPost("dangTaiCV")]
+        public async Task<IActionResult> dangTaiCV([FromForm] IFormFile cv_file, [FromForm] int ma_Nguoi_Tim_Viec)
+        {
+            var result = await Module_NTV.UploadCvAsync(cv_file, ma_Nguoi_Tim_Viec);
+
+            if (result)
+            {
+                return Ok(new { success = true, message = "Upload thành công" });
+            }
+            return BadRequest(new { success = false, message = "Chưa có file CV" });
+        }
+
+        [HttpPost("luuCV")]
+        public IActionResult luuCV([FromBody] cv_online_nguoi_tim_viec cv_on)
+        {
+            bool luu_cv = Module_NTV.luuCv(cv_on);
+            if (luu_cv)
+            {
+                return Ok(new { success = true, message = "Lưu cv thành công" });
+            }
+            return BadRequest(new { success = false, message = "Chưa có file CV" });
+        }
+
+        [HttpPost("layDanhSachCV")]
+        public IActionResult layDanhSachCV([FromBody] cv_nguoi_tim_viec cv_ntv)
+        {
+            var danh_sach = Module_NTV.layDanhSachCV(cv_ntv.ma_nguoi_tim_viec);
+            if (danh_sach != null)
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return BadRequest(new { success = false, message = "Chưa có file CV" });
+        }
+
+        [HttpPost("capNhatThongTinNguoiTimViec")]
+        public IActionResult capNhatThongTinNguoiTimViec([FromBody] JObject du_lieu_ntv)
+        {
+            int ma_Nguoi_Tim_Viec = du_lieu_ntv["ma_nguoi_tim_viec"]?.Value<int>() ?? 0;
+            if (ma_Nguoi_Tim_Viec == 0)
+            {
+                return BadRequest(new { success = false, message = "Không có mã người tìm việc" });
+            }
+            var field = du_lieu_ntv.Properties().FirstOrDefault(p => p.Name != "ma_nguoi_tim_viec");
+            if (field == null)
+            {
+                return BadRequest(new { success = false, message = "Không có trường dữ liệu cần cập nhật" });
+            }
+            try
+            {
+                bool ket_Qua = Module_NTV.capNhatThongTinNguoiTimViec(ma_Nguoi_Tim_Viec, field.Name, field.Value.ToString());
+                if (ket_Qua)
+                {
+                    return Ok(new { success = true });
+                }
+                return BadRequest(new { success = false, message = "Cập nhật thông tin không thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
     }
 }
+
+

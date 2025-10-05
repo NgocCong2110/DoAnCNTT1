@@ -7,8 +7,8 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of nganhNgheList">
-          <button class="dropdown-item" type="button" 
-                  (click)="nganh_nghe = gia_tri.value; nganh_nghe_label = gia_tri.label">
+          <button class="dropdown-item" type="button"
+            (click)="nganh_nghe = gia_tri.value; nganh_nghe_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -21,8 +21,8 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of diaDiemList">
-          <button class="dropdown-item" type="button" 
-                  (click)="dia_diem = gia_tri.value; dia_diem_label = gia_tri.label">
+          <button class="dropdown-item" type="button"
+            (click)="dia_diem = gia_tri.value; dia_diem_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -35,8 +35,8 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of mucLuongList">
-          <button class="dropdown-item" type="button" 
-                  (click)="muc_luong = gia_tri.value; muc_luong_label = gia_tri.label">
+          <button class="dropdown-item" type="button"
+            (click)="muc_luong = gia_tri.value; muc_luong_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -49,8 +49,8 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of kinhNghiemList">
-          <button class="dropdown-item" type="button" 
-                  (click)="kinh_nghiem = gia_tri.value; kinh_nghiem_label = gia_tri.label">
+          <button class="dropdown-item" type="button"
+            (click)="kinh_nghiem = gia_tri.value; kinh_nghiem_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -63,8 +63,8 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of hinhThucList">
-          <button class="dropdown-item" type="button" 
-                  (click)="hinh_thuc = gia_tri.value; hinh_thuc_label = gia_tri.label">
+          <button class="dropdown-item" type="button"
+            (click)="hinh_thuc = gia_tri.value; hinh_thuc_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -77,15 +77,14 @@
       </button>
       <ul class="dropdown-menu">
         <li *ngFor="let gia_tri of chucVuList">
-          <button class="dropdown-item" type="button" 
-                  (click)="chuc_vu = gia_tri.value; chuc_vu_label = gia_tri.label">
+          <button class="dropdown-item" type="button" (click)="chuc_vu = gia_tri.value; chuc_vu_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
       </ul>
     </div>
 
-    <div class="dropdown">
+    <!-- <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
         {{ phuc_loi_label || 'Phúc lợi' }}
       </button>
@@ -111,9 +110,83 @@
           </button>
         </li>
       </ul>
+    </div> -->
+
+
+    <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()">Lọc</button>
+  </div>
+</div>
+
+<div *ngIf="!loading && danh_sach_de_xuat.length === 0" class="text-center text-muted mt-4">
+  Không có việc làm đề xuất
+</div>
+
+<div *ngIf="error" class="text-center text-danger mb-3">
+  {{ error }}
+</div>
+
+<div class="row mt-5" *ngIf="toan_bo">
+  <div class="col-md-6 col-lg-4 mb-3" *ngFor="let job of danh_sach_de_xuat">
+    <div class="card h-100 shadow-sm border-0 job-card">
+      <div class="card-body bg-red">
+        <h5 class="card-title text-secondary mb-2 fw-bold">
+          {{ job.viec_lam.tieu_de || job.viec_lam.nganh_nghe }}
+        </h5>
+
+        <div class="job-details">
+          <p class="mb-1">
+            <i class="bi bi-geo-alt-fill text-muted me-2"></i>
+            <strong>Địa điểm:</strong> {{ job.viec_lam.dia_diem }}
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-briefcase-fill text-muted me-2"></i>
+            <strong>Kinh nghiệm:</strong> {{ job.viec_lam.kinh_nghiem }}
+          </p>
+          <p class="mb-2">
+            <i class="bi bi-currency-dollar text-muted me-2"></i>
+            <strong>Mức lương:</strong> {{ job.viec_lam.muc_luong }}
+          </p>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button class="btn btn-outline-primary btn-sm" style="background-color: #0d6efd;" (click)="chiTietBaiDang(job.ma_bai_dang)">
+            Xem chi tiết
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <button class="btn btn-secondary px-4 flex-shrink-0" (click)="locCongViec()">Lọc</button>
+<div class="row mt-5" *ngIf="tung_phan">
+  <div class="col-md-6 col-lg-4 mb-3" *ngFor="let job of danh_sach_de_xuat">
+    <div class="card h-100 shadow-sm border-0 job-card">
+      <div class="card-body bg-red">
+        <h5 class="card-title text-secondary mb-2 fw-bold">
+          {{ job.tieu_de || job.nganh_nghe }}
+        </h5>
 
+        <div class="job-details">
+          <p class="mb-1">
+            <i class="bi bi-geo-alt-fill text-muted me-2"></i>
+            <strong>Địa điểm:</strong> {{ job.dia_diem }}
+          </p>
+          <p class="mb-1">
+            <i class="bi bi-briefcase-fill text-muted me-2"></i>
+            <strong>Kinh nghiệm:</strong> {{ job.kinh_nghiem }}
+          </p>
+          <p class="mb-2">
+            <i class="bi bi-currency-dollar text-muted me-2"></i>
+            <strong>Mức lương:</strong> {{ job.muc_luong }}
+          </p>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button class="btn btn-outline-primary btn-sm" style="background-color: #0d6efd;" (click)="chiTietBaiDang(job.ma_bai_dang)">
+            Xem chi tiết
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

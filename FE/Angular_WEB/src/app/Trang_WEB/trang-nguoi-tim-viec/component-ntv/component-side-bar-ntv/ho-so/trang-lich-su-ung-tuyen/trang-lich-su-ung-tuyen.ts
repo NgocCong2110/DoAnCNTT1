@@ -59,4 +59,14 @@ export class TrangLichSuUngTuyen implements OnInit{
       })
   }
 
+  trangThaiUngTuyen: {[key: number]: string} = {
+    1: "Đang chờ",
+    2: "Chấp nhận",
+    3: "Từ chối"
+  }
+
+  trangThaiMap(key: number){
+    return this.trangThaiUngTuyen[key] || "Không có thông tin";
+  }
+
 }

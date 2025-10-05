@@ -2,6 +2,12 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Auth } from '../../../../../../services/auth';
+
+interface API_RESPONSE{
+  success: boolean;
+  danh_sach: any[];
+}
 
 interface CvForm {
   hoTen: string;
@@ -29,6 +35,8 @@ export class TrangCvNtv {
   uploadedFileName: string = '';
   dang_tai_file: File | null = null;
 
+  thongTin: any;
+
   formCv: CvForm = {
     hoTen: '',
     email: '',
@@ -44,13 +52,16 @@ export class TrangCvNtv {
   };
 
   ma_nguoi_dung = 1;
-  cvs: any[] = [];
+  danh_sach_cv: any[] = [];
   hienModal = false;
 
   allBlocks = ['thongTinCoBan', 'hocVan', 'kinhNghiem', 'kyNang', 'duAn', 'mucTieu'];
   blocks: string[] = [];
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+
+  constructor(public auth: Auth, private httpclient: HttpClient, private cdr: ChangeDetectorRef) {
+    this.thongTin = this.auth.layThongTinNguoiDung();
+  }
 
   moForm() {
     this.hienModal = true;
@@ -92,9 +103,9 @@ export class TrangCvNtv {
 
     const formData = new FormData();
     formData.append('cvFile', this.dang_tai_file);
-    formData.append('userId', this.ma_nguoi_dung.toString());
+    formData.append('userId', this.thongTin?.thong_tin_chi_tiet.ma_nguoi_tim_viec);
 
-    this.http.post('https://localhost:65001/api/API_WEB/upload', formData)
+    this.httpclient.post('http://localhost:65001/api/API_WEB/dangTaiCV', formData)
       .subscribe({
         next: () => {
           alert('Upload CV thành công!');
@@ -109,7 +120,7 @@ export class TrangCvNtv {
   luuCV() {
     const body = { ...this.formCv, userId: this.ma_nguoi_dung };
 
-    this.http.post('https://localhost:65001/api/API_WEB/create', body)
+    this.httpclient.post('http://localhost:65001/api/API_WEB/luuCV', body)
       .subscribe({
         next: () => {
           alert('CV online lưu thành công!');
@@ -123,11 +134,13 @@ export class TrangCvNtv {
   }
 
   loadCvs() {
-    this.http.get<any[]>(`https://localhost:65001/api/API_WEB/user/${this.ma_nguoi_dung}`)
+    this.httpclient.post<API_RESPONSE>(`http://localhost:65001/api/API_WEB/layDanhSachCV`, {  ma_nguoi_tim_viec : this.thongTin?.thong_tin_chi_tiet.ma_nguoi_tim_viec })
       .subscribe({
         next: (data) => {
-          this.cvs = data;
-          this.cdr.markForCheck();
+          if(data.success){
+            this.danh_sach_cv = data.danh_sach;
+            this.cdr.markForCheck();
+          }
         },
         error: (err) => {
           console.error('Lỗi khi tải CV:', err);

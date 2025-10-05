@@ -51,30 +51,50 @@ export class TrangDangKyCongTy {
   }
 
   kiemTraEmail() {
-    this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucGmail', {
+    this.http.post<any>('http://localhost:65001/api/API_WEB/kiemTraTaiKhoanDangKy', {
       email: this.form.email
     }).subscribe({
       next: (data) => {
         if (data.success) {
-          this.http.post<any>('http://localhost:65001/api/API_WEB/themThongTinCongTy',
-            this.getThongTinDangKy()
-          ).subscribe({
+          this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucMaSoThue', {
+            ma_so_thue: this.form.maSo_Thue
+          }).subscribe({
             next: (data2) => {
               if (data2.success) {
-                this.thong_bao = 'Đăng ký thông tin công ty thành công!';
+                this.http.post<any>(
+                  'http://localhost:65001/api/API_WEB/themThongTinCongTy',
+                  this.getThongTinDangKy()
+                ).subscribe({
+                  next: (data3) => {
+                    if (data3.success) {
+                      this.thong_bao = 'Đăng ký thông tin công ty thành công!';
+                      this.hien_thong_bao = true;
+                      setTimeout(() => {
+                        this.hien_thong_bao = false;
+                        this.router.navigate(['/trang-chu']);
+                      }, 2000);
+                    } else {
+                      this.thong_bao = 'Đăng ký thông tin công ty thất bại!';
+                      this.hien_thong_bao = true;
+                      setTimeout(() => this.hien_thong_bao = false, 1500);
+                    }
+                  },
+                  error: () => {
+                    this.thong_bao = 'Lỗi khi thêm thông tin công ty!';
+                    this.hien_thong_bao = true;
+                    setTimeout(() => this.hien_thong_bao = false, 1500);
+                  }
+                });
+              } else {
+                this.thong_bao = data2.message || 'Mã số thuế không hợp lệ!';
                 this.hien_thong_bao = true;
                 setTimeout(() => {
                   this.hien_thong_bao = false;
-                  this.router.navigate(['/trang-chu']);
                 }, 2000);
-              } else {
-                this.thong_bao = 'Đăng ký thông tin công ty thất bại!';
-                this.hien_thong_bao = true;
-                setTimeout(() => this.hien_thong_bao = false, 1500);
               }
             },
             error: () => {
-              this.thong_bao = 'Lỗi khi thêm thông tin công ty!';
+              this.thong_bao = 'Lỗi khi xác thực mã số thuế!';
               this.hien_thong_bao = true;
               setTimeout(() => this.hien_thong_bao = false, 1500);
             }

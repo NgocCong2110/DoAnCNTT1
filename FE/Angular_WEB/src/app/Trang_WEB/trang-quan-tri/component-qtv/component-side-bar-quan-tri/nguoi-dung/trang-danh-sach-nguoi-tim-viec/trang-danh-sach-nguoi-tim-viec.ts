@@ -22,7 +22,13 @@ export class TrangDanhSachNguoiTimViec implements OnInit {
   danh_sach_nguoi_tim_viec_full: any[] = []; 
   danh_sach_nguoi_tim_viec: any[] = [];      
   loading = true;
+  nguoi_tim_viec_chon: any | null = null;
   error = '';
+
+  index = 0;
+
+  showXacNhanXoa = false;
+  formXoa = false;
 
   trangHienTai = 1;
   soLuongMoiTrang = 10;
@@ -52,6 +58,38 @@ export class TrangDanhSachNguoiTimViec implements OnInit {
           this.cd.markForCheck();
         }
       });
+  }
+
+  moXacNhanXoa(nguoi_tim_viec: any, index: number) {
+    this.showXacNhanXoa = true;
+    this.nguoi_tim_viec_chon = nguoi_tim_viec
+    this.index = index;
+  }
+
+  xoaNguoiTimViec() {
+    const ma_nguoi_tim_viec = this.nguoi_tim_viec_chon?.ma_nguoi_tim_viec;
+    if (!ma_nguoi_tim_viec) return;
+    this.danh_sach_nguoi_tim_viec_full.splice(this.index, 1);
+    this.loadTrang(this.trangHienTai);
+    this.showXacNhanXoa = false;
+    this.cd.detectChanges();
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/xoaNguoiTimViec', ma_nguoi_tim_viec)
+      .subscribe({
+        next: (data) => {
+          if (!data.success) {
+            alert('Xóa thất bại, sẽ tải lại danh sách!');
+            this.layDanhSachNguoiTimViec();
+          }
+        },
+        error: () => {
+          alert('Lỗi kết nối, tải lại danh sách!');
+          this.layDanhSachNguoiTimViec();
+        }
+      });
+  }
+
+  huyXoa() {
+    this.showXacNhanXoa = false;
   }
 
   loadTrang(trang: number) {

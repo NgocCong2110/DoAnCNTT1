@@ -53,7 +53,7 @@ export class TrangDangKyNTV {
   }
 
   kiemTraEmail() {
-    this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucGmail', {
+    this.http.post<any>('http://localhost:65001/api/API_WEB/kiemTraTaiKhoanDangKy', {
       email: this.email_dang_ky
     }).subscribe({
       next: (data) => {

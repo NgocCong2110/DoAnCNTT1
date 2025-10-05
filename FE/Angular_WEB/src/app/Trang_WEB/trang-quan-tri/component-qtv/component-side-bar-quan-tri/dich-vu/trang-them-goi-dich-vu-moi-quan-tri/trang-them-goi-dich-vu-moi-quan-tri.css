@@ -1,0 +1,53 @@
+.tao-dv-container {
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.tao-dv-card {
+  max-width: 480px;
+  width: 100%;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+  margin: 0 auto;
+}
+
+.tao-dv-title {
+  color: #2c3e50;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.tao-dv-btn {
+  font-size: 1.1rem;
+  padding: 10px 0;
+  border-radius: 8px;
+  margin-top: 8px;
+  border: #545b62;
+}
+
+.tao-dv-btn:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.input-group-text {
+  background: #f1f7ff;
+  border: none;
+  color: #007bff;
+  font-size: 1.2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #34495e;
+}
+
+.form-control:focus,
+textarea:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 2px #cce1ff;
+}

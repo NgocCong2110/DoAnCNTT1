@@ -1,1 +1,40 @@
-<p>trang-them-goi-dich-vu-moi-quan-tri works!</p>
+<div class="tao-dv-container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow tao-dv-card p-4">
+    <h1 class="fw-bold mb-4 text-center tao-dv-title">
+      <i class="bi bi-gear-fill me-2"></i> Thêm dịch vụ
+    </h1>
+    <form>
+
+      <div class="mb-3">
+        <label for="ten_dich_vu" class="form-label">Tên dịch vụ</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+          <input type="text" id="ten_dich_vu" class="form-control" placeholder="Tên dịch vụ"
+            [(ngModel)]="ten_dich_vu" name="ten_dich_vu">
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="mo_ta" class="form-label">Mô tả</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-pencil-square"></i></span>
+          <textarea id="mo_ta" class="form-control" rows="3" placeholder="Mô tả dịch vụ..."
+            [(ngModel)]="mo_ta" name="mo_ta"></textarea>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="gia" class="form-label">Giá (VND)</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-cash-stack"></i></span>
+          <input type="number" id="gia" class="form-control" placeholder="100000"
+            [(ngModel)]="gia" name="gia">
+        </div>
+      </div>
+      
+      <button type="submit" class="w-100 tao-dv-btn" style="background-color: gray; color: white;" click = "taoDichVuMoi()">
+        <i class="bi bi-check-circle me-2"></i> Lưu dịch vụ
+      </button>
+    </form>
+  </div>
+</div>

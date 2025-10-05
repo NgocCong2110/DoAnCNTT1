@@ -14,6 +14,13 @@
             <img src="anh_WEB/anh_icon_WEB/anh_icon_luu_bai.webp" style="width:16px;height:16px;margin-right:5px;">
             Lưu bài đăng
           </a>
+          <a class="dropdown-item" (click)="moPopUpXoa()"
+            *ngIf="auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty == bai_dang_duoc_chon?.ma_nguoi_dang || 
+            auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'"
+            style="color: red;">
+            <img src="anh_WEB/anh_icon_WEB/icon_xoa_bai.webp" style="width:16px;height:16px;margin-right:5px;">
+            Xóa bài đăng
+          </a>
         </li>
       </ul>
     </div>
@@ -53,11 +60,10 @@
     <p>{{ bai_dang_duoc_chon.viec_lam.yeu_cau }}</p>
   </div>
   <div class="d-flex justify-content-center align-items-center p-3">
-    <button class="btn btn-primary mx-2" style="background-color: gray; border: 0;" *ngIf="auth.layThongTinNguoiDung()"
-      (click)="moPopUpBaoCao()">Báo cáo
+    <button class="btn btn-primary mx-2" style="background-color: gray; border: 0;" (click)="moPopUpBaoCao()">Báo cáo
       bài đăng</button>
     <button class="btn btn-primary mx-2" style="background-color: #007BFF; border: 0;"
-      *ngIf="auth.layThongTinNguoiDung()" (click)="ungTuyenCongViec()">Ứng tuyển công việc
+      *ngIf="auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.kieu_nguoi_dung == 'nguoi_Tim_Viec'" (click)="ungTuyenCongViec()">Ứng tuyển công việc
     </button>
   </div>
 </div>
@@ -81,6 +87,21 @@
       <h5 class="modal-title text-success">Ứng tuyển thành công!</h5>
       <div class="modal-body">
         <p>Bạn đã ứng tuyển vào công việc này.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="pop_up_xoa_bai" class="modal fade show"
+     style="display:block; background: rgba(0,0,0,0.5);" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <h5 class="modal-title text-danger">Xác nhận xoá</h5>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xoá bài đăng: <b>{{ bai_dang_duoc_chon?.tieu_de }}</b> không?</p>
+      </div>
+      <div class="text-end">
+        <button class="btn btn-secondary mx-1" (click)="huyXoa()">Huỷ</button>
+        <button class="btn btn-danger mx-1" (click)="xacNhanXoa()">Xoá</button>
       </div>
     </div>
   </div>

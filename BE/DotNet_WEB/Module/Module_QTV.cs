@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
 
-
 namespace DotNet_WEB.Module
 {
     public class Module_QTV
@@ -47,13 +46,25 @@ namespace DotNet_WEB.Module
             var danhSachNguoiTimViec = new List<nguoi_tim_viec>();
             while (reader.Read())
             {
-                var nguoiTimViec = new nguoi_tim_viec
+                var nguoi_Tim_Viec = new nguoi_tim_viec
                 {
                     ma_nguoi_tim_viec = reader.GetInt32("ma_nguoi_tim_viec"),
+                    ho_ten = reader.GetString("ho_ten"),
                     ten_dang_nhap = reader.GetString("ten_dang_nhap"),
                     email = reader.GetString("email"),
+                    dien_thoai = reader.GetString("dien_thoai"),
+                    mat_khau = reader.GetString("mat_khau"),
+                    ngay_sinh = reader.GetDateTime("ngay_sinh"),
+                    gioi_tinh = (GioiTinh)Enum.Parse(typeof(GioiTinh), reader.GetString("gioi_tinh")),
+                    trinh_do_hoc_van = (TrinhDoHocVan)Enum.Parse(typeof(TrinhDoHocVan), reader.GetString("trinh_do_hoc_van")),
+                    dia_chi = reader.GetString("dia_chi"),
+                    anh_dai_dien = reader.GetString("anh_dai_dien"),
+                    quoc_tich = reader.GetString("quoc_tich"),
+                    mo_ta = reader.GetString("mo_ta"),
+                    ngay_tao = reader.GetDateTime("ngay_tao"),
+                    ngay_cap_nhat = reader.GetDateTime("ngay_cap_nhat")
                 };
-                danhSachNguoiTimViec.Add(nguoiTimViec);
+                danhSachNguoiTimViec.Add(nguoi_Tim_Viec);
             }
             return danhSachNguoiTimViec;
         }
@@ -88,8 +99,8 @@ namespace DotNet_WEB.Module
                     ? LoaiHinhCongTy.None
                     : (LoaiHinhCongTy)Enum.Parse(typeof(LoaiHinhCongTy), reader.GetString("loai_hinh_cong_ty")),
                     quy_mo = reader.GetString("quy_mo"),
-                    nam_thanh_lap = reader.IsDBNull(reader.GetOrdinal("nam_thanh_lap")) 
-                    ? null 
+                    nam_thanh_lap = reader.IsDBNull(reader.GetOrdinal("nam_thanh_lap"))
+                    ? null
                     : (int?)reader.GetInt16("nam_thanh_lap"),
                     anh_bia = reader.IsDBNull(reader.GetOrdinal("anh_bia")) ? null : reader.GetString("anh_bia"),
                     trang_thai = reader.IsDBNull(reader.GetOrdinal("trang_thai"))
@@ -148,6 +159,107 @@ namespace DotNet_WEB.Module
                 danhSachViPham.Add(viPham);
             }
             return danhSachViPham;
+        }
+
+        public static List<thanh_toan> layLichSuThanhToan()
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from thanh_toan";
+            using var cmd = new MySqlCommand(sql, coon);
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<thanh_toan>();
+            while (reader.Read())
+            {
+                var ds = new thanh_toan
+                {
+                    ma_thanh_toan = reader.GetInt32("ma_thanh_toan"),
+                    ma_don_hang = reader.GetInt32("ma_don_hang"),
+                    so_tien = reader.GetDecimal("so_tien"),
+                    response_code = reader.GetString("response_code"),
+                    transaction_no = reader.GetString("transaction_no"),
+                    bank_code = reader.GetString("bank_code"),
+                    ngay_thanh_toan = reader.GetDateTime("ngay_thanh_toan"),
+                    trang_thai_thanh_toan = (TrangThaiThanhToan)Enum.Parse(typeof(TrangThaiThanhToan), reader.GetString("trang_thai_thanh_toan")),
+                    ngay_tao = reader.GetDateTime("ngay_tao")
+                };
+                danh_sach.Add(ds);
+            }
+            return danh_sach;
+        }
+
+        public static bool taoDichVuMoi(dich_vu dich_Vu)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "insert into dich_vu (ten_dich_vu, mo_ta, gia) values (@ten_Dich_Vu, @mo_Ta, @gia)";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ten_Dich_Vu", dich_Vu.ten_dich_vu);
+            cmd.Parameters.AddWithValue("@mo_Ta", dich_Vu.mo_ta);
+            cmd.Parameters.AddWithValue("@gia", dich_Vu.gia);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
+        public static bool xoaCongTy(int ma_Cong_Ty)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+            try
+            {
+                string xoa_tb_nd = "delete from nguoi_dung where ma_cong_ty = @ma_cong_ty";
+                using (var cmd = new MySqlCommand(xoa_tb_nd, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_cong_ty", ma_Cong_Ty);
+                    cmd.ExecuteNonQuery();
+                }
+
+                string xoa_tb_ct = "delete from cong_ty where ma_cong_ty = @ma_cong_ty";
+                using (var cmd = new MySqlCommand(xoa_tb_ct, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_cong_ty", ma_Cong_Ty);
+                    cmd.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return true;
+            }
+            catch
+            {
+                trans.Rollback();
+                return false;
+            }
+        }
+
+        public static bool xoaNguoiTimViec(int ma_Nguoi_Tim_Viec)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+            try
+            {
+                string xoa_tb_nd = "delete from nguoi_dung where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+                using (var cmd = new MySqlCommand(xoa_tb_nd, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", ma_Nguoi_Tim_Viec);
+                    cmd.ExecuteNonQuery();
+                }
+
+                string xoa_tb_ct = "delete from nguoi_tim_viec where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+                using (var cmd = new MySqlCommand(xoa_tb_ct, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", ma_Nguoi_Tim_Viec);
+                    cmd.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return true;
+            }
+            catch
+            {
+                trans.Rollback();
+                return false;
+            }
         }
     }
 }

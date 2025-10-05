@@ -1,0 +1,32 @@
+<div class="bg-light">
+  <app-header-web></app-header-web>
+  <div class="mt-5">
+    <div *ngIf="chi_tiet" class="container mt-5">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title text-primary">{{ chi_tiet?.tieu_de }}</h3>
+          <p><strong>Công ty:</strong> {{ chi_tiet?.ten_nguoi_dang }}</p>
+          <p><strong>Nội dung:</strong> {{ chi_tiet?.noi_dung }}</p>
+          <p><strong>Ngày tạo:</strong> {{ chi_tiet?.ngay_tao | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Ngày cập nhật:</strong> {{ chi_tiet?.ngay_cap_nhat | date:'dd/MM/yyyy' }}</p>
+          <h4 class="card-title text-success">Thông tin việc làm</h4>
+          <p><strong>Ngành nghề:</strong> {{ chi_tiet?.viec_lam?.nganh_nghe }}</p>
+          <p><strong>Vị trí:</strong> {{ chi_tiet?.viec_lam?.vi_tri }}</p>
+          <p><strong>Kinh nghiệm:</strong> {{ chi_tiet?.viec_lam?.kinh_nghiem }}</p>
+          <p><strong>Mô tả:</strong> {{ chi_tiet?.viec_lam?.mo_ta }}</p>
+          <p><strong>Yêu cầu:</strong> {{ chi_tiet?.viec_lam?.yeu_cau }}</p>
+          <p><strong>Mức lương:</strong> {{ chi_tiet?.viec_lam?.muc_luong }}</p>
+          <p><strong>Địa điểm:</strong> {{ chi_tiet?.viec_lam?.dia_diem }}</p>
+          <p><strong>Hình thức làm việc:</strong>
+            {{ layLoaiHinh(chi_tiet?.viec_lam?.loai_hinh) }}
+          </p>
+          <p><strong>Ngày tạo:</strong> {{ chi_tiet?.viec_lam?.ngay_tao | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Ngày cập nhật:</strong> {{ chi_tiet?.viec_lam?.ngay_cap_nhat | date:'dd/MM/yyyy' }}</p>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

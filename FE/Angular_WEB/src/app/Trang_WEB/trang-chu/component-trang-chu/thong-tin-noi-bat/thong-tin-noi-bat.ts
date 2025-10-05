@@ -14,8 +14,5 @@ import { FormsModule } from '@angular/forms';
 })
 export class ThongTinNoiBat {
   constructor(public auth: Auth) {}
-  @ViewChild('DangBai') DangBai!: DangBai;
-  async xuLyBaiDangMoi(data: {tieu_de: string, noi_dung: string}) {
-    await this.DangBai.themBaiDang();
-  }
+  
 }

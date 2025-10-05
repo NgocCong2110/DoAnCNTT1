@@ -37,6 +37,7 @@ export class DanhSachBaiDang implements OnInit, OnDestroy {
     });
 
     this.sub2 = this.baiDangService.danhSach$.subscribe(danhSach => {
+      this.danhSachBaiDangFull = [];
       this.danhSachBaiDangFull = danhSach;
       this.tongTrang = Math.ceil(this.danhSachBaiDangFull.length / this.soLuongMoiTrang);
       this.loadTrang(this.trangHienTai);

@@ -8,12 +8,31 @@ using ZstdSharp.Unsafe;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Quic;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Security.Cryptography;
+using System.Net;
 
 namespace DotNet_WEB.Module
 {
     public class ChucNang_WEB
     {
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
+        public static bool kiemTraTaiKhoanDangKy(nguoi_dung nguoi_Dung)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select 1 from nguoi_dung where email = @email";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@email", nguoi_Dung.email);
+            using var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                return false;
+            }
+            return true;
+        }
         public static bool themNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
         {
             if (nguoi_Tim_Viec.mat_khau == null || nguoi_Tim_Viec.email == null)
@@ -108,6 +127,78 @@ namespace DotNet_WEB.Module
                 return false;
             }
         }
+
+        public static bool doiMatKhauMoi(nguoi_dung nguoi_Dung)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+
+            try
+            {
+                string sqlLoai = "SELECT loai_nguoi_dung FROM nguoi_dung WHERE email = @email";
+                LoaiNguoiDung loaiNguoiDung = LoaiNguoiDung.None;
+
+                using (var cmd = new MySqlCommand(sqlLoai, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@email", nguoi_Dung.email);
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        string? loaiStr = result.ToString();
+                        if (!Enum.TryParse(loaiStr, out loaiNguoiDung))
+                        {
+                            throw new Exception("Loại người dùng trong DB không hợp lệ.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Không tìm thấy người dùng với email này.");
+                    }
+                }
+
+                string? mkMaHoa = maHoaMatKhau(nguoi_Dung.mat_khau);
+
+                string doi_mk_nguoi_dung = "UPDATE nguoi_dung SET mat_khau = @mat_khau WHERE email = @email";
+                using (var cmd = new MySqlCommand(doi_mk_nguoi_dung, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@mat_khau", mkMaHoa);
+                    cmd.Parameters.AddWithValue("@email", nguoi_Dung.email);
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (loaiNguoiDung == LoaiNguoiDung.cong_Ty)
+                {
+                    string doi_mk_cong_ty = "UPDATE cong_ty SET mat_khau_dn_cong_ty = @mat_khau WHERE email = @email";
+                    using (var cmd = new MySqlCommand(doi_mk_cong_ty, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@mat_khau", mkMaHoa);
+                        cmd.Parameters.AddWithValue("@email", nguoi_Dung.email);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else if (loaiNguoiDung == LoaiNguoiDung.nguoi_Tim_Viec)
+                {
+                    string doi_mk_tim_viec = "UPDATE nguoi_tim_viec SET mat_khau = @mat_khau WHERE email = @email";
+                    using (var cmd = new MySqlCommand(doi_mk_tim_viec, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@mat_khau", mkMaHoa);
+                        cmd.Parameters.AddWithValue("@email", nguoi_Dung.email);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                trans.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                Console.WriteLine("Lỗi đổi mật khẩu: " + ex.Message);
+                return false;
+            }
+        }
+
 
         public static List<nguoi_dung> thongTinNguoiDungBangEmail(string email)
         {
@@ -241,29 +332,6 @@ namespace DotNet_WEB.Module
             return null;
         }
 
-
-        // public static List<nguoi_dung> layThongTinNguoiDung(string email)
-        // {
-        //     using var conn = new MySqlConnection(chuoi_KetNoi);
-        //     conn.Open();
-        //     string lay_thong_tin = "select * from nguoi_dung where email = @email";
-        //     using var cmd = new MySqlCommand(lay_thong_tin, conn);
-        //     cmd.Parameters.AddWithValue("@email", email);
-        //     using var reader = cmd.ExecuteReader();
-        //     var danh_sach_nguoi_dung = new List<nguoi_dung>();
-        //     while (reader.Read())
-        //     {
-        //         var nguoiDung = new nguoi_dung
-        //         {
-        //             loai_nguoi_dung = Enum.Parse<LoaiNguoiDung>(reader.GetString("loai_nguoi_dung")),
-        //             email = reader.GetString("email"),
-        //             ten_dang_nhap = reader.GetString("ten_dang_nhap"),
-        //         };
-        //         danh_sach_nguoi_dung.Add(nguoiDung);
-        //     }
-        //     return danh_sach_nguoi_dung;
-        // }
-
         public static List<bai_dang> layDanhSachBaiDang()
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
@@ -340,6 +408,33 @@ namespace DotNet_WEB.Module
             return null;
         }
 
+        public static List<bai_dang> layBaiDangTheoMa(int ma_Bai_Dang)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from bai_dang where ma_bai_dang = @ma_Bai_Dang";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_Bai_Dang", ma_Bai_Dang);
+            using var reader = cmd.ExecuteReader();
+            var thong_tin = new List<bai_dang>();
+            if (reader.Read())
+            {
+                var bai_d = new bai_dang
+                {
+                    ma_bai_dang = reader.GetInt32("ma_bai_dang"),
+                    ma_nguoi_dang = reader.GetInt32("ma_nguoi_dang"),
+                    ten_nguoi_dang = reader.GetString("ten_nguoi_dang"),
+                    tieu_de = reader.GetString("tieu_de"),
+                    noi_dung = reader.GetString("noi_dung"),
+                    loai_bai = (LoaiBai)Enum.Parse(typeof(LoaiBai), reader.GetString("loai_bai")),
+                    trang_thai = (TrangThaiBai)Enum.Parse(typeof(TrangThaiBai), reader.GetString("trang_thai")),
+                    ngay_tao = reader.GetDateTime("ngay_tao"),
+                    ngay_cap_nhat = reader.GetDateTime("ngay_cap_nhat"),
+                };
+                thong_tin.Add(bai_d);
+            }
+            return thong_tin;
+        }
 
         public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam)
         {
@@ -502,17 +597,34 @@ namespace DotNet_WEB.Module
             return false;
         }
 
-        public static List<thong_bao> layDanhSachThongBao()
+        public static List<thong_bao> layDanhSachThongBao(thong_bao_kieu_nguoi_dung tb_knd)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = @"select tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, qt.ho_ten,
+            string sql = "";
+            if (tb_knd.kieu_nguoi_dung == "nguoi_Tim_Viec")
+            {
+                sql = @"select tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, qt.ho_ten,
                                 tb.ma_quan_tri, tb.ma_cong_ty, ct.ten_cong_ty, tb.ngay_tao
                             from thong_bao tb 
                             LEFT JOIN quan_tri qt ON tb.ma_quan_tri = qt.ma_quan_tri
                             LEFT JOIN cong_ty ct ON tb.ma_cong_ty = ct.ma_cong_ty
+                            WHERE tb.loai_thong_bao != 'thu_Moi_Phong_Van'
+                                OR (tb.loai_thong_bao = 'thu_Moi_Phong_Van' AND tb.ma_nguoi_tim_viec = @ma_Nguoi_Tim_Viec)
                             ORDER BY tb.ma_thong_bao ASC";
+            }
+            if (tb_knd.kieu_nguoi_dung != "nguoi_Tim_Viec")
+            {
+                sql = @"select tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, qt.ho_ten,
+                                tb.ma_quan_tri, tb.ma_cong_ty, ct.ten_cong_ty, tb.ngay_tao
+                            from thong_bao tb 
+                            LEFT JOIN quan_tri qt ON tb.ma_quan_tri = qt.ma_quan_tri
+                            LEFT JOIN cong_ty ct ON tb.ma_cong_ty = ct.ma_cong_ty
+                            WHERE tb.loai_thong_bao != 'thu_Moi_Phong_Van'
+                            ORDER BY tb.ma_thong_bao ASC";
+            }
             using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("ma_Nguoi_Tim_Viec", tb_knd.ma_nguoi_tim_viec);
             using var reader = cmd.ExecuteReader();
             var danh_sach_thong_bao = new List<thong_bao>();
             while (reader.Read())
@@ -543,7 +655,6 @@ namespace DotNet_WEB.Module
             }
             return danh_sach_thong_bao;
         }
-
         public static List<thong_bao> chonThongBaoCoDinh(LoaiThongBao loai_Thong_Bao)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
@@ -594,5 +705,448 @@ namespace DotNet_WEB.Module
 
             return danh_sach_thong_bao_co_dinh;
         }
+
+        public static bool xoaBaiDang(int ma_Bai_Dang)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+
+            try
+            {
+                string sql_vieclam = "DELETE FROM viec_lam WHERE ma_bai_dang = @ma_Bai_Dang";
+                using (var cmd1 = new MySqlCommand(sql_vieclam, coon, trans))
+                {
+                    cmd1.Parameters.AddWithValue("@ma_Bai_Dang", ma_Bai_Dang);
+                    cmd1.ExecuteNonQuery();
+                }
+
+                string sql_baidang = "DELETE FROM bai_dang WHERE ma_bai_dang = @ma_Bai_Dang";
+                int rowef;
+                using (var cmd2 = new MySqlCommand(sql_baidang, coon, trans))
+                {
+                    cmd2.Parameters.AddWithValue("@ma_Bai_Dang", ma_Bai_Dang);
+                    rowef = cmd2.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+                return rowef > 0;
+            }
+            catch
+            {
+                trans.Rollback();
+                return false;
+            }
+        }
+
+        public static bool guiThongBaoMoi(thong_bao thong_Bao)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "insert into thong_bao (tieu_de, noi_dung, loai_thong_bao, ma_quan_tri, ma_cong_ty, ma_nguoi_nhan, ngay_tao, ngay_cap_nhat) values(@tieu_de, @noi_dung, @loai_thong_bao, @ma_quan_tri, @ma_cong_ty, @ma_nguoi_nhan, @ngay_tao, @ngay_cap_nhat)";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@tieu_de", thong_Bao.tieu_de);
+            cmd.Parameters.AddWithValue("@noi_dung", thong_Bao.noi_dung);
+            cmd.Parameters.AddWithValue("@loai_thong_bao", thong_Bao.loai_thong_bao);
+            cmd.Parameters.AddWithValue("@ma_quan_tri", thong_Bao.ma_quan_tri);
+            cmd.Parameters.AddWithValue("@ma_cong_ty", thong_Bao.ma_cong_ty);
+            cmd.Parameters.AddWithValue("@ma_nguoi_nhan", thong_Bao.ma_nguoi_nhan);
+            cmd.Parameters.AddWithValue("@ngay_tao", thong_Bao.ngay_tao);
+            cmd.Parameters.AddWithValue("@ngay_cap_nhat", thong_Bao.ngay_cap_nhat);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
+        public static List<viec_lam> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
+        {
+            var chuoiYeuCau = Normalize(chuoi_yeu_cau);
+
+            var mapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "laptrinhvien", "Công nghệ thông tin" },
+                { "developer", "Công nghệ thông tin" },
+                { "coder", "Công nghệ thông tin" },
+                { "tester", "Công nghệ thông tin" },
+                { "ke toan", "Tài chính - kế toán" },
+                { "accountant", "Tài chính - kế toán" },
+                { "giaovien", "Giáo dục - đào tạo" },
+                { "teacher", "Giáo dục - đào tạo" }
+            };
+
+            string mappedNganh = "";
+
+            if (mapping.TryGetValue(chuoiYeuCau, out string? nganh))
+            {
+                mappedNganh = nganh;
+            }
+            else
+            {
+
+                using var coon = new MySqlConnection(chuoi_KetNoi);
+                coon.Open();
+
+                string sql = "SELECT DISTINCT nganh_nghe FROM viec_lam";
+                using var cmd = new MySqlCommand(sql, coon);
+                using var reader = cmd.ExecuteReader();
+
+                double bestScore = 0;
+                while (reader.Read())
+                {
+                    string nganh_nghe = reader.GetString("nganh_nghe");
+                    double acc = Similarity(chuoiYeuCau, Normalize(nganh_nghe));
+
+                    if (acc > bestScore)
+                    {
+                        bestScore = acc;
+                        mappedNganh = nganh_nghe;
+                    }
+                }
+            }
+
+            var ketQua = new List<viec_lam>();
+            using (var coon = new MySqlConnection(chuoi_KetNoi))
+            {
+                coon.Open();
+                string sql = "SELECT * FROM viec_lam WHERE nganh_nghe = @nganh";
+                using var cmd = new MySqlCommand(sql, coon);
+                cmd.Parameters.AddWithValue("@nganh", mappedNganh);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var vl = new viec_lam
+                    {
+                        ma_bai_dang = reader.GetInt32("ma_bai_dang"),
+                        nganh_nghe = reader.GetString("nganh_nghe"),
+                        tieu_de = reader.GetString("tieu_de"),
+                        mo_ta = reader.GetString("mo_ta"),
+                        muc_luong = reader.GetString("muc_luong"),
+                        kinh_nghiem = reader.GetString("kinh_nghiem"),
+                        dia_diem = reader.GetString("dia_diem")
+                    };
+                    ketQua.Add(vl);
+                }
+            }
+
+            return ketQua;
+        }
+
+        public static string taoDonHang(tao_don_hang tdh)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+            string payment_Url = "";
+            try
+            {
+                decimal gia_dich_vu = 0;
+                string lay_gia_dich_vu = "SELECT gia FROM dich_vu WHERE ma_dich_vu = @ma_Dich_Vu";
+                using (var cmd = new MySqlCommand(lay_gia_dich_vu, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Dich_Vu", tdh.ma_dich_vu);
+                    var kq = cmd.ExecuteScalar();
+                    if (kq == null) throw new Exception("Dịch vụ không tồn tại");
+                    gia_dich_vu = Convert.ToDecimal(kq);
+                }
+
+                int ma_don_hang;
+                string them_don_hang = @"
+            INSERT INTO don_hang (ma_cong_ty, tong_tien, trang_thai_don_hang, ngay_tao)
+            VALUES (@ma_Cong_Ty, @tong_tien, 'cho_Thanh_Toan', NOW());
+            SELECT LAST_INSERT_ID();";
+
+                using (var cmd = new MySqlCommand(them_don_hang, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Cong_Ty", tdh.ma_cong_ty);
+                    cmd.Parameters.AddWithValue("@tong_tien", gia_dich_vu);
+                    var res = cmd.ExecuteScalar();
+                    if (res == null) throw new Exception("Không lấy được ID đơn hàng");
+                    ma_don_hang = Convert.ToInt32(res);
+                }
+
+                string tao_chi_tiet_don_hang = @"
+            INSERT INTO chi_tiet_don_hang (ma_don_hang, ma_dich_vu, so_luong, don_gia, trang_thai_don_hang)
+            VALUES (@ma_Don_Hang, @ma_Dich_Vu, 1, @don_Gia, 'cho_Thanh_Toan')";
+
+                using (var cmd = new MySqlCommand(tao_chi_tiet_don_hang, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
+                    cmd.Parameters.AddWithValue("@ma_Dich_Vu", tdh.ma_dich_vu);
+                    cmd.Parameters.AddWithValue("@don_Gia", gia_dich_vu);
+                    cmd.ExecuteNonQuery();
+                }
+
+                trans.Commit();
+
+                payment_Url = GenerateVNPayUrl(ma_don_hang, gia_dich_vu);
+            }
+            catch
+            {
+                try { trans.Rollback(); } catch { }
+                throw;
+            }
+            return payment_Url;
+        }
+
+        public static bool kiemTraOTPTonTai(string email)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select ma_otp_gui_di from ma_otp where email = @email and het_han_luc > now()";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@email", email);
+            using var reader = cmd.ExecuteReader();
+            return !reader.Read();
+        }
+
+        public static int taoOTPMoi(string email)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            int ma_otp_rad = RanDomOTP();
+            string sql = "insert into ma_otp (email, ma_otp_gui_di, het_han_luc, da_su_dung, so_lan_thu) values(@email, @otp_rad, @thoi_gian_het_han, 0, 0)";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@otp_rad", ma_otp_rad);
+            cmd.Parameters.AddWithValue("@thoi_gian_het_han", DateTime.Now.AddMinutes(5));
+            cmd.ExecuteNonQuery();
+            return ma_otp_rad;
+        }
+
+        public static int RanDomOTP()
+        {
+            Random random = new Random();
+            int num = random.Next(100000, 999999);
+            return num;
+        }
+
+        private static string GenerateVNPayUrl(int ma_don_hang, decimal tongTien)
+        {
+            var vnp_Params = new Dictionary<string, string>
+            {
+                { "vnp_Version", "2.1.0" },
+                { "vnp_Command", "pay" },
+                { "vnp_TmnCode", "BROPIXNH" },
+                { "vnp_Amount", ((long)(tongTien * 100)).ToString() },
+                { "vnp_CurrCode", "VND" },
+                { "vnp_TxnRef", ma_don_hang.ToString() },
+                { "vnp_OrderInfo", $"Thanh toán đơn hàng {ma_don_hang}" },
+                { "vnp_OrderType", "other" },
+                { "vnp_Locale", "vn" },
+                { "vnp_ReturnUrl", "https://1e3b4214677f.ngrok-free.app/api/API_WEB/VNPayReturn" },
+                { "vnp_IpAddr", "127.0.0.1" },
+                { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
+                { "vnp_SecureHashType", "SHA256" }
+            };
+
+            var sortedParams = vnp_Params.OrderBy(k => k.Key);
+            var queryString = new StringBuilder();
+            var hashData = new StringBuilder();
+
+            foreach (var kv in sortedParams)
+            {
+                if (queryString.Length > 0)
+                {
+                    queryString.Append("&");
+                    hashData.Append("&");
+                }
+                queryString.Append($"{kv.Key}={WebUtility.UrlEncode(kv.Value)}");
+                hashData.Append($"{kv.Key}={kv.Value}");
+            }
+
+            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("I7LL3FX1ZJQZ6OCXQ9EGY9DVT0W0Q3EE"));
+            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(hashData.ToString()));
+            var vnp_SecureHash = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
+
+            return $"{"https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
+        }
+
+        public static bool capNhatTrangThaiDonHang(int ma_don_hang, decimal so_tien, string vnpay_res)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            using var trans = coon.BeginTransaction();
+            try
+            {
+                string cap_nhat_don_hang = "UPDATE don_hang SET trang_thai_don_hang = 'da_Thanh_Toan' WHERE ma_don_hang=@ma_Don_Hang";
+                using (var cmd = new MySqlCommand(cap_nhat_don_hang, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
+                    cmd.ExecuteNonQuery();
+                }
+
+                string cap_nhat_chi_tiet_don_hang = "UPDATE chi_tiet_don_hang SET trang_thai_don_hang = 'da_Thanh_Toan' WHERE ma_don_hang=@ma_Don_Hang";
+                using (var cmd = new MySqlCommand(cap_nhat_chi_tiet_don_hang, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
+                    cmd.ExecuteNonQuery();
+                }
+
+                string them_thanh_toan_moi = @"INSERT INTO thanh_toan (ma_don_hang, so_tien, response_code, ngay_thanh_toan, trang_thai_thanh_toan) " +
+                        "VALUES (@ma_Don_Hang, @so_Tien, @res, now(), 'da_Thanh_Toan')";
+                using (var cmd = new MySqlCommand(them_thanh_toan_moi, coon, trans))
+                {
+                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
+                    cmd.Parameters.AddWithValue("@so_Tien", so_tien);
+                    cmd.Parameters.AddWithValue("@res", vnpay_res);
+                    cmd.ExecuteNonQuery();
+                }
+                trans.Commit();
+                return true;
+            }
+            catch
+            {
+                trans.Rollback();
+                return false;
+            }
+        }
+
+
+
+        public static List<viec_lam_ket_qua> deXuatViecLamSelector(viec_lam viec_Lam)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from viec_lam";
+            using var cmd = new MySqlCommand(sql, coon);
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<viec_lam_ket_qua>();
+            while (reader.Read())
+            {
+                var vl = new viec_lam_ket_qua
+                {
+                    ma_viec = reader.GetInt32("ma_viec"),
+                    nganh_nghe = reader.GetString("nganh_nghe"),
+                    dia_diem = reader.GetString("dia_diem"),
+                    muc_luong = reader.GetString("muc_luong"),
+                    kinh_nghiem = reader.GetString("kinh_nghiem"),
+                    loai_hinh = (LoaiHinhViecLam)Enum.Parse(typeof(LoaiHinhViecLam), reader.GetString("loai_hinh")),
+                    ma_bai_dang = reader.GetInt32("ma_bai_dang"),
+                    diem_phu_hop = 0
+                };
+                var vl_nganh_nghe = Normalize(vl.nganh_nghe);
+                var vl_dia_diem = Normalize(vl.dia_diem);
+                var vl_muc_luong = Normalize(vl.muc_luong);
+                var vl_kinh_nghiem = Normalize(vl.kinh_nghiem);
+                var vl_loai_hinh = Normalize(vl.loai_hinh.ToString());
+
+                var req_nganh_nghe = Normalize(viec_Lam.nganh_nghe);
+                var req_dia_diem = Normalize(viec_Lam.dia_diem);
+                var req_muc_luong = Normalize(viec_Lam.muc_luong);
+                var req_kinh_nghiem = Normalize(viec_Lam.kinh_nghiem);
+                var req_loai_hinh = Normalize(viec_Lam.loai_hinh.ToString());
+
+                if (!string.IsNullOrEmpty(req_dia_diem) && vl_dia_diem.Contains(req_dia_diem))
+                {
+                    vl.diem_phu_hop += 3;
+                }
+
+                if (!string.IsNullOrEmpty(req_nganh_nghe) && vl_nganh_nghe.Contains(req_nganh_nghe))
+                {
+                    vl.diem_phu_hop += 6;
+                }
+
+                if (!string.IsNullOrEmpty(req_muc_luong) && vl_muc_luong.Contains(req_muc_luong))
+                {
+                    vl.diem_phu_hop += 2;
+                }
+
+                if (!string.IsNullOrEmpty(req_kinh_nghiem) && vl_kinh_nghiem.Contains(req_kinh_nghiem))
+                {
+                    vl.diem_phu_hop += 2;
+                }
+
+                if (!string.IsNullOrEmpty(req_loai_hinh) && vl_loai_hinh.Contains(req_loai_hinh))
+                {
+                    vl.diem_phu_hop += 1;
+                }
+
+                if (vl.diem_phu_hop > 0)
+                    danh_sach.Add(vl);
+            }
+            return danh_sach.OrderByDescending(j => j.diem_phu_hop).Take(5).ToList();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        public static string Normalize(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            string normalized = input.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (char c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+
+            string result = sb.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant();
+
+            result = Regex.Replace(result, @"[\s_\-.,/]+", "");
+
+            return result;
+        }
+
+        public static double Similarity(string s1, string s2)
+        {
+            int distance = Levenshtein(s1, s2);
+            int maxLen = Math.Max(s1.Length, s2.Length);
+            return 1.0 - (double)distance / maxLen;
+        }
+
+        public static int Levenshtein(string s, string t)
+        {
+            int n = s.Length;
+            int m = t.Length;
+            int[,] d = new int[n + 1, m + 1];
+
+            if (n == 0) return m;
+            if (m == 0) return n;
+
+            for (int i = 0; i <= n; d[i, 0] = i++) ;
+            for (int j = 0; j <= m; d[0, j] = j++) ;
+
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+                    d[i, j] = Math.Min(
+                        Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                        d[i - 1, j - 1] + cost
+                    );
+                }
+            }
+            return d[n, m];
+        }
+
+
+        public static string? maHoaMatKhau(string mat_khau)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(mat_khau);
+                byte[] hash = sha256.ComputeHash(bytes);
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
     }
 }

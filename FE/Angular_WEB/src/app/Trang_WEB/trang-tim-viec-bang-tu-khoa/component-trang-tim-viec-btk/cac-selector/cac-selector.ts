@@ -1,21 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { ThongTinViecLam } from '../../../../services/thong-tin-viec-lam-service/thong-tin-viec-lam';
+
+interface API_RESPONSE {
+  success: boolean;
+  danh_sach: any[];
+}
 
 @Component({
   selector: 'app-cac-selector',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './cac-selector.html', 
+  templateUrl: './cac-selector.html',
   styleUrls: ['./cac-selector.css']
 })
-export class CacSelector {
+export class CacSelector implements OnInit{
+
+  constructor(public httpclient: HttpClient, public cd: ChangeDetectorRef, private router: Router, public vl: ThongTinViecLam) { }
+
+  danh_sach_de_xuat: any[] = [];
+
+  loading = false;
+
+  toan_bo = true;
+
+  tung_phan = false;
+
+  error = false;
+
+  ma_bai_dang: number = 0;
 
   nganh_nghe = '';
   dia_diem = '';
   muc_luong = '';
   kinh_nghiem = '';
-  hinh_thuc = '';
+  hinh_thuc: number = 0;
   chuc_vu = '';
   phuc_loi = '';
   quy_mo_cong_ty = '';
@@ -40,7 +63,7 @@ export class CacSelector {
     { value: 'hanoi', label: 'Hà Nội' },
     { value: 'hcm', label: 'TP. Hồ Chí Minh' },
     { value: 'danang', label: 'Đà Nẵng' },
-    { value: 'lam_viec_tu_xa', label: 'Remote' }
+    { value: 'cantho', label: 'Cần Thơ' }
   ];
 
   mucLuongList = [
@@ -58,10 +81,10 @@ export class CacSelector {
   ];
 
   hinhThucList = [
-    { value: 'fulltime', label: 'Toàn thời gian' },
-    { value: 'parttime', label: 'Bán thời gian' },
-    { value: 'freelance', label: 'Freelance' },
-    { value: 'lam_viec_tu_xa', label: 'Remote' }
+    { value: 1, label: 'Toàn thời gian' },
+    { value: 2, label: 'Bán thời gian' },
+    { value: 3, label: 'Thực tập' },
+    { value: 4, label: 'Freelance' }
   ];
 
   chucVuList = [
@@ -93,30 +116,85 @@ export class CacSelector {
       dia_diem: this.dia_diem,
       muc_luong: this.muc_luong,
       kinh_nghiem: this.kinh_nghiem,
-      hinh_thuc: this.hinh_thuc,
-      chuc_vu: this.chuc_vu,
-      phuc_loi: this.phuc_loi,
-      quy_mo_cong_ty: this.quy_mo_cong_ty
+      loai_hinh: this.hinh_thuc,
     };
 
+    this.loading = true;
     this.duaRaDeXuat(bo_loc);
   }
 
-  async duaRaDeXuat(bo_loc: any) { 
-    try {
-      const response = await fetch("http://localhost:65001/api/API_WEB/", { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify(bo_loc) 
-      }); 
-      const data = await response.json(); 
-      if (data.success) { 
-        console.log("Dữ liệu lọc thành công:", data); 
-      } else {
-        console.error("Lỗi:", data.message); 
-      } 
-    } catch (error) {
-      console.error("Lỗi kết nối API:", error);
-    }
+  ngOnInit(): void {
+    this.vl.ket_qua$.subscribe(data => {
+      if(data && data.length > 0){
+        this.danh_sach_de_xuat = data;
+        this.toan_bo = false;
+        this.tung_phan = true;
+        this.cd.markForCheck();
+      }
+    })
+
+    this.layDanhSachViecLam();
+  }
+
+  layDanhSachViecLam()  {
+    this.toan_bo = true;
+    this.tung_phan = false;
+    this.cd.markForCheck();
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachViecLam', {})
+      .subscribe({
+        next: (data) => {
+          this.loading = false;
+
+          if (data.success) {
+            this.danh_sach_de_xuat = [];
+            this.danh_sach_de_xuat = data.danh_sach;
+            this.error = false;
+          }
+          else {
+            this.error = true;
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = true;
+          this.danh_sach_de_xuat = [];
+          this.cd.markForCheck();
+        }
+      })
+  }
+
+  duaRaDeXuat(viec_Lam: any) {
+    this.toan_bo = false;
+    this.tung_phan = true;
+    this.loading = true;
+    this.cd.markForCheck();
+    //van de ve warp object
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/deXuatViecLamSelector', viec_Lam)
+      .subscribe({
+        next: (data) => {
+          this.loading = false;
+
+          if (data.success) {
+            this.danh_sach_de_xuat = [];
+            this.danh_sach_de_xuat = data.danh_sach;
+            this.error = false;
+          }
+          else {
+            this.error = true;
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = true;
+          this.danh_sach_de_xuat = [];
+          this.cd.markForCheck();
+        }
+      })
+  }
+
+  chiTietBaiDang(ma_bai_dang: number){
+    this.router.navigate(['trang-chi-tiet-viec-lam', ma_bai_dang]);
   }
 }

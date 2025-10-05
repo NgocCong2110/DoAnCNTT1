@@ -14,6 +14,7 @@
                     <th>Mức lương</th>
                     <th>Kinh nghiệm</th>
                     <th>Địa điểm</th>
+                    <th>Trạng thái</th>
                     <th>Ngày ứng tuyển</th>
                 </tr>
             </thead>
@@ -25,6 +26,13 @@
                     <td>{{ ls.viec_Lam?.muc_luong }}</td>
                     <td>{{ ls.viec_Lam?.kinh_nghiem }}</td>
                     <td>{{ ls.cong_Ty?.dia_chi }}</td>
+                    <td [ngClass]="{
+                        'text-warning': ls.trang_thai === 1,
+                        'text-success': ls.trang_thai === 2,
+                        'text-danger': ls.trang_thai === 3
+                    }">
+                        {{ trangThaiMap(ls.trang_thai) }}
+                    </td>
                     <td>{{ ls.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
                 </tr>
             </tbody>

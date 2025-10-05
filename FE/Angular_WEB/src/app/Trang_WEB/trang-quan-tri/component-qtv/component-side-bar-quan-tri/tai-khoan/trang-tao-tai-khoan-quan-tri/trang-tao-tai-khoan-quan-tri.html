@@ -18,7 +18,7 @@
 					<input type="password" id="matkhau_quan_tri" class="form-control" placeholder="Mật khẩu quản trị" [(ngModel)]="matkhau_quan_tri" name="matkhau_quan_tri">
 				</div>
 			</div>
-			<button type="submit" class="w-100 tao-tkqt-btn" style="background-color: gray; color: white;">
+			<button type="submit" class="w-100 tao-tkqt-btn" style="background-color: gray; color: white;" (click)="taoTaiKhoanQuanTri()">
 				<i class="bi bi-person-check me-2"></i> Tạo tài khoản
 			</button>
 		</form>

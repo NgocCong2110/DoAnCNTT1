@@ -21,13 +21,14 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   noi_dung_bao_cao: string = "";
   thongTin: any;
   pop_up_ung_tuyen = false;
+  pop_up_xoa_bai = false;
 
   constructor(
     public baiDangService: BaiDang,
     public auth: Auth,
     private http: HttpClient,
     private cdr: ChangeDetectorRef
-  ) { 
+  ) {
     this.thongTin = this.auth.layThongTinNguoiDung();
   }
 
@@ -51,10 +52,6 @@ export class TinTuyenDung implements OnInit, OnDestroy {
 
   layLoaiHinh(loaiHinh: number) {
     return this.loaiHinhMap[loaiHinh] || 'Không xác định';
-  }
-
-  themBaiDang(a: string, b: string) {
-    console.log("skibidi");
   }
 
   baoCaoBaiDang() {
@@ -124,6 +121,39 @@ export class TinTuyenDung implements OnInit, OnDestroy {
         alert("Ứng tuyển thất bại.");
       }
     });
+  }
+
+  moPopUpXoa() {
+    this.pop_up_xoa_bai = true;
+    this.cdr.detectChanges();
+  }
+
+  huyXoa() {
+    this.pop_up_xoa_bai = false;
+    this.cdr.detectChanges();
+  }
+
+  xacNhanXoa() {
+    if (!this.bai_dang_duoc_chon?.ma_bai_dang) return;
+
+    this.baiDangService.xoaBaiDang(this.bai_dang_duoc_chon.ma_bai_dang)
+      .then((data) => {
+        if (data?.success) {
+          alert("Xoá bài đăng thành công.");
+          this.pop_up_xoa_bai = false;
+          this.baiDangService.chonBaiDang(null); 
+        } else {
+          alert("Xoá bài đăng thất bại.");
+        }
+        this.cdr.detectChanges();
+      })
+      .catch(() => {
+        alert("Có lỗi xảy ra khi xoá.");
+      });
+  }
+
+  xoaBaiDang() {
+    alert(this.bai_dang_duoc_chon?.ma_bai_dang);
   }
 
   moPopUpBaoCao() {

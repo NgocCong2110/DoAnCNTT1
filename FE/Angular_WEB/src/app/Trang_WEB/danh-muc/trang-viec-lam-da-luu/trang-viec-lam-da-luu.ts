@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 
 interface API_RESPONSE {
-  success: boolean,
-  danh_sach: []
+  success: boolean;
+  danh_sach: any[];
 }
 
 @Component({
@@ -34,12 +34,12 @@ export class TrangViecLamDaLuu implements OnInit {
   }
 
   layDanhSachBaiDangDaLuu() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachBaiDangDaLuu', { ma_nguoi_luu: this.thongTin?.thong_tin_chi_tiet.ma_nguoi_dung })
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachBaiDangDaLuu', { ma_nguoi_luu: this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung })
       .subscribe({
         next: (data) => {
           this.loading = false;
           if(data.success){
-            this.danh_sach_bai_dang_da_luu = data.danh_sach;
+            this.danh_sach_bai_dang_da_luu = data.danh_sach || [];
           }
           else{
             this.pop_up_lay_thong_tin_that_bai = true;
@@ -47,6 +47,11 @@ export class TrangViecLamDaLuu implements OnInit {
               this.pop_up_lay_thong_tin_that_bai = false;
             },1500);
           }
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.danh_sach_bai_dang_da_luu = [];
           this.cd.detectChanges();
         }
       });

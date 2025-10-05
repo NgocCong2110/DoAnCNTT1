@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 
-interface API_RESPONSE{
+interface API_RESPONSE {
   success: boolean;
   danh_sach: any[];
 }
@@ -21,8 +21,14 @@ export class TrangDanhSachCongTy implements OnInit {
 
   danh_sach_cong_ty_full: any[] = [];
   danh_sach_cong_ty: any[] = [];
+  cong_ty_chon: any | null = null;
   loading = true;
   error = '';
+
+  index = 0;
+
+  showXacNhanXoa = false;
+  formXoa = false;
 
   trangHienTai = 1;
   soLuongMoiTrang = 10;
@@ -52,6 +58,38 @@ export class TrangDanhSachCongTy implements OnInit {
           this.cd.markForCheck();
         }
       });
+  }
+
+  moXacNhanXoa(cong_ty: any, index: number) {
+    this.showXacNhanXoa = true;
+    this.cong_ty_chon = cong_ty
+    this.index = index;
+  }
+
+  xoaCongTy() {
+    const ma_cong_ty = this.cong_ty_chon?.ma_cong_ty;
+    if (!ma_cong_ty) return;
+    this.danh_sach_cong_ty_full.splice(this.index, 1);
+    this.loadTrang(this.trangHienTai);
+    this.showXacNhanXoa = false;
+    this.cd.detectChanges();
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/xoaCongTy', ma_cong_ty)
+      .subscribe({
+        next: (data) => {
+          if (!data.success) {
+            alert('Xóa thất bại, sẽ tải lại danh sách!');
+            this.layDanhSachCongTy();
+          }
+        },
+        error: () => {
+          alert('Lỗi kết nối, tải lại danh sách!');
+          this.layDanhSachCongTy();
+        }
+      });
+  }
+
+  huyXoa() {
+    this.showXacNhanXoa = false;
   }
 
   loadTrang(trang: number) {

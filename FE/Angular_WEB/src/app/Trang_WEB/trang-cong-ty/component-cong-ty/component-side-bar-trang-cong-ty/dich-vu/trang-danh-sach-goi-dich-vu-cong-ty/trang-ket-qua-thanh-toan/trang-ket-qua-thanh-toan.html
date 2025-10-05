@@ -1,0 +1,8 @@
+<div *ngIf="success">
+    ✅ Thanh toán thành công - Mã đơn hàng: {{maDonHang}}
+</div>
+<div *ngIf="!success">
+    ❌ Thanh toán thất bại - Mã đơn hàng: {{maDonHang}}
+    <br *ngIf="errorCode">
+    <span *ngIf="errorCode">Mã lỗi VNPay: {{errorCode}}</span>
+</div>
