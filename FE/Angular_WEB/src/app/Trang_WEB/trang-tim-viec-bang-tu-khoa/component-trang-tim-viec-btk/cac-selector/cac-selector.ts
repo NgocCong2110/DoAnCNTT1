@@ -55,8 +55,8 @@ export class CacSelector implements OnInit{
   nganhNgheList = [
     { value: 'cong_nghe_thong_tin', label: 'Công nghệ thông tin' },
     { value: 'marketing', label: 'Marketing' },
-    { value: 'tai_chinh', label: 'Tài chính - Kế toán' },
-    { value: 'kinh_doanh', label: 'Kinh doanh - Bán hàng' }
+    { value: 'vien_thong', label: 'Viễn Thông' },
+    { value: 'ban_le', label: 'Kinh doanh - Bán hàng' }
   ];
 
   diaDiemList = [

@@ -22,6 +22,6 @@ export class TheTimKiemViecLam {
         this.router.navigate(['/trang-tim-viec-xung-quanh']);
       }
       this.loading = '';
-    }, 1000);
+    }, 500);
   }
 }

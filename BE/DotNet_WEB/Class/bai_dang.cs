@@ -22,8 +22,6 @@ namespace DotNet_WEB.Class
 
         public string? noi_dung { get; set; }
 
-        public int luot_thich { get; set; }
-
         public LoaiBai loai_bai { get; set; } = LoaiBai.tuyen_Dung;
 
         public TrangThaiBai trang_thai { get; set; } = TrangThaiBai.cong_Khai;

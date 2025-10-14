@@ -1,40 +1,64 @@
-<div class="bg-light">
+<div class="container py-3">
 
-  <div class="container py-3">
-    <div class="card shadow-sm p-4 rounded-3">
-      <h3 class="mb-3 text-center">Chọn loại thông báo</h3>
+  <div class="card shadow-sm p-4 rounded-3 mb-4">
+    <h3 class="mb-3 text-center">Chọn loại thông báo</h3>
+    <select class="form-select" (change)="chonThongBao($event)">
+      <option selected disabled>-- Vui lòng chọn --</option>
+      <option value="toan_Bo">Toàn bộ thông báo</option>
+      <option value="1">Thông báo từ server</option>
+      <option value="2">Việc làm mới</option>
+      <option value="3" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn</option>
+    </select>
+  </div>
 
-      <select class="form-select" id="thongBaoSelect" (change)="chonThongBao($event)">
-        <option selected disabled>-- Vui lòng chọn --</option>
-        <option value="toan_Bo">Toàn bộ thông báo</option>
-        <option value="1">Thông báo từ server</option>
-        <option value="2">Việc làm mới</option>
-        <option value="3"
-          *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">
-          Thư mời phỏng vấn
-        </option>
-      </select>
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="text-muted mt-2">Đang tải thông báo...</p>
+  </div>
+
+  <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="list-group">
+    <div class="list-group-item list-group-item-action" 
+         *ngFor="let tb of danh_sach_thong_bao"
+         (click)="xemChiTiet(tb)">
+      <h5 class="mb-1">{{ tb.tieu_de }}</h5>
+      <p class="mb-1">{{ tb.noi_dung }}</p>
+      <small class="text-muted">{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
     </div>
+  </div>
 
-    <div *ngIf="loading" class="text-center mt-4">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Đang tải...</span>
+  <div *ngIf="!loading && danh_sach_thong_bao.length === 0" class="text-center text-muted my-4">
+    Không có thông báo nào.
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': chiTietThongBao}" style="background-color: rgba(0,0,0,0.5);" *ngIf="chiTietThongBao">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ chiTietThongBao.tieu_de }}</h5>
+        <button type="button" class="btn-close" (click)="chiTietThongBao = null"></button>
       </div>
-      <p class="mt-2 text-muted">Đang tải thông báo...</p>
-    </div>
-
-    <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="mt-4">
-      <div class="list-group">
-        <div class="list-group-item list-group-item-action" *ngFor="let tb of danh_sach_thong_bao">
-          <h5 class="mb-1">{{ tb.tieu_de }}</h5>
-          <p class="mb-1">{{ tb.noi_dung }}</p>
-          <small class="text-muted">{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
+      <div class="modal-body">
+        <p><strong>Nội dung:</strong> {{ chiTietThongBao.noi_dung }}</p>
+        <p *ngIf="chiTietThongBao.cong_Ty">
+          <strong>Công ty:</strong> {{ chiTietThongBao.cong_Ty.ten_cong_ty }}
+        </p>
+        <p *ngIf="chiTietThongBao.quan_Tri">
+          <strong>Người gửi:</strong> {{ chiTietThongBao.quan_Tri.ho_ten }}
+        </p>
+        <div *ngIf="chiTietThongBao.chi_tiet_thu_moi?.length > 0">
+          <h6>Chi tiết thư mời:</h6>
+          <ul>
+            <li *ngFor="let ct of chiTietThongBao.chi_tiet_thu_moi">
+              Thời gian: {{ ct.thoi_gian | date:'dd/MM/yyyy HH:mm' }}, 
+              Địa điểm: {{ ct.dia_diem }}
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-
-    <div *ngIf="!loading && danh_sach_thong_bao.length === 0" class="text-center text-muted mt-4">
-      Không có thông báo nào.
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="chiTietThongBao = null">Đóng</button>
+      </div>
     </div>
   </div>
 </div>
@@ -45,8 +69,7 @@
       <div class="toast-body">
         ❌ Lấy thông tin thông báo thất bại!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto"
-        (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_lay_thong_tin_that_bai=false"></button>
     </div>
   </div>
 </div>

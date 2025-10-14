@@ -39,8 +39,10 @@ export class TrangDoiMatKhau {
     this.isSubmitting = true;
     const body = {
       email: this.route.snapshot.paramMap.get('email'),
-      mat_khau_moi: this.doiMatKhauForm.value.mat_khau_moi
+      mat_khau: this.doiMatKhauForm.value.mat_khau_moi
     };
+
+    console.log(body);
 
     this.http.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/doiMatKhauMoi", body)
       .subscribe({

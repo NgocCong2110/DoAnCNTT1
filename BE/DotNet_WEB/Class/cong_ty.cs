@@ -25,7 +25,6 @@ namespace DotNet_WEB.Class
         public LoaiHinhCongTy loai_hinh_cong_ty { get; set; } = LoaiHinhCongTy.congty_CoPhan;
         public string? quy_mo { get; set; }
         public int? nam_thanh_lap { get; set; }
-        public string? anh_bia { get; set; }
         public TrangThaiCongTy trang_thai { get; set; } = TrangThaiCongTy.hoat_Dong;
         public DateTime ngay_tao { get; set; } = DateTime.Now;
         public DateTime ngay_cap_nhat { get; set; } = DateTime.Now;

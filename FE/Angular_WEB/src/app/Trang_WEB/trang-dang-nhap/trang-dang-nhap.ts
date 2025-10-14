@@ -70,9 +70,7 @@ export class TrangDangNhap {
                   thongTin_DangNhap.ma_dang_nhap = data_qtri.ma_quan_tri;
                   thongTin_DangNhap.ten_dang_nhap = data_qtri.ten_dang_nhap;
 
-                  if (data_qtri.vai_tro === 1) {
-                    thongTin_DangNhap.kieu_nguoi_dung = "quan_Tri_Vien";
-                  }
+                  thongTin_DangNhap.kieu_nguoi_dung = "quan_Tri_Vien";
 
                   this.auth.dangNhap(thongTin_DangNhap);
                   setTimeout(() => this.router.navigate(['/trang-chu']), 1500);

@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, QueryList, ViewChildren, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
+import { HttpHeaders } from '@angular/common/http';
+import e from 'express';
 
 interface API_RESPONSE {
   success: boolean;
@@ -46,16 +48,22 @@ export class TrangQuenMatKhau {
   guiOtp() {
     if (this.emailForm.invalid) return;
 
-    const email = this.emailForm.value.email;
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiYeuCauOTP', email)
-      .subscribe({
-        next: (data) => {
-          if (data.success) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+    const email = this.emailForm.value.email;
+    console.log(email);
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiYeuCauOTP', `"${email}"`, { headers: headers })
+    .subscribe({
+      next: (data) => {
+        if (data.success) {
+
+          }
+          else{
+            alert(data.message);
           }
         },
         error: (err) => {
-          console.log("otp gui that bai");
+          console.log(err.message);
           return;
         }
       })
@@ -93,7 +101,6 @@ export class TrangQuenMatKhau {
       email: this.emailForm.value.email,
       ma_otp_gui_di: otp
     };
-
 
     this.httpclient.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/xacNhanOTP", thong_tin)
       .subscribe({

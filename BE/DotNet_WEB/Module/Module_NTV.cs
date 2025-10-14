@@ -34,20 +34,20 @@ namespace DotNet_WEB.Module
             {
                 var ung_Tuyen = new ung_tuyen
                 {
-                    ngay_ung_tuyen = reader.GetDateTime("ngay_ung_tuyen"),
-                    trang_thai = (TrangThaiUngTuyen)Enum.Parse(typeof(TrangThaiUngTuyen), reader.GetString("trang_thai")),
+                    ngay_ung_tuyen = reader.IsDBNull(reader.GetOrdinal("ngay_ung_tuyen")) ? DateTime.MinValue : reader.GetDateTime("ngay_ung_tuyen"),
+                    trang_thai = reader.IsDBNull(reader.GetOrdinal("trang_thai")) ? TrangThaiUngTuyen.None : (TrangThaiUngTuyen)Enum.Parse(typeof(TrangThaiUngTuyen), reader.GetString("trang_thai")),
                     viec_Lam = new viec_lam
                     {
-                        nganh_nghe = reader.GetString("nganh_nghe"),
-                        vi_tri = reader.GetString("vi_tri"),
-                        kinh_nghiem = reader.GetString("kinh_nghiem"),
-                        muc_luong = reader.GetString("muc_luong"),
-                        yeu_cau = reader.GetString("yeu_cau")
+                        nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
+                        vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
+                        kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
+                        muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
+                        yeu_cau = reader.IsDBNull(reader.GetOrdinal("yeu_cau")) ? null : reader.GetString("yeu_cau")
                     },
                     cong_Ty = new cong_ty
                     {
-                        ten_cong_ty = reader.GetString("ten_cong_ty"),
-                        dia_chi = reader.GetString("dia_chi")
+                        ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty"),
+                        dia_chi = reader.IsDBNull(reader.GetOrdinal("dia_chi")) ? null : reader.GetString("dia_chi")
                     }
                 };
 
@@ -135,11 +135,15 @@ namespace DotNet_WEB.Module
             {
                 var cv = new cv_nguoi_tim_viec
                 {
-                    ma_cv = reader.GetInt32("ma_cv"),
-                    ma_nguoi_tim_viec = reader.GetInt32("ma_nguoi_tim_viec"),
-                    ten_file = reader.GetString("ten_file"),
-                    duong_dan_file = reader.GetString("duong_dan_file"),
-                    ngay_tao = reader.GetDateTime("ngay_tao")
+                    ma_cv = reader.IsDBNull(reader.GetOrdinal("ma_cv")) ? 0 : reader.GetInt32("ma_cv"),
+
+                    ma_nguoi_tim_viec = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_tim_viec")) ? 0 : reader.GetInt32("ma_nguoi_tim_viec"),
+
+                    ten_file = reader.IsDBNull(reader.GetOrdinal("ten_file")) ? null : reader.GetString("ten_file"),
+
+                    duong_dan_file = reader.IsDBNull(reader.GetOrdinal("duong_dan_file")) ? null : reader.GetString("duong_dan_file"),
+
+                    ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao")
                 };
                 danh_sach.Add(cv);
             }

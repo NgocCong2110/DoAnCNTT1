@@ -21,6 +21,6 @@ export class TrangLuaChonDangKy {
       } else {
         this.router.navigate(['/dang-ky']);
       }
-    }, 1500);
+    }, 500);
   }
 }

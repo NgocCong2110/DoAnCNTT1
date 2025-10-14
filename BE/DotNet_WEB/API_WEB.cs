@@ -87,7 +87,6 @@ namespace DotNet_WEB
                     ten_dang_nhap = thong_tin[0].ten_dang_nhap ?? "",
                     ho_ten = thong_tin[0].ho_ten,
                     email = thong_tin[0].email,
-                    vai_tro = thong_tin[0].vai_tro
                 });
             }
             return Ok(new { success = false, message = "Đăng nhập thất bại." });
@@ -300,12 +299,12 @@ namespace DotNet_WEB
         [HttpPost("tuChoiUngVien")]
         public IActionResult tuChoiUngVien([FromBody] ung_tuyen ung_Tuyen)
         {
-            bool ket_qua = Module_CTY.tuChoiUngVien(ung_Tuyen.ma_nguoi_tim_viec);
+            bool ket_qua = Module_CTY.tuChoiUngVien(ung_Tuyen);
             if (ket_qua)
             {
-                return Ok(new { success = true });
+                return Ok(new { success = true, message = "Từ chối ứng viên thành công" });
             }
-            return BadRequest(new { success = false, message = " Có lỗi trong quá trình " });
+            return BadRequest(new { success = false, message = "Có lỗi trong quá trình từ chối ứng viên" });
         }
 
         [HttpPost("xoaUngVien")]
@@ -351,13 +350,43 @@ namespace DotNet_WEB
             return BadRequest(new { success = false, message = "Email đã tồn tại" });
         }
 
+        [HttpPost("layToaDoCongTy")]
+        public async Task<IActionResult> layToaDoCongTy([FromBody] string vi_tri)
+        {
+            string apiKey = "pk.dee0f3e5396893fd514aca66dd4c0790";
+            var url = $"https://us1.locationiq.com/v1/search?key={apiKey}&q={Uri.EscapeDataString(vi_tri)}&format=json";
+            using (HttpClient client = new HttpClient())
+            {
+                var res = await client.GetAsync(url);
+                res.EnsureSuccessStatusCode();
+                var content = await res.Content.ReadAsStringAsync();
+                var json = JArray.Parse(content);
+
+                if (json.Count > 0)
+                {
+                    var lat = json[0]["lat"].ToString();
+                    var lng = json[0]["lon"].ToString();
+                    return Ok(new { lat, lng });
+                }
+            }
+            return NotFound(new { message = "Không tìm thấy địa chỉ" });
+        }
+
         [HttpPost("doiMatKhauMoi")]
         public IActionResult doiMatKhauMoi([FromBody] nguoi_dung nguoi_Dung)
         {
-            bool ket_qua = ChucNang_WEB.doiMatKhauMoi(nguoi_Dung);
+            bool ket_qua = ChucNang_WEB.doiMatKhauMoi(nguoi_Dung.email, nguoi_Dung.mat_khau);
             if (ket_qua)
             {
                 return Ok(new { success = true });
+            }
+            else
+            {
+                bool ket_qua_2 = ChucNang_WEB.doiMatKhauQuanTri(nguoi_Dung.email, nguoi_Dung.mat_khau);
+                if (ket_qua_2)
+                {
+                    return Ok(new { success = true });
+                }
             }
             return BadRequest(new { success = false });
         }
@@ -464,9 +493,9 @@ namespace DotNet_WEB
         }
 
         [HttpPost("layDanhSachThongBao")]
-        public IActionResult layDanhSachThongBao([FromBody] thong_bao_kieu_nguoi_dung tb_knd)
+        public IActionResult layDanhSachThongBao([FromBody] thong_bao_kieu_nguoi_dung thong_Bao_Kieu_Nguoi_Dung)
         {
-            var danh_sach = ChucNang_WEB.layDanhSachThongBao(tb_knd);
+            var danh_sach = ChucNang_WEB.layDanhSachThongBao(thong_Bao_Kieu_Nguoi_Dung);
             if (danh_sach != null)
             {
                 return Ok(new { success = true, danh_sach });
@@ -578,30 +607,32 @@ namespace DotNet_WEB
         public async Task<IActionResult> guiYeuCauOTP([FromBody] string email_yeu_cau)
         {
             bool ket_qua = ChucNang_WEB.kiemTraOTPTonTai(email_yeu_cau);
-            if(ket_qua)
+            if (!ket_qua)
             {
-                int otp = ChucNang_WEB.taoOTPMoi(email_yeu_cau);
-                if(otp >= 100000 && otp <= 999999)
+                return BadRequest(new { success = false, message = "Đã tồn tại OTP hãy sử dụng OTP cũ" });
+
+            }
+            int otp = ChucNang_WEB.taoOTPMoi(email_yeu_cau);
+            if (otp >= 100000 && otp <= 999999)
+            {
+                bool kq_gui_otp = await XacThuc_ND.guiMaOTP(otp, email_yeu_cau);
+                if (kq_gui_otp)
                 {
-                    bool kq_gui_otp = await XacThuc_ND.guiMaOTP(otp, email_yeu_cau);
-                    if(kq_gui_otp)
-                    {
-                        return Ok( new { success = true });
-                    }
+                    return Ok(new { success = true });
                 }
             }
-            return BadRequest(new { success = false, message = "Tạo otp không thành công "});
+            return BadRequest(new { success = false, message = "Tạo otp không thành công " });
         }
 
         [HttpPost("xacNhanOTP")]
         public IActionResult xacNhanOTP([FromBody] ma_otp ma_Otp)
         {
             bool ket_qua = XacThuc_ND.xacNhanOTP(ma_Otp);
-            if(ket_qua)
+            if (ket_qua)
             {
-                return Ok( new { success = true });
+                return Ok(new { success = true });
             }
-            return BadRequest( new { success = false, message = "OTP sai"});
+            return BadRequest(new { success = false, message = "OTP sai" });
         }
 
         [HttpPost("thanhToanVNPAY")]
@@ -639,7 +670,7 @@ namespace DotNet_WEB
             if (ket_qua)
             {
                 return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=true&ma_don_hang={ma_don_hang}");
-            } 
+            }
             return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={ma_don_hang}");
         }
 

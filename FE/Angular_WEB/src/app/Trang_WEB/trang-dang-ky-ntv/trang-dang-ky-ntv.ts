@@ -21,15 +21,6 @@ export class TrangDangKyNTV {
 
   constructor(public router: Router, public http: HttpClient) { }
 
-  getThongTinDangKy() {
-    return {
-      ten_dang_ky: this.ten_dang_ky,
-      email: this.email_dang_ky,
-      mat_khau: this.password_dang_ky,
-      vai_tro: 'nguoi_tim_viec'
-    };
-  }
-
   kiemTraMatKhau(event: Event) {
     event.preventDefault();
 
@@ -53,13 +44,18 @@ export class TrangDangKyNTV {
   }
 
   kiemTraEmail() {
+    const thong_tin = {
+      ten_dang_nhap: this.ten_dang_ky,
+      email: this.email_dang_ky,
+      mat_khau: this.password_dang_ky
+    }
     this.http.post<any>('http://localhost:65001/api/API_WEB/kiemTraTaiKhoanDangKy', {
-      email: this.email_dang_ky
-    }).subscribe({
+      email: this.email_dang_ky})
+      .subscribe({
       next: (data) => {
         if (data.success) {
           this.http.post<any>('http://localhost:65001/api/API_WEB/themThongTinNguoiTimViec',
-            this.getThongTinDangKy()
+            thong_tin
           ).subscribe({
             next: (data2) => {
               if (data2.success) {

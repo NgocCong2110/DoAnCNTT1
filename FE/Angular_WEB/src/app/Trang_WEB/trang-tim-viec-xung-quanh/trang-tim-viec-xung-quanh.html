@@ -1,20 +1,44 @@
+<app-header-web></app-header-web>
 <div class="container-fluid" style="background-color: #f0f0f0; min-height: 100vh; padding: 1rem;">
+  
   <div class="row g-3">
+
     <div class="col-12 col-md-3">
-      <div class="p-3 bg-light rounded shadow-sm mb-3">
-        <form (ngSubmit)="timKiem()" class="d-flex flex-column gap-2">
-          <label>Ngành nghề:</label>
-          <select [(ngModel)]="nganh_nghe" name="nganh" class="form-select w-100">
-            <option value="">-- Tất cả --</option>
-            <option value="cong_nghe_thong_tin">Công nghệ thông tin</option>
-            <option value="ke_toan">Kế toán</option>
-          </select>
+      <div class="p-3 bg-light rounded shadow-sm mb-3 d-flex flex-column gap-2">
 
-          <label>Bán kính (km):</label>
-          <input [(ngModel)]="ban_kinh" name="radius" type="number" class="form-control w-100" />
+        <label>Ngành nghề:</label>
+        <select [(ngModel)]="nganh_nghe" name="nganh" class="form-select">
+          <option value="">-- Tất cả --</option>
+          <option value="cong_nghe_thong_tin">Công nghệ thông tin</option>
+          <option value="ke_toan">Kế toán</option>
+        </select>
 
-          <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
-        </form>
+        <label>Bán kính (km):</label>
+        <input [(ngModel)]="ban_kinh" name="radius" type="number" class="form-control" />
+
+        <!-- <button (click)="timKiem()" class="btn btn-primary mt-2">Tìm kiếm</button> -->
+
+        <hr />
+
+        <label>Tỉnh / Thành phố:</label>
+        <select [(ngModel)]="selectedTinh" name="tinh" class="form-select" (change)="layThongTinTinh()">
+          <option [ngValue]="null">-- Chọn tỉnh thành --</option>
+          <option *ngFor="let t of tinh_thanh" [ngValue]="t">{{ t.name }}</option>
+        </select>
+
+        <label>Quận / Huyện:</label>
+        <select [(ngModel)]="selectedHuyen" name="huyen" class="form-select" (change)="layThongTinHuyen()">
+          <option [ngValue]="null">-- Chọn quận huyện --</option>
+          <option *ngFor="let h of quan_huyen" [ngValue]="h">{{ h.name }}</option>
+        </select>
+
+        <label>Phường / Xã:</label>
+        <select [(ngModel)]="selectedXa" name="xa" class="form-select">
+          <option [ngValue]="null">-- Chọn phường xã --</option>
+          <option *ngFor="let x of phuong_xa" [ngValue]="x">{{ x.name }}</option>
+        </select>
+
+        <button (click)="layToaDo()" class="btn btn-success mt-2">Xác định vị trí</button>
       </div>
     </div>
 

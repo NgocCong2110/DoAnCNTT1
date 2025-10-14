@@ -63,7 +63,7 @@
     <button class="btn btn-primary mx-2" style="background-color: gray; border: 0;" (click)="moPopUpBaoCao()">Báo cáo
       bài đăng</button>
     <button class="btn btn-primary mx-2" style="background-color: #007BFF; border: 0;"
-      *ngIf="auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.kieu_nguoi_dung == 'nguoi_Tim_Viec'" (click)="ungTuyenCongViec()">Ứng tuyển công việc
+      *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'" (click)="ungTuyenCongViec()">Ứng tuyển công việc
     </button>
   </div>
 </div>

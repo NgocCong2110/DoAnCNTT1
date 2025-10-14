@@ -11,7 +11,7 @@ namespace DotNet_WEB.Class
     {
         [Key]
         public int? ma_otp_id { get; set; }
-        public string email { get; set; }
+        public string? email { get; set; }
         public int ma_otp_gui_di { get; set; }
         public DateTime het_han_luc { get; set; }
         public bool da_su_dung { get; set; }

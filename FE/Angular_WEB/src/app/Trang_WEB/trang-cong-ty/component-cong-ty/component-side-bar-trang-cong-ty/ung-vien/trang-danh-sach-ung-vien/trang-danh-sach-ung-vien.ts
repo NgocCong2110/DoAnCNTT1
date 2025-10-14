@@ -171,19 +171,22 @@ export class TrangDanhSachUngVien implements OnInit {
   }
 
   tuChoiUV() {
-    const data = {
-      ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec,
-      trang_thai: "tu_Choi"
+    const thong_tin = {
+      ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
+      ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec
     }
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/tuChoiUngVien', JSON.stringify(data)).
-      subscribe(data => {
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/tuChoiUngVien', thong_tin)
+      .subscribe(data => {
+        console.log(data.message);
         if (data.success) {
           this.dongForm();
         }
         else{
           this.pop_up_tu_choi_that_bai = true;
+          this.cd.detectChanges();
           setTimeout(() => {
             this.pop_up_tu_choi_that_bai = false;
+            this.cd.detectChanges();
           },2000)
           this.dongForm();
         }
@@ -207,31 +210,29 @@ export class TrangDanhSachUngVien implements OnInit {
     if (!this.uvMuonXoa || this.indexMuonXoa === null) return;
 
     const thong_tin_xoa = {
-      ma_cong_ty: this.thongTin.ma_cong_ty,
+      ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
       ma_nguoi_tim_viec: this.uvMuonXoa.ma_nguoi_tim_viec
     }
 
-    
-
     this.httpclient.post<API_RESPONSE>(
       'http://localhost:65001/api/API_WEB/xoaUngVien',
-      { thong_tin_xoa }
+       thong_tin_xoa 
     ).subscribe({
       next: (data) => {
         if (data.success) {
           this.danh_sach_ung_vien.splice(this.indexMuonXoa!, 1);
           this.pop_up_xoa_thanh_cong = true;
-          setTimeout(() => this.pop_up_xoa_thanh_cong = false, 1500);
+          setTimeout(() => { this.pop_up_xoa_thanh_cong = false; this.cd.detectChanges(); }, 1500);
         } else {
           this.pop_up_xoa_that_bai = true;
-          setTimeout(() => this.pop_up_xoa_that_bai = false, 1500);
+          setTimeout(() => { this.pop_up_xoa_that_bai = false; this.cd.detectChanges(); }, 1500);
         }
         this.cd.detectChanges();
         this.dongXacNhanXoa();
       },
       error: () => {
         this.pop_up_xoa_that_bai = true;
-        setTimeout(() => this.pop_up_xoa_that_bai = false, 1500);
+        setTimeout(() => { this.pop_up_xoa_that_bai = false; this.cd.detectChanges(); }, 1500);
         this.cd.detectChanges();
         this.dongXacNhanXoa();
       }

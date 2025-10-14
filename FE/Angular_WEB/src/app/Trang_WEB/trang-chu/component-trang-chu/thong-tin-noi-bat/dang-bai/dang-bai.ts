@@ -28,7 +28,6 @@ export class DangBai {
 
   tieu_de_moi = '';
   noi_dung_moi = '';
-  luot_thich = 0;
   loai_bai = 'viec_Lam_Moi';
   trang_thai = 'hien_Thi';
 
@@ -65,7 +64,6 @@ export class DangBai {
         ten_nguoi_dang: nguoiDung.thong_tin_chi_tiet.ten_cong,
         tieu_de: this.tieu_de_moi,
         noi_dung: this.noi_dung_moi,
-        luot_thich: this.luot_thich,
         loai_bai: this.loai_bai,
         trang_thai: this.trang_thai,
         ngay_tao: new Date().toISOString(),

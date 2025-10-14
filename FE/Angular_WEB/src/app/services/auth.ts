@@ -44,4 +44,9 @@ export class Auth {
       return null;
     }
   }
+
+  layVaiTro(){
+    const nguoi_dung = this.layThongTinNguoiDung();
+    return nguoi_dung?.kieu_nguoi_dung ?? null;  
+  }
 }

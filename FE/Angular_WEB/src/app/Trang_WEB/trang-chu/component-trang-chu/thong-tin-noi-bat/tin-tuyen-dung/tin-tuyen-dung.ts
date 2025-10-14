@@ -7,6 +7,10 @@ import { Subscription } from 'rxjs';
 import { BaiDangComponent } from '../bai-dang.model';
 import { HttpClient } from '@angular/common/http';
 
+interface API_RESPONSE{
+  success: boolean
+}
+
 @Component({
   selector: 'app-tin-tuyen-dung',
   standalone: true,
@@ -57,15 +61,22 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   baoCaoBaiDang() {
     const ma_Nguoi_Bao_Cao = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
 
-    this.http.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", {
-      ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
+    if(ma_Nguoi_Bao_Cao == null){
+      alert("Vui lòng đăng nhập để báo cáo bài đăng.");
+      return;
+    }
+
+    const thong_tin = {
+      ma_bai_vi_pham: this.bai_dang_duoc_chon?.ma_bai_dang,
       ten_nguoi_dang: this.bai_dang_duoc_chon?.ten_nguoi_dang,
       tieu_de: this.bai_dang_duoc_chon?.tieu_de,
       noi_dung: this.bai_dang_duoc_chon?.noi_dung,
       ma_nguoi_bao_cao: ma_Nguoi_Bao_Cao,
       noi_dung_bao_cao: this.noi_dung_bao_cao,
       ngay_bao_cao: new Date()
-    }).subscribe({
+    }
+
+    this.http.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", thong_tin).subscribe({
       next: (data) => {
         if (data.success) {
           alert("Báo cáo bài đăng thành công.");
@@ -85,13 +96,22 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   luuBaiDang() {
     const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
 
-    this.http.post("http://localhost:65001/api/API_WEB/luuBaiDang", {
+    if(ma_Nguoi_Luu == null){
+      alert("Vui lòng đăng nhập để lưu bài đăng.");
+      return;
+    }
+
+    const thong_tin = {
       ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
       ma_nguoi_luu: ma_Nguoi_Luu
-    }).subscribe({
-      next: () => {
-        alert("Đã lưu bài đăng.");
-        this.cdr.detectChanges();
+    }
+
+    this.http.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/luuBaiDang", thong_tin).subscribe({
+      next: (data) => {
+        if(data.success){
+          alert("Đã lưu bài đăng.");
+          this.cdr.detectChanges();
+        }
       },
       error: () => {
         alert("Không thể lưu bài đăng.");

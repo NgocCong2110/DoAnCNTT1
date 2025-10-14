@@ -26,8 +26,8 @@ namespace DotNet_WEB.Class
         public int ma_nguoi_nhan { get; set; }
         [ForeignKey(nameof(ma_nguoi_nhan))]
         public nguoi_dung? nguoi_Dung { get; set; }
-        public TrangThaiDoc trang_thai_doc { get; set; } = TrangThaiDoc.chua_Doc;
         public DateTime ngay_tao { get; set; }
         public DateTime ngay_cap_nhat { get; set; }
+        public List<chi_tiet_thu_moi>? chi_tiet_thu_moi { get; set; }
     }
 }

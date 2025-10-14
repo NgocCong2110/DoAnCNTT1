@@ -9,7 +9,7 @@ namespace DotNet_WEB.Class
 {
     public class thong_bao_kieu_nguoi_dung
     {
-        public string kieu_nguoi_dung { get; set; }
+        public string? kieu_nguoi_dung { get; set; }
         public int? ma_nguoi_tim_viec { get; set; }
     }
 }
