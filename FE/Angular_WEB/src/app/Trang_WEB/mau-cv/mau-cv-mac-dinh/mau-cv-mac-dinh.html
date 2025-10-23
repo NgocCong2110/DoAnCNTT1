@@ -1,0 +1,95 @@
+<app-header-web></app-header-web>
+<div class="cv-container">
+  <div class="cv-header">
+    <div class="avatar">
+      <img [src]="formCv.anh_dai_dien || 'assets/default-avatar.png'" alt="Avatar" class="avatar-img"
+        (click)="chonAnhDaiDien()" />
+
+      <input type="file" #fileInput accept="image/*" (change)="onImageSelected($event)" style="display: none" />
+    </div>
+
+
+    <div class="info">
+      <div class="form-row">
+        <label>Họ tên:</label>
+        <input type="text" [(ngModel)]="formCv.hoTen" placeholder="Nhập họ tên của bạn">
+      </div>
+
+      <div class="form-row">
+        <label>Ngày sinh:</label>
+        <input type="text" [(ngModel)]="formCv.ngaySinh" placeholder="DD/MM/YYYY">
+      </div>
+
+      <div class="form-row">
+        <label>Giới tính:</label>
+        <input type="text" [(ngModel)]="formCv.gioiTinh" placeholder="Nam/Nữ">
+      </div>
+
+      <div class="form-row">
+        <label>Điện thoại:</label>
+        <input type="text" [(ngModel)]="formCv.dienThoai" placeholder="0123 456 789">
+      </div>
+
+      <div class="form-row">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="formCv.email" placeholder="example@gmail.com">
+      </div>
+
+      <div class="form-row">
+        <label>Địa chỉ:</label>
+        <input type="text" [(ngModel)]="formCv.diaChi" placeholder="Quận, thành phố">
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-section">
+    <h2>Mục tiêu nghề nghiệp</h2>
+    <textarea [(ngModel)]="formCv.mucTieu" placeholder="Nhập mục tiêu nghề nghiệp của bạn"></textarea>
+  </div>
+
+  <div class="cv-section">
+    <h2>Học vấn</h2>
+    <div *ngFor="let hv of formCv.hocVan; let i = index" class="cv-item">
+      <div class="form-row">
+        <label>Thời gian:</label>
+        <input [(ngModel)]="hv.thoiGian" placeholder="VD: 2019 - 2023">
+      </div>
+      <div class="form-row">
+        <label>Trường:</label>
+        <input [(ngModel)]="hv.tenTruong" placeholder="Tên trường">
+      </div>
+      <div class="form-row">
+        <label>Ngành học:</label>
+        <input [(ngModel)]="hv.nganhHoc" placeholder="Ngành học">
+      </div>
+      <div class="form-row">
+        <label>Mô tả:</label>
+        <textarea [(ngModel)]="hv.moTa" placeholder="Mô tả ngắn gọn"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="cv-section">
+    <h2>Kinh nghiệm làm việc</h2>
+    <div *ngFor="let kn of formCv.kinhNghiem; let i = index" class="cv-item">
+      <div class="form-row">
+        <label>Thời gian:</label>
+        <input [(ngModel)]="kn.thoiGian" placeholder="VD: 2021 - 2024">
+      </div>
+      <div class="form-row">
+        <label>Công ty:</label>
+        <input [(ngModel)]="kn.tenCongTy" placeholder="Tên công ty">
+      </div>
+      <div class="form-row">
+        <label>Vị trí:</label>
+        <input [(ngModel)]="kn.viTri" placeholder="Vị trí làm việc">
+      </div>
+      <div class="form-row">
+        <label>Mô tả:</label>
+        <textarea [(ngModel)]="kn.moTa" placeholder="Mô tả công việc"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-save" (click)="taiCV()"> Tải CV PDF</button>
+</div>

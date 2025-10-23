@@ -1,0 +1,68 @@
+<div class="carousel-wrapper position-relative py-5">
+  <h2 class="fw-bold text-center mb-4"> Người dùng nói gì về trang web của chúng tôi </h2>
+  <div id="carouselDanhGia" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+    <div class="carousel-inner">
+      <div class="carousel-item" *ngFor="let slide of slides; let i = index" [class.active]="i === 0">
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-6 col-lg-5" *ngFor="let dg of slide">
+            <div class="testimonial-card p-4 bg-white rounded-4 shadow-sm h-100">
+              <div class="quote-icon text-secondary display-6 mb-3">“</div>
+              <p class="text-secondary mb-4">
+                {{ dg.noi_dung_danh_gia }}
+              </p>
+              <div class="fw-bold text-end mt-auto">
+                {{ dg.ten_nguoi_danh_gia }} –
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDanhGia" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselDanhGia" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <div class="text-center mt-3 sticky-bottom bg-light py-2">
+    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalReview">
+      Gửi đánh giá
+    </button>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalReview" tabindex="-1" aria-labelledby="modalReviewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-lg">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold" id="modalReviewLabel">Gửi đánh giá của bạn</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p>Hãy nhập nội dung đánh giá</p>
+          <textarea [(ngModel)]="noi_dung_danh_gia" placeholder="Nhập đánh giá..."
+            class="form-control p-3 rounded-3 border-secondary" rows="4"></textarea>
+        </div>
+        <div class="mb-3">
+          <p>Hãy chọn số điểm đánh giá</p>
+          <select [(ngModel)]="so_diem_danh_gia" class="form-select p-3 rounded-3 border-secondary">
+            <option *ngFor="let s of [1, 2, 3, 4, 5]" [value]="s">{{ s }} ⭐</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Hủy
+        </button>
+        <button type="button" class="btn btn-primary fw-bold" (click)="guiDanhGia()" data-bs-dismiss="modal">
+          Gửi
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

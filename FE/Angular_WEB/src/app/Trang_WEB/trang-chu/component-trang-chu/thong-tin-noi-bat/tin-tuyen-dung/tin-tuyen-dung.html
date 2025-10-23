@@ -29,14 +29,11 @@
   <p class="mb-1"><b>Người đăng:</b> {{ bai_dang_duoc_chon.ten_nguoi_dang }}</p>
   <p class="mb-1"><b>Ngày đăng:</b> {{ bai_dang_duoc_chon.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</p>
   <hr>
-  <div class="noi-dung mb-3">
-    <p style="white-space: pre-wrap;">{{ bai_dang_duoc_chon.noi_dung }}</p>
-  </div>
   <div *ngIf="bai_dang_duoc_chon.viec_lam" class="border p-3 rounded mb-3">
     <h3>Thông tin công việc</h3>
 
     <h5>Ngành nghề</h5>
-    <p>{{ bai_dang_duoc_chon.viec_lam.nganh_nghe }}</p>
+    <p>{{ laynganhnghe(bai_dang_duoc_chon.viec_lam.nganh_nghe) }}</p>
 
     <h5>Vị trí</h5>
     <p>{{ bai_dang_duoc_chon.viec_lam.vi_tri }}</p>
@@ -103,6 +100,18 @@
         <button class="btn btn-secondary mx-1" (click)="huyXoa()">Huỷ</button>
         <button class="btn btn-danger mx-1" (click)="xacNhanXoa()">Xoá</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="thong_tin_bai_xoa">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        Xoá bài đăng thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="thong_tin_bai_xoa=false"></button>
     </div>
   </div>
 </div>

@@ -9,13 +9,15 @@
       <thead class="table-dark">
         <tr>
           <th>#</th>
+          <th>Họ tên</th>
+          <th>Email</th>
           <th>Vị trí ứng tuyển</th>
           <th>Tiêu đề tuyển dụng</th>
           <th>Mức lương</th>
           <th>Địa điểm</th>
 
           <th>Ngày ứng tuyển</th>
-          <th>Họ tên</th>
+
           <th>Email</th>
           <th>Điện thoại</th>
           <th></th>
@@ -25,14 +27,13 @@
       <tbody>
         <tr *ngFor="let uv of danh_sach_ung_vien; let i = index">
           <td>{{ i + 1 }}</td>
+          <td>{{ uv.nguoi_tim_viec?.ho_ten }}</td>
+          <td>{{ uv.nguoi_tim_viec?.email }}</td>
           <td>{{ uv.viec_Lam?.vi_tri }}</td>
           <td>{{ uv.viec_Lam?.tieu_de }}</td>
           <td>{{ uv.viec_Lam?.muc_luong }}</td>
           <td>{{ uv.viec_Lam?.dia_diem }}</td>
-
           <td>{{ uv.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ uv.nguoi_tim_viec?.ho_ten }}</td>
-          <td>{{ uv.nguoi_tim_viec?.email }}</td>
           <td>{{ uv.nguoi_tim_viec?.dien_thoai || 'Chưa có' }}</td>
           <td>
             <button class="btn btn-primary btn-sm" style="border: none;" (click)="moFormUV(uv)">

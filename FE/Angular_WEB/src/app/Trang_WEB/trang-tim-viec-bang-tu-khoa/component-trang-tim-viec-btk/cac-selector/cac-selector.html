@@ -1,11 +1,11 @@
-<div class="card p-3 shadow-sm bg-light rounded-3">
+<div class="card p-3 shadow-sm rounded-3" style="background-color: white;">
   <div class="d-flex flex-wrap gap-2">
 
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
         {{ nganh_nghe_label || 'Ngành nghề' }}
       </button>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu dropdown-scroll">
         <li *ngFor="let gia_tri of nganhNgheList">
           <button class="dropdown-item" type="button"
             (click)="nganh_nghe = gia_tri.value; nganh_nghe_label = gia_tri.label">
@@ -73,11 +73,11 @@
 
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        {{ chuc_vu_label || 'Chức vụ' }}
+        {{ vi_tri_label ||'Vị trí làm việc' }}
       </button>
       <ul class="dropdown-menu">
-        <li *ngFor="let gia_tri of chucVuList">
-          <button class="dropdown-item" type="button" (click)="chuc_vu = gia_tri.value; chuc_vu_label = gia_tri.label">
+        <li *ngFor="let gia_tri of viTriList">
+          <button class="dropdown-item" type="button" (click)="vi_tri = gia_tri.value; vi_tri_label = gia_tri.label">
             {{ gia_tri.label }}
           </button>
         </li>
@@ -96,24 +96,12 @@
           </button>
         </li>
       </ul>
-    </div>
-
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        {{ quy_mo_cong_ty_label || 'Quy mô công ty' }}
-      </button>
-      <ul class="dropdown-menu">
-        <li *ngFor="let gia_tri of quyMoCongTyList">
-          <button class="dropdown-item" type="button" 
-                  (click)="quy_mo_cong_ty = gia_tri.value; quy_mo_cong_ty_label = gia_tri.label">
-            {{ gia_tri.label }}
-          </button>
-        </li>
-      </ul>
     </div> -->
 
 
-    <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()">Lọc</button>
+
+    <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()"
+      style="background-color: #0d6efd; color: white; font-weight: bold;">Lọc</button>
   </div>
 </div>
 
@@ -125,64 +113,108 @@
   {{ error }}
 </div>
 
-<div class="row mt-5" *ngIf="toan_bo">
-  <div class="col-md-6 col-lg-4 mb-3" *ngFor="let job of danh_sach_de_xuat">
-    <div class="card h-100 shadow-sm border-0 job-card">
-      <div class="card-body bg-red">
-        <h5 class="card-title text-secondary mb-2 fw-bold">
-          {{ job.viec_lam.tieu_de || job.viec_lam.nganh_nghe }}
-        </h5>
+<div class="container py-4">
+  <div class="row gy-4" *ngIf="toan_bo">
+    <div class="col-12" *ngFor="let job of danh_sach_de_xuat">
+      <div class="card job-card border rounded-4 p-4 d-flex flex-row align-items-center shadow-sm"
+        style="min-height: 140px; background-color: white;">
 
-        <div class="job-details">
-          <p class="mb-1">
-            <i class="bi bi-geo-alt-fill text-muted me-2"></i>
-            <strong>Địa điểm:</strong> {{ job.viec_lam.dia_diem }}
-          </p>
-          <p class="mb-1">
-            <i class="bi bi-briefcase-fill text-muted me-2"></i>
-            <strong>Kinh nghiệm:</strong> {{ job.viec_lam.kinh_nghiem }}
-          </p>
-          <p class="mb-2">
-            <i class="bi bi-currency-dollar text-muted me-2"></i>
-            <strong>Mức lương:</strong> {{ job.viec_lam.muc_luong }}
-          </p>
+        <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
+          <img [src]="'/anh_WEB/logo_cong_ty/' + job.logo" alt="Logo công ty" class="img-fluid rounded"
+            style="width: 90px; height: 90px; object-fit: contain;">
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <button class="btn btn-outline-primary btn-sm" style="background-color: #0d6efd;" (click)="chiTietBaiDang(job.ma_bai_dang)">
+        <div class="content-wrapper flex-grow-1">
+          <h4 class="fw-bold text-dark mb-2">{{ job.viec_Lam?.tieu_de || job.tieu_de }}</h4>
+          <p class="mb-2 text-muted fs-6">{{ job.ten_nguoi_dang }}</p>
+
+          <div class="text-muted small d-flex flex-wrap gap-4 fs-6">
+            <span class="text-danger fw-semibold fs-5">
+              $ {{ job.viec_lam?.muc_luong }}/tháng
+            </span>
+            <span>{{ job.viec_lam?.dia_diem }}</span>
+            <span>{{ job.viec_lam?.kinh_nghiem }}</span>
+          </div>
+
+          <div class="text-muted small mt-3">
+            Cập nhật: {{ job.ngay_cap_nhat | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <div class="button-wrapper ms-4">
+          <button class="btn btn-primary px-4 py-2 rounded-pill" (click)="chiTietBaiDang(job.ma_bai_dang)">
             Xem chi tiết
           </button>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="row mt-5" *ngIf="tung_phan">
-  <div class="col-md-6 col-lg-4 mb-3" *ngFor="let job of danh_sach_de_xuat">
-    <div class="card h-100 shadow-sm border-0 job-card">
-      <div class="card-body bg-red">
-        <h5 class="card-title text-secondary mb-2 fw-bold">
-          {{ job.tieu_de || job.nganh_nghe }}
-        </h5>
+  <div class="row gy-4" *ngIf="tung_phan">
+    <div class="col-12" *ngFor="let job of danh_sach_de_xuat">
+      <div class="card job-card border rounded-4 p-4 d-flex flex-row align-items-center shadow-sm"
+        style="min-height: 140px; background-color: white;">
 
-        <div class="job-details">
-          <p class="mb-1">
-            <i class="bi bi-geo-alt-fill text-muted me-2"></i>
-            <strong>Địa điểm:</strong> {{ job.dia_diem }}
-          </p>
-          <p class="mb-1">
-            <i class="bi bi-briefcase-fill text-muted me-2"></i>
-            <strong>Kinh nghiệm:</strong> {{ job.kinh_nghiem }}
-          </p>
-          <p class="mb-2">
-            <i class="bi bi-currency-dollar text-muted me-2"></i>
-            <strong>Mức lương:</strong> {{ job.muc_luong }}
-          </p>
+        <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
+          <img [src]="'/anh_WEB/logo_cong_ty/' + (job.viec_Lam?.cong_Ty?.logo || 'anh_Logo.png')" alt="Logo công ty"
+            class="img-fluid rounded" style="width: 90px; height: 90px; object-fit: contain;">
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <button class="btn btn-outline-primary btn-sm" style="background-color: #0d6efd;" (click)="chiTietBaiDang(job.ma_bai_dang)">
+        <div class="content-wrapper flex-grow-1">
+          <h4 class="fw-bold text-dark mb-2">{{ job.viec_Lam?.tieu_de }}</h4>
+          <p class="mb-2 text-muted fs-6">{{ job.viec_Lam?.cong_Ty?.ten_cong_ty }}</p>
+
+          <div class="text-muted small d-flex flex-wrap gap-4 fs-6">
+            <span class="text-danger fw-semibold fs-5">
+              $ {{ job.viec_Lam?.muc_luong }}/tháng
+            </span>
+            <span>{{ job.viec_Lam?.dia_diem }}</span>
+            <span>{{ job.viec_Lam?.kinh_nghiem }}</span>
+          </div>
+
+          <div class="text-muted small mt-3">
+            Cập nhật: {{ job.viec_Lam?.ngay_cap_nhat | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <div class="button-wrapper ms-4">
+          <button class="btn btn-primary px-4 py-2 rounded-pill" (click)="chiTietBaiDang(job.ma_bai_dang)">
+            Xem chi tiết
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row gy-4" *ngIf="de_xuat_thanh_tim_kiem">
+    <div class="col-12" *ngFor="let job of danh_sach_de_xuat">
+      <div class="card job-card border rounded-4 p-4 d-flex flex-row align-items-center shadow-sm"
+        style="min-height: 140px; background-color: white;">
+
+        <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
+          <img [src]="'/anh_WEB/logo_cong_ty/' + job.logo" alt="Logo công ty" class="img-fluid rounded"
+            style="width: 90px; height: 90px; object-fit: contain;">
+        </div>
+
+        <div class="content-wrapper flex-grow-1">
+          <h4 class="fw-bold text-dark mb-2">{{ job.tieu_de }}</h4>
+          <p class="mb-2 text-muted fs-6">{{ job.cong_Ty?.ten_cong_ty }}</p>
+
+          <div class="text-muted small d-flex flex-wrap gap-4 fs-6">
+            <span class="text-danger fw-semibold fs-5">
+              $ {{ job.muc_luong }}/tháng
+            </span>
+            <span>{{ job.dia_diem }}</span>
+            <span>{{ job.kinh_nghiem }}</span>
+          </div>
+
+          <div class="text-muted small mt-3">
+            Cập nhật: {{ job.ngay_cap_nhat | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <div class="button-wrapper ms-4">
+          <button class="btn btn-primary px-4 py-2 rounded-pill" (click)="chiTietBaiDang(job.ma_bai_dang)">
             Xem chi tiết
           </button>
         </div>

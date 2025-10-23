@@ -58,7 +58,7 @@ export class TrangDanhSachGoiDichVuCongTy implements OnInit{
       ma_cong_ty: this.thongTin?.thong_tin_chi_tiet?.ma_cong_ty,
       ma_dich_vu: dv.ma_dich_vu
     }
-     this.httpclient.post<any>('http://localhost:65001/api/API_WEB/thanhToanVNPAY', thong_tin_don_hang)
+     this.httpclient.post<any>('http://localhost:65001/api/API_Ngan_Hang/thanhToanVNPAY', thong_tin_don_hang)
     .subscribe({
       next: (res) => {
         if (res.success && res.urlThanhToan) {

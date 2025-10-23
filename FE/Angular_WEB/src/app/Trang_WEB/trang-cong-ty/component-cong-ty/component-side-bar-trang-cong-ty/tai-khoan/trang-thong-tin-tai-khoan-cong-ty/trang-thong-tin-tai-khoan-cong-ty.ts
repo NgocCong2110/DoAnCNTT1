@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Auth } from '../../../../../../services/auth';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../../../../../services/auth';
 
 @Component({
   selector: 'app-trang-thong-tin-tai-khoan-cong-ty',
@@ -12,13 +12,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class TrangThongTinTaiKhoanCongTy implements OnInit {
   thongTin: any;
-
   formDangMo = false;
-  duLieuSua: string = '';
+  duLieuSua = '';
   giaTriMoi: any = '';
   giaTriCu: any = '';
 
-  constructor(private auth: Auth) { }
+  fileLogo: File | null = null;
+  previewLogo: string | null = null;
+
+  constructor(private auth: Auth) {}
 
   ngOnInit(): void {
     const duLieu = this.auth.layThongTinNguoiDung();
@@ -37,41 +39,56 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
     this.duLieuSua = '';
     this.giaTriMoi = '';
     this.giaTriCu = '';
+    this.fileLogo = null;
+    this.previewLogo = null;
+  }
+
+  chonLogo(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.fileLogo = file;
+
+    const reader = new FileReader();
+    reader.onload = () => (this.previewLogo = reader.result as string);
+    reader.readAsDataURL(file);
   }
 
   async luuForm() {
-    if (!this.thongTin || !this.thongTin.cong_ty) return;
+    if (!this.thongTin?.cong_ty) return;
 
-    this.thongTin.cong_ty[this.duLieuSua] = this.giaTriMoi;
-
-    const payload = {
-      ma_cong_ty: this.thongTin.cong_ty.ma_cong_ty,
-      [this.duLieuSua]: this.giaTriMoi
-    };
-
-    try {
-      const response = await fetch("http://localhost:65001/api/API_WEB/capNhatThongTinCongTy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert(`Cập nhật ${this.duLieuSua} thành công!`);
-      } else {
-        this.thongTin.cong_ty[this.duLieuSua] = this.giaTriCu;
-        alert(`Cập nhật ${this.duLieuSua} thất bại. Vui lòng thử lại.`);
-      }
-    } catch (err) {
-      console.error("Lỗi kết nối:", err);
-      this.thongTin.cong_ty[this.duLieuSua] = this.giaTriCu;
-      alert("Không kết nối được server!");
+    if (this.duLieuSua === 'logo' && this.fileLogo) {
+      await this.capNhatLogo();
+      return;
     }
 
     this.dongForm();
+  }
+
+  private async capNhatLogo() {
+    const formData = new FormData();
+    formData.append('ma_cong_ty', this.thongTin.cong_ty.ma_cong_ty);
+    formData.append('logo', this.fileLogo!);
+
+    try {
+      const res = await fetch('http://localhost:65001/api/API_WEB/capNhatLogoCongTy', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        this.thongTin.cong_ty.logo = data.url || this.previewLogo;
+        alert(' Cập nhật logo thành công!');
+      } else {
+        alert(' Cập nhật logo thất bại.');
+      }
+    } catch (err) {
+      console.error('Lỗi upload logo:', err);
+      alert(' Không thể tải ảnh lên server.');
+    } finally {
+      this.dongForm();
+    }
   }
 }

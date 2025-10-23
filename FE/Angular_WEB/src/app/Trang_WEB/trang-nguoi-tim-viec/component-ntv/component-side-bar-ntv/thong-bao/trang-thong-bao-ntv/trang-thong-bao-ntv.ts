@@ -22,7 +22,6 @@ export class TrangThongBaoNtv implements OnInit {
   pop_up_lay_thong_tin_that_bai = false;
   loading = true;
 
-  // Biến lưu thông báo đang xem chi tiết
   chiTietThongBao: any = null;
 
   constructor(public auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) {}

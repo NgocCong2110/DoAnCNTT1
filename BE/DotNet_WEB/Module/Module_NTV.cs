@@ -82,7 +82,7 @@ namespace DotNet_WEB.Module
                 using var cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@ma", ma_Nguoi_Tim_Viec);
                 cmd.Parameters.AddWithValue("@ten", cvFile.FileName);
-                cmd.Parameters.AddWithValue("@duong", duongDanFile);
+                cmd.Parameters.AddWithValue("@duong", tenFile);
 
                 conn.Open();
                 await cmd.ExecuteNonQueryAsync();

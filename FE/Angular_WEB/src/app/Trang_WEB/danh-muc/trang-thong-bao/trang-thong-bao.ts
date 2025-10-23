@@ -62,12 +62,16 @@ export class TrangThongBao implements OnInit{
     this.danh_sach_thong_bao = [];
     this.loading = true;
     const value = event.target.value;
+    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_nguoi_tim_viec || 0;
+    const ma_cong_ty = this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_cong_ty || 0;
+    const ma_quan_tri = this.auth.layThongTinNguoiDung().ma_quan_tri || 0;
     if(value === 'toan_Bo'){
       this.danhSachThongBao();
       return;
     }
+    
     const value_num = Number(value);
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num })
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num, ma_nguoi_tim_viec, ma_cong_ty, ma_quan_tri })
       .subscribe({
         next: (data) => {
           this.loading = false;

@@ -1,49 +1,83 @@
 <div class="cong-ty-container">
   <section class="thong-tin-cong-ty">
     <h2>Thông tin công ty</h2>
+
     <div class="card">
+      <!-- Header -->
       <div class="card-header">
-        <img [src]="thongTin?.logo" alt="Logo công ty" class="avatar" />
+        <div class="logo-wrapper">
+          <img
+            [src]="thongTin?.logo || 'assets/default-logo.png'"
+            alt="Logo công ty"
+            class="avatar"
+          />
+          <button class="btn-edit-logo" (click)="moForm('logo')">🖋 Thay đổi</button>
+        </div>
+
         <div class="header-info">
           <h3>{{ thongTin?.ten_cong_ty }}</h3>
-          <p><strong>Tên đăng nhập:</strong> {{ thongTin?.ten_dn_cong_ty }}</p>
           <p><strong>Email:</strong> {{ thongTin?.email }}
             <button (click)="moForm('email')">✏️</button>
+          </p>
+          <p><strong>Điện thoại:</strong> {{ thongTin?.dien_thoai }}
+            <button (click)="moForm('dien_thoai')">✏️</button>
+          </p>
+          <p><strong>Website:</strong> {{ thongTin?.website }}
+            <button (click)="moForm('website')">✏️</button>
           </p>
         </div>
       </div>
 
-      <div class="card-body grid-container">
-        <div class="grid-item">
-          <strong>Người đại diện:</strong> {{ thongTin?.nguoi_dai_dien }}
-          <button (click)="moForm('nguoi_dai_dien')">✏️</button>
+      <!-- Body -->
+      <div class="card-body">
+        <h4>Thông tin cơ bản</h4>
+        <div class="grid-container">
+          <div class="grid-item">
+            <strong>Người đại diện:</strong> {{ thongTin?.nguoi_dai_dien }}
+            <button (click)="moForm('nguoi_dai_dien')">✏️</button>
+          </div>
+          <div class="grid-item">
+            <strong>Mã số thuế:</strong> {{ thongTin?.ma_so_thue }}
+            <button (click)="moForm('ma_so_thue')">✏️</button>
+          </div>
+          <div class="grid-item">
+            <strong>Năm thành lập:</strong> {{ thongTin?.nam_thanh_lap }}
+            <button (click)="moForm('nam_thanh_lap')">✏️</button>
+          </div>
+          <div class="grid-item">
+            <strong>Quy mô nhân sự:</strong> {{ thongTin?.quy_mo }}
+            <button (click)="moForm('quy_mo')">✏️</button>
+          </div>
+          <div class="grid-item full-width">
+            <strong>Địa chỉ:</strong> {{ thongTin?.dia_chi }}
+            <button (click)="moForm('dia_chi')">✏️</button>
+          </div>
         </div>
-        <div class="grid-item">
-          <strong>Mã số thuế:</strong> {{ thongTin?.ma_so_thue }}
-          <button (click)="moForm('ma_so_thue')">✏️</button>
+
+        <h4>Thông tin tuyển dụng</h4>
+        <div class="grid-container">
+          <div class="grid-item">
+            <strong>Ngành nghề chính:</strong> {{ thongTin?.nganh_nghe }}
+            <button (click)="moForm('nganh_nghe')">✏️</button>
+          </div>
+          <div class="grid-item">
+            <strong>Loại hình DN:</strong> {{ thongTin?.loai_hinh }}
+            <button (click)="moForm('loai_hinh')">✏️</button>
+          </div>
+          <div class="grid-item">
+            <strong>Người phụ trách tuyển dụng:</strong> {{ thongTin?.nguoi_tuyen_dung }}
+            <button (click)="moForm('nguoi_tuyen_dung')">✏️</button>
+          </div>
+          <div class="grid-item full-width">
+            <strong>Phúc lợi nổi bật:</strong> {{ thongTin?.phuc_loi }}
+            <button (click)="moForm('phuc_loi')">✏️</button>
+          </div>
         </div>
-        <div class="grid-item">
-          <strong>Điện thoại:</strong> {{ thongTin?.dien_thoai }}
-          <button (click)="moForm('dien_thoai')">✏️</button>
-        </div>
-        <div class="grid-item">
-          <strong>Website:</strong> {{ thongTin?.website }}
-          <button (click)="moForm('website')">✏️</button>
-        </div>
-        <div class="grid-item">
-          <strong>Địa chỉ:</strong> {{ thongTin?.dia_chi }}
-          <button (click)="moForm('dia_chi')">✏️</button>
-        </div>
-        <div class="grid-item">
-          <strong>Quy mô:</strong> {{ thongTin?.quy_mo }}
-          <button (click)="moForm('quy_mo')">✏️</button>
-        </div>
-        <div class="grid-item">
-          <strong>Năm thành lập:</strong> {{ thongTin?.nam_thanh_lap }}
-          <button (click)="moForm('nam_thanh_lap')">✏️</button>
-        </div>
+
+        <h4>Giới thiệu công ty</h4>
         <div class="grid-item full-width">
-          <strong>Mô tả:</strong> {{ thongTin?.mo_ta }}
+          <strong>Mô tả:</strong>
+          <p>{{ thongTin?.mo_ta }}</p>
           <button (click)="moForm('mo_ta')">✏️</button>
         </div>
       </div>
@@ -57,24 +91,26 @@
 
     <ng-container [ngSwitch]="duLieuSua">
 
+      <div *ngSwitchCase="'logo'" class="upload-logo">
+        <input type="file" (change)="chonLogo($event)" accept="image/*" />
+        <div *ngIf="previewLogo" class="preview">
+          <img [src]="previewLogo" alt="Xem trước logo mới" />
+        </div>
+      </div>
+
       <input *ngSwitchCase="'email'" [(ngModel)]="giaTriMoi" name="email" type="email" required />
-
       <input *ngSwitchCase="'dien_thoai'" [(ngModel)]="giaTriMoi" name="dien_thoai" />
-
       <input *ngSwitchCase="'website'" [(ngModel)]="giaTriMoi" name="website" />
-
       <input *ngSwitchCase="'nguoi_dai_dien'" [(ngModel)]="giaTriMoi" name="nguoi_dai_dien" />
-
       <input *ngSwitchCase="'ma_so_thue'" [(ngModel)]="giaTriMoi" name="ma_so_thue" />
-
       <input *ngSwitchCase="'dia_chi'" [(ngModel)]="giaTriMoi" name="dia_chi" />
-
       <input *ngSwitchCase="'quy_mo'" [(ngModel)]="giaTriMoi" name="quy_mo" />
-
       <input *ngSwitchCase="'nam_thanh_lap'" [(ngModel)]="giaTriMoi" name="nam_thanh_lap" type="number" />
-
+      <input *ngSwitchCase="'nganh_nghe'" [(ngModel)]="giaTriMoi" name="nganh_nghe" />
+      <input *ngSwitchCase="'loai_hinh'" [(ngModel)]="giaTriMoi" name="loai_hinh" />
+      <input *ngSwitchCase="'nguoi_tuyen_dung'" [(ngModel)]="giaTriMoi" name="nguoi_tuyen_dung" />
+      <textarea *ngSwitchCase="'phuc_loi'" [(ngModel)]="giaTriMoi" name="phuc_loi"></textarea>
       <textarea *ngSwitchCase="'mo_ta'" [(ngModel)]="giaTriMoi" name="mo_ta"></textarea>
-
       <input *ngSwitchDefault [(ngModel)]="giaTriMoi" [name]="duLieuSua" />
 
     </ng-container>

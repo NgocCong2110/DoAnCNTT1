@@ -13,6 +13,8 @@ using System.Text.RegularExpressions;
 using System.Text;
 using System.Security.Cryptography;
 using System.Net;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.viec_lam;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.danh_gia_web;
 
 namespace DotNet_WEB.Module
 {
@@ -33,6 +35,22 @@ namespace DotNet_WEB.Module
             }
             return true;
         }
+
+        public static List<so_luong_nganh_nghe> layNganhNgheNoiBat()
+        {
+            return viec_lam_noi_bat.layNganhNgheNoiBat();
+        }
+
+        public static List<danh_gia> layDanhSachDanhGia()
+        {
+            return lay_danh_sach_danh_gia.layDanhSachDanhGia();
+        }
+
+        public static bool themDanhGiaMoi(danh_gia danh_Gia)
+        {
+            return them_danh_gia_moi.themDanhGiaMoi(danh_Gia);
+        }
+
         public static bool themNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
         {
             if (nguoi_Tim_Viec.mat_khau == null || nguoi_Tim_Viec.email == null)
@@ -174,7 +192,7 @@ namespace DotNet_WEB.Module
                     using (var cmd = new MySqlCommand(doi_mk_cong_ty, coon, trans))
                     {
                         cmd.Parameters.AddWithValue("@mat_khau", mkMaHoa);
-                        cmd.Parameters.AddWithValue("@email",email);
+                        cmd.Parameters.AddWithValue("@email", email);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -384,16 +402,20 @@ namespace DotNet_WEB.Module
 
             string sql = @"
         SELECT 
-            ma_bai_dang,
-            ma_nguoi_dang,
-            ten_nguoi_dang,
-            tieu_de,
-            noi_dung,
-            loai_bai,
-            trang_thai,
-            ngay_tao,
-            ngay_cap_nhat
-        FROM bai_dang;
+    bd.ma_bai_dang,
+    bd.ma_nguoi_dang,
+    bd.ten_nguoi_dang,
+    bd.tieu_de,
+    bd.noi_dung,
+    bd.loai_bai,
+    bd.trang_thai,
+    bd.ngay_tao,
+    bd.ngay_cap_nhat,
+    ct.ma_cong_ty,
+    ct.logo
+FROM bai_dang bd
+LEFT JOIN cong_ty ct ON bd.ma_nguoi_dang = ct.ma_cong_ty
+ORDER BY bd.ngay_tao DESC;
     ";
 
             using var cmd = new MySqlCommand(sql, coon);
@@ -407,6 +429,11 @@ namespace DotNet_WEB.Module
                     ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
 
                     ma_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_dang")) ? 0 : reader.GetInt32("ma_nguoi_dang"),
+
+                    cong_Ty = new cong_ty
+                    {
+                        logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo")
+                    },
 
                     ten_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ten_nguoi_dang")) ? null : reader.GetString("ten_nguoi_dang"),
 
@@ -532,8 +559,8 @@ namespace DotNet_WEB.Module
 
                 if (viec_Lam != null)
                 {
-                    string sqlViecLam = @"INSERT INTO viec_lam(ma_cong_ty, nganh_nghe, vi_tri, kinh_nghiem, tieu_de, mo_ta, yeu_cau, muc_luong, dia_diem, loai_hinh, so_luong, ma_bai_dang) 
-                                  VALUES(@ma_cong_ty, @nganh_nghe, @vi_tri, @kinh_nghiem, @tieu_de, @mo_ta, @yeu_cau, @muc_luong, @dia_diem, @loai_hinh, @so_luong, @ma_bai_dang)";
+                    string sqlViecLam = @"INSERT INTO viec_lam(ma_cong_ty, nganh_nghe, vi_tri, kinh_nghiem, tieu_de, mo_ta, yeu_cau, muc_luong, dia_diem, loai_hinh,  ma_bai_dang) 
+                                  VALUES(@ma_cong_ty, @nganh_nghe, @vi_tri, @kinh_nghiem, @tieu_de, @mo_ta, @yeu_cau, @muc_luong, @dia_diem, @loai_hinh, @ma_bai_dang)";
                     using var cmdViecLam = new MySqlCommand(sqlViecLam, coon, trans);
                     cmdViecLam.Parameters.AddWithValue("@ma_cong_ty", viec_Lam.ma_cong_ty);
                     cmdViecLam.Parameters.AddWithValue("@nganh_nghe", viec_Lam.nganh_nghe);
@@ -552,8 +579,10 @@ namespace DotNet_WEB.Module
                 trans.Commit();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine("Lỗi khi thêm bài đăng mới." + ex.Message);
+                Console.WriteLine("Chi tiết lỗi: " + ex.StackTrace);
                 trans.Rollback();
                 return false;
             }
@@ -656,6 +685,19 @@ namespace DotNet_WEB.Module
                 danh_sach_da_luu.Add(bai_Dang);
             }
             return danh_sach_da_luu;
+        }
+
+        public static bool kiemTraUngTuyen(ung_tuyen ung_Tuyen)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from ung_tuyen where ma_viec = @ma_Viec and ma_cong_ty = @ma_Cong_Ty and ma_nguoi_tim_viec = @ma_Nguoi_Tim_Viec";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_Viec", ung_Tuyen.ma_viec);
+            cmd.Parameters.AddWithValue("@ma_Cong_Ty", ung_Tuyen.ma_cong_ty);
+            cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ung_Tuyen.ma_nguoi_tim_viec);
+            using var reader = cmd.ExecuteReader();
+            return reader.Read();
         }
 
         public static bool ungTuyenCongViec(int ma_Viec, int ma_Cong_Ty, int ma_Nguoi_Tim_Viec)
@@ -771,22 +813,38 @@ namespace DotNet_WEB.Module
             return danh_sach;
         }
 
-        public static List<thong_bao> chonThongBaoCoDinh(LoaiThongBao loai_Thong_Bao)
+        public static List<thong_bao> chonThongBaoCoDinh(thong_bao thong_Bao)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
+            string sql = "";
+            if (thong_Bao.ma_cong_ty != 0 || thong_Bao.ma_quan_tri != 0)
+            {
+                sql = @"SELECT tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, 
+                    tb.ma_quan_tri, qt.ho_ten, tb.ma_cong_ty, ct.ten_cong_ty, tb.ngay_tao, tb.ma_nguoi_tim_viec
+                    FROM thong_bao tb 
+                LEFT JOIN quan_tri qt ON tb.ma_quan_tri = qt.ma_quan_tri
+                LEFT JOIN cong_ty ct ON tb.ma_cong_ty = ct.ma_cong_ty
+                WHERE tb.loai_thong_bao = @loai_Thong_Bao
+                ORDER BY tb.ma_thong_bao ASC";
+            }
+            
+            else
+            {
+                sql = @"SELECT tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, 
+                    tb.ma_quan_tri, qt.ho_ten, tb.ma_cong_ty, ct.ten_cong_ty, tb.ngay_tao, tb.ma_nguoi_tim_viec
+                    FROM thong_bao tb 
+                LEFT JOIN quan_tri qt ON tb.ma_quan_tri = qt.ma_quan_tri
+                LEFT JOIN cong_ty ct ON tb.ma_cong_ty = ct.ma_cong_ty
+                WHERE tb.loai_thong_bao = @loai_Thong_Bao and (tb.loai_thong_bao != 'thu_Moi_Phong_Van' or tb.ma_nguoi_tim_viec = @ma_nguoi_tim_viec)
+                ORDER BY tb.ma_thong_bao ASC";
+            }
 
-            string sql = @"
-        SELECT tb.ma_thong_bao, tb.tieu_de, tb.noi_dung, tb.loai_thong_bao, 
-               tb.ma_quan_tri, qt.ho_ten, tb.ma_cong_ty, ct.ten_cong_ty, tb.ngay_tao, tb.ma_nguoi_tim_viec
-        FROM thong_bao tb 
-        LEFT JOIN quan_tri qt ON tb.ma_quan_tri = qt.ma_quan_tri
-        LEFT JOIN cong_ty ct ON tb.ma_cong_ty = ct.ma_cong_ty
-        WHERE tb.loai_thong_bao = @loai_Thong_Bao
-        ORDER BY tb.ma_thong_bao ASC";
+            
 
             using var cmd = new MySqlCommand(sql, coon);
-            cmd.Parameters.AddWithValue("@loai_Thong_Bao", loai_Thong_Bao.ToString());
+            cmd.Parameters.AddWithValue("@loai_Thong_Bao", thong_Bao.loai_thong_bao);
+            cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", thong_Bao.ma_nguoi_tim_viec);
 
             using var reader = cmd.ExecuteReader();
             var danh_sach_thong_bao_co_dinh = new List<thong_bao>();
@@ -890,10 +948,10 @@ namespace DotNet_WEB.Module
 
             var mapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                { "laptrinhvien", "Công nghệ thông tin" },
-                { "developer", "Công nghệ thông tin" },
-                { "coder", "Công nghệ thông tin" },
-                { "tester", "Công nghệ thông tin" },
+                { "laptrinhvien", "cong_nghe_thong_tin" },
+                { "developer", "cong_nghe_thong_tin" },
+                { "coder", "cong_nghe_thong_tin" },
+                { "tester", "cong_nghe_thong_tin" },
                 { "ke toan", "Tài chính - kế toán" },
                 { "accountant", "Tài chính - kế toán" },
                 { "giaovien", "Giáo dục - đào tạo" },
@@ -934,7 +992,8 @@ namespace DotNet_WEB.Module
             using (var coon = new MySqlConnection(chuoi_KetNoi))
             {
                 coon.Open();
-                string sql = "SELECT * FROM viec_lam WHERE nganh_nghe = @nganh";
+                string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty FROM viec_lam vl join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
+                 WHERE nganh_nghe = @nganh ";
                 using var cmd = new MySqlCommand(sql, coon);
                 cmd.Parameters.AddWithValue("@nganh", mappedNganh);
 
@@ -944,6 +1003,13 @@ namespace DotNet_WEB.Module
                     var vl = new viec_lam
                     {
                         ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+
+                        cong_Ty = new cong_ty
+                        {
+                            logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
+
+                            ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty")
+                        },
 
                         nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
 
@@ -962,63 +1028,6 @@ namespace DotNet_WEB.Module
             }
 
             return ketQua;
-        }
-
-        public static string taoDonHang(tao_don_hang tdh)
-        {
-            using var coon = new MySqlConnection(chuoi_KetNoi);
-            coon.Open();
-            using var trans = coon.BeginTransaction();
-            string payment_Url = "";
-            try
-            {
-                decimal gia_dich_vu = 0;
-                string lay_gia_dich_vu = "SELECT gia FROM dich_vu WHERE ma_dich_vu = @ma_Dich_Vu";
-                using (var cmd = new MySqlCommand(lay_gia_dich_vu, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Dich_Vu", tdh.ma_dich_vu);
-                    var kq = cmd.ExecuteScalar();
-                    if (kq == null) throw new Exception("Dịch vụ không tồn tại");
-                    gia_dich_vu = Convert.ToDecimal(kq);
-                }
-
-                int ma_don_hang;
-                string them_don_hang = @"
-            INSERT INTO don_hang (ma_cong_ty, tong_tien, trang_thai_don_hang, ngay_tao)
-            VALUES (@ma_Cong_Ty, @tong_tien, 'cho_Thanh_Toan', NOW());
-            SELECT LAST_INSERT_ID();";
-
-                using (var cmd = new MySqlCommand(them_don_hang, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Cong_Ty", tdh.ma_cong_ty);
-                    cmd.Parameters.AddWithValue("@tong_tien", gia_dich_vu);
-                    var res = cmd.ExecuteScalar();
-                    if (res == null) throw new Exception("Không lấy được ID đơn hàng");
-                    ma_don_hang = Convert.ToInt32(res);
-                }
-
-                string tao_chi_tiet_don_hang = @"
-            INSERT INTO chi_tiet_don_hang (ma_don_hang, ma_dich_vu, so_luong, don_gia, trang_thai_don_hang)
-            VALUES (@ma_Don_Hang, @ma_Dich_Vu, 1, @don_Gia, 'cho_Thanh_Toan')";
-
-                using (var cmd = new MySqlCommand(tao_chi_tiet_don_hang, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
-                    cmd.Parameters.AddWithValue("@ma_Dich_Vu", tdh.ma_dich_vu);
-                    cmd.Parameters.AddWithValue("@don_Gia", gia_dich_vu);
-                    cmd.ExecuteNonQuery();
-                }
-
-                trans.Commit();
-
-                payment_Url = GenerateVNPayUrl(ma_don_hang, gia_dich_vu);
-            }
-            catch
-            {
-                try { trans.Rollback(); } catch { }
-                throw;
-            }
-            return payment_Url;
         }
 
         public static bool kiemTraOTPTonTai(string email)
@@ -1075,94 +1084,13 @@ namespace DotNet_WEB.Module
             return num;
         }
 
-        private static string GenerateVNPayUrl(int ma_don_hang, decimal tongTien)
-        {
-            var vnp_Params = new Dictionary<string, string>
-            {
-                { "vnp_Version", "2.1.0" },
-                { "vnp_Command", "pay" },
-                { "vnp_TmnCode", "BROPIXNH" },
-                { "vnp_Amount", ((long)(tongTien * 100)).ToString() },
-                { "vnp_CurrCode", "VND" },
-                { "vnp_TxnRef", ma_don_hang.ToString() },
-                { "vnp_OrderInfo", $"Thanh toán đơn hàng {ma_don_hang}" },
-                { "vnp_OrderType", "other" },
-                { "vnp_Locale", "vn" },
-                { "vnp_ReturnUrl", "https://1e3b4214677f.ngrok-free.app/api/API_WEB/VNPayReturn" },
-                { "vnp_IpAddr", "127.0.0.1" },
-                { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
-                { "vnp_SecureHashType", "SHA256" }
-            };
-
-            var sortedParams = vnp_Params.OrderBy(k => k.Key);
-            var queryString = new StringBuilder();
-            var hashData = new StringBuilder();
-
-            foreach (var kv in sortedParams)
-            {
-                if (queryString.Length > 0)
-                {
-                    queryString.Append("&");
-                    hashData.Append("&");
-                }
-                queryString.Append($"{kv.Key}={WebUtility.UrlEncode(kv.Value)}");
-                hashData.Append($"{kv.Key}={kv.Value}");
-            }
-
-            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("I7LL3FX1ZJQZ6OCXQ9EGY9DVT0W0Q3EE"));
-            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(hashData.ToString()));
-            var vnp_SecureHash = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
-
-            return $"{"https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
-        }
-
-        public static bool capNhatTrangThaiDonHang(int ma_don_hang, decimal so_tien, string vnpay_res)
-        {
-            using var coon = new MySqlConnection(chuoi_KetNoi);
-            coon.Open();
-            using var trans = coon.BeginTransaction();
-            try
-            {
-                string cap_nhat_don_hang = "UPDATE don_hang SET trang_thai_don_hang = 'da_Thanh_Toan' WHERE ma_don_hang=@ma_Don_Hang";
-                using (var cmd = new MySqlCommand(cap_nhat_don_hang, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
-                    cmd.ExecuteNonQuery();
-                }
-
-                string cap_nhat_chi_tiet_don_hang = "UPDATE chi_tiet_don_hang SET trang_thai_don_hang = 'da_Thanh_Toan' WHERE ma_don_hang=@ma_Don_Hang";
-                using (var cmd = new MySqlCommand(cap_nhat_chi_tiet_don_hang, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
-                    cmd.ExecuteNonQuery();
-                }
-
-                string them_thanh_toan_moi = @"INSERT INTO thanh_toan (ma_don_hang, so_tien, response_code, ngay_thanh_toan, trang_thai_thanh_toan) " +
-                        "VALUES (@ma_Don_Hang, @so_Tien, @res, now(), 'da_Thanh_Toan')";
-                using (var cmd = new MySqlCommand(them_thanh_toan_moi, coon, trans))
-                {
-                    cmd.Parameters.AddWithValue("@ma_Don_Hang", ma_don_hang);
-                    cmd.Parameters.AddWithValue("@so_Tien", so_tien);
-                    cmd.Parameters.AddWithValue("@res", vnpay_res);
-                    cmd.ExecuteNonQuery();
-                }
-                trans.Commit();
-                return true;
-            }
-            catch
-            {
-                trans.Rollback();
-                return false;
-            }
-        }
-
-
-
         public static List<viec_lam_ket_qua> deXuatViecLamSelector(viec_lam viec_Lam)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = "select * from viec_lam";
+            string sql = @"SELECT v.*, c.logo, c.ten_cong_ty 
+               FROM viec_lam v
+               INNER JOIN cong_ty c ON v.ma_cong_ty = c.ma_cong_ty";
             using var cmd = new MySqlCommand(sql, coon);
             using var reader = cmd.ExecuteReader();
             var danh_sach = new List<viec_lam_ket_qua>();
@@ -1171,7 +1099,41 @@ namespace DotNet_WEB.Module
                 var vl = new viec_lam_ket_qua
                 {
                     ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
+                    viec_Lam = new viec_lam
+                    {
+                        ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
+
+                        cong_Ty = new cong_ty
+                        {
+                            logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
+
+                            ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty")
+                        },
+
+                        nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
+
+                        vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
+
+                        kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
+
+                        tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
+
+                        mo_ta = reader.IsDBNull(reader.GetOrdinal("mo_ta")) ? null : reader.GetString("mo_ta"),
+
+                        yeu_cau = reader.IsDBNull(reader.GetOrdinal("yeu_cau")) ? null : reader.GetString("yeu_cau"),
+
+                        muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
+
+                        dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem"),
+
+                        loai_hinh = reader.IsDBNull(reader.GetOrdinal("loai_hinh")) ? LoaiHinhViecLam.None : (LoaiHinhViecLam)Enum.Parse(typeof(LoaiHinhViecLam), reader.GetString("loai_hinh")),
+
+                        ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+
+                        ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
+                    },
                     nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
+                    vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
                     dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem"),
                     muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
                     kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
@@ -1180,50 +1142,54 @@ namespace DotNet_WEB.Module
                     diem_phu_hop = 0
                 };
                 var vl_nganh_nghe = Normalize(vl.nganh_nghe);
+                var vl_vi_tri = Normalize(vl.vi_tri);
                 var vl_dia_diem = Normalize(vl.dia_diem);
                 var vl_muc_luong = Normalize(vl.muc_luong);
                 var vl_kinh_nghiem = Normalize(vl.kinh_nghiem);
                 var vl_loai_hinh = Normalize(vl.loai_hinh.ToString());
 
+                var req_vi_tri = Normalize(viec_Lam.vi_tri);
                 var req_nganh_nghe = Normalize(viec_Lam.nganh_nghe);
                 var req_dia_diem = Normalize(viec_Lam.dia_diem);
                 var req_muc_luong = Normalize(viec_Lam.muc_luong);
                 var req_kinh_nghiem = Normalize(viec_Lam.kinh_nghiem);
                 var req_loai_hinh = Normalize(viec_Lam.loai_hinh.ToString());
 
-                if (!string.IsNullOrEmpty(req_dia_diem) && vl_dia_diem.Contains(req_dia_diem))
+                if (!string.IsNullOrEmpty(req_dia_diem) && !string.IsNullOrEmpty(vl_dia_diem) && vl_dia_diem.Contains(req_dia_diem))
                 {
-                    vl.diem_phu_hop += 3;
+                    vl.diem_phu_hop += 4;
                 }
 
-                if (!string.IsNullOrEmpty(req_nganh_nghe) && vl_nganh_nghe.Contains(req_nganh_nghe))
+                if (!string.IsNullOrEmpty(req_nganh_nghe) && !string.IsNullOrEmpty(vl_nganh_nghe) && vl_nganh_nghe.Contains(req_nganh_nghe))
                 {
                     vl.diem_phu_hop += 6;
                 }
 
-                if (!string.IsNullOrEmpty(req_muc_luong) && vl_muc_luong.Contains(req_muc_luong))
+                if (!string.IsNullOrEmpty(req_vi_tri) && !string.IsNullOrEmpty(vl_vi_tri) && vl_vi_tri.Contains(req_vi_tri))
                 {
                     vl.diem_phu_hop += 2;
                 }
 
-                if (!string.IsNullOrEmpty(req_kinh_nghiem) && vl_kinh_nghiem.Contains(req_kinh_nghiem))
+                if (!string.IsNullOrEmpty(req_muc_luong) && !string.IsNullOrEmpty(vl_muc_luong) && vl_muc_luong.Contains(req_muc_luong))
+                {
+                    vl.diem_phu_hop += 3;
+                }
+
+                if (!string.IsNullOrEmpty(req_kinh_nghiem) && !string.IsNullOrEmpty(vl_kinh_nghiem) && vl_kinh_nghiem.Contains(req_kinh_nghiem))
                 {
                     vl.diem_phu_hop += 2;
                 }
 
-                if (!string.IsNullOrEmpty(req_loai_hinh) && vl_loai_hinh.Contains(req_loai_hinh))
+                if (!string.IsNullOrEmpty(req_loai_hinh) && !string.IsNullOrEmpty(vl_loai_hinh) && vl_loai_hinh.Contains(req_loai_hinh))
                 {
                     vl.diem_phu_hop += 1;
                 }
 
-                if (vl.diem_phu_hop > 0)
+                if (vl.diem_phu_hop > 1)
                     danh_sach.Add(vl);
             }
-            return danh_sach.OrderByDescending(j => j.diem_phu_hop).Take(5).ToList();
+            return danh_sach.OrderByDescending(j => j.diem_phu_hop).ToList();
         }
-
-
-
 
 
 
@@ -1236,7 +1202,7 @@ namespace DotNet_WEB.Module
         public static string Normalize(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
-                return string.Empty;
+                return null;
 
             string normalized = input.Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder();
@@ -1251,7 +1217,7 @@ namespace DotNet_WEB.Module
 
             result = Regex.Replace(result, @"[\s_\-.,/]+", "");
 
-            return result;
+            return string.IsNullOrWhiteSpace(result) ? null : result;
         }
 
         public static double Similarity(string s1, string s2)
@@ -1305,4 +1271,5 @@ namespace DotNet_WEB.Module
         }
 
     }
+
 }

@@ -65,6 +65,15 @@ namespace DotNet_WEB.Class
         tu_Do = 4
     }
 
+    public enum TrangThaiDanhGia
+    {
+        None = 0,
+        [Display(Name = "Đang hiển thị")]
+        dang_Hien_Thi = 1,
+        [Display(Name = "Chưa hiển thị")]
+        chua_Hien_Thi = 2
+    }
+
     public enum TrangThaiUngTuyen
     {
         None = 0,

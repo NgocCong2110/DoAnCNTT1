@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThongTinViecLam } from '../../../../services/thong-tin-viec-lam-service/thong-tin-viec-lam';
+import { ActivatedRoute } from '@angular/router';
 
 interface API_RESPONSE {
   success: boolean;
@@ -18,15 +19,17 @@ interface API_RESPONSE {
   templateUrl: './cac-selector.html',
   styleUrls: ['./cac-selector.css']
 })
-export class CacSelector implements OnInit{
+export class CacSelector implements OnInit {
 
-  constructor(public httpclient: HttpClient, public cd: ChangeDetectorRef, private router: Router, public vl: ThongTinViecLam) { }
+  constructor(public httpclient: HttpClient, public cd: ChangeDetectorRef, private router: Router, public vl: ThongTinViecLam, private route: ActivatedRoute) { }
 
   danh_sach_de_xuat: any[] = [];
 
   loading = false;
 
   toan_bo = true;
+
+  de_xuat_thanh_tim_kiem = false;
 
   tung_phan = false;
 
@@ -35,11 +38,11 @@ export class CacSelector implements OnInit{
   ma_bai_dang: number = 0;
 
   nganh_nghe = '';
+  vi_tri = '';
   dia_diem = '';
   muc_luong = '';
   kinh_nghiem = '';
   hinh_thuc: number = 0;
-  chuc_vu = '';
   phuc_loi = '';
   quy_mo_cong_ty = '';
 
@@ -48,16 +51,33 @@ export class CacSelector implements OnInit{
   muc_luong_label = '';
   kinh_nghiem_label = '';
   hinh_thuc_label = '';
-  chuc_vu_label = '';
+  vi_tri_label = '';
   phuc_loi_label = '';
   quy_mo_cong_ty_label = '';
 
   nganhNgheList = [
     { value: 'cong_nghe_thong_tin', label: 'Công nghệ thông tin' },
+    { value: 'tai_chinh', label: 'Tài chính - Ngân hàng - Kế toán' },
     { value: 'marketing', label: 'Marketing' },
-    { value: 'vien_thong', label: 'Viễn Thông' },
-    { value: 'ban_le', label: 'Kinh doanh - Bán hàng' }
+    { value: 'ban_hang', label: 'Bán hàng' },
+    { value: 'san_xuat', label: 'Sản xuất - Công nghiệp' },
+    { value: 'xay_dung', label: 'Xây dựng - Kiến trúc' },
+    { value: 'giao_duc', label: 'Giáo dục - Đào tạo' },
+    { value: 'y_te', label: 'Y tế - Dược' },
+    { value: 'hanh_chinh', label: 'Hành chính - Văn phòng' },
+    { value: 'nhan_su', label: 'Nhân sự' },
+    { value: 'luat', label: 'Pháp lý - Luật' },
+    { value: 'du_lich', label: 'Du lịch - Nhà hàng - Khách sạn' },
+    { value: 'bat_dong_san', label: 'Bất động sản' },
+    { value: 'van_tai', label: 'Vận tải - Kho vận - Logistics' },
+    { value: 'truyen_thong', label: 'Truyền thông - Quảng cáo' },
+    { value: 'thiet_ke', label: 'Thiết kế - Mỹ thuật - Sáng tạo' },
+    { value: 'nong_lam_ngu_nghiep', label: 'Nông - Lâm - Ngư nghiệp' },
+    { value: 'co_khi_dien_dien_tu', label: 'Cơ khí - Điện - Điện tử' },
+    { value: 'cong_tac_xa_hoi', label: 'Công tác xã hội - Phi lợi nhuận' },
+    { value: 'khac', label: 'Khác' }
   ];
+
 
   diaDiemList = [
     { value: 'hanoi', label: 'Hà Nội' },
@@ -87,7 +107,7 @@ export class CacSelector implements OnInit{
     { value: 4, label: 'Freelance' }
   ];
 
-  chucVuList = [
+  viTriList = [
     { value: 'nhan_vien', label: 'Nhân viên' },
     { value: 'truong_nhom', label: 'Trưởng nhóm' },
     { value: 'quan_ly', label: 'Quản lý' },
@@ -113,6 +133,7 @@ export class CacSelector implements OnInit{
   locCongViec() {
     const bo_loc = {
       nganh_nghe: this.nganh_nghe,
+      vi_tri: this.vi_tri,
       dia_diem: this.dia_diem,
       muc_luong: this.muc_luong,
       kinh_nghiem: this.kinh_nghiem,
@@ -124,21 +145,46 @@ export class CacSelector implements OnInit{
   }
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params => {
+      this.xuLyThayDoiParam(params);
+    });
+
     this.vl.ket_qua$.subscribe(data => {
-      if(data && data.length > 0){
+      if (data && data.length > 0) {
         this.danh_sach_de_xuat = data;
+        this.de_xuat_thanh_tim_kiem = true;
         this.toan_bo = false;
-        this.tung_phan = true;
+        this.tung_phan = false;
         this.cd.markForCheck();
       }
-    })
+    });
 
-    this.layDanhSachViecLam();
   }
 
-  layDanhSachViecLam()  {
+  xuLyThayDoiParam(params: any) {
+    const nganh = params['nganh'];
+
+    if (nganh) {
+      this.toan_bo = false;
+      this.tung_phan = false;
+      this.de_xuat_thanh_tim_kiem = true;
+
+      this.nganh_nghe = nganh;
+      this.duaRaDeXuat({ nganh_nghe: nganh });
+    }
+    else {
+      this.de_xuat_thanh_tim_kiem = false;
+      this.toan_bo = true;
+      this.tung_phan = false;
+      this.layDanhSachViecLam();
+    }
+  }
+
+  layDanhSachViecLam() {
     this.toan_bo = true;
     this.tung_phan = false;
+    this.de_xuat_thanh_tim_kiem = false;
     this.cd.markForCheck();
     this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachViecLam', {})
       .subscribe({
@@ -165,7 +211,12 @@ export class CacSelector implements OnInit{
   }
 
   duaRaDeXuat(viec_Lam: any) {
+    if (Object.values(viec_Lam).every(v => [null, undefined, '', 0].includes(v as any))) {
+      this.layDanhSachViecLam();
+      return;
+    }
     this.toan_bo = false;
+    this.de_xuat_thanh_tim_kiem = false;
     this.tung_phan = true;
     this.loading = true;
     this.cd.markForCheck();
@@ -174,10 +225,8 @@ export class CacSelector implements OnInit{
       .subscribe({
         next: (data) => {
           this.loading = false;
-
           if (data.success) {
-            this.danh_sach_de_xuat = [];
-            this.danh_sach_de_xuat = data.danh_sach;
+            this.danh_sach_de_xuat = data.danh_sach || [];
             this.error = false;
           }
           else {
@@ -194,7 +243,8 @@ export class CacSelector implements OnInit{
       })
   }
 
-  chiTietBaiDang(ma_bai_dang: number){
+  chiTietBaiDang(ma_bai_dang: number) {
     this.router.navigate(['trang-chi-tiet-viec-lam', ma_bai_dang]);
   }
+
 }

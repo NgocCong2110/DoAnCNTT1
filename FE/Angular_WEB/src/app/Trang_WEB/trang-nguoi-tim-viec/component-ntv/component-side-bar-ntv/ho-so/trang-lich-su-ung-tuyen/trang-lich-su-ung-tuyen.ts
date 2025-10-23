@@ -69,4 +69,26 @@ export class TrangLichSuUngTuyen implements OnInit{
     return this.trangThaiUngTuyen[key] || "Không có thông tin";
   }
 
+  nganhNgheMapping: { [key: string]: string } = {
+      cong_nghe_thong_tin: 'Công nghệ thông tin',
+      cham_soc_khach_hang: 'Chăm sóc khách hàng',
+      sales: 'Sales',
+      tai_chinh: 'Tài chính',
+      marketing: 'Marketing',
+      ban_hang: 'Bán hàng',
+      san_xuat: 'Sản xuất',
+      giao_duc: 'Giáo dục',
+      y_te: 'Y tế',
+      hanh_chinh: 'Hành chính',
+      xay_dung: 'Xây dựng',
+      luat: 'Luật - Pháp lý',
+      bat_dong_san: 'Bất động sản',
+      du_lich: 'Du lịch',
+      nong_nghiep: 'Nông nghiệp',
+      nghe_thuat: 'Nghệ thuật',
+      van_tai: 'Vận tải'
+    };
+    laynganhnghe(ma: string): string {
+      return this.nganhNgheMapping[ma] || '';
+    }
 }

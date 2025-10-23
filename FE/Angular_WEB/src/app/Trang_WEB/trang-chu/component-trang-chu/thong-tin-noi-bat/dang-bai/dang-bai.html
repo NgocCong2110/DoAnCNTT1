@@ -14,7 +14,7 @@
   <div class="d-flex justify-content-end mt-2" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty' 
            || auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">
     <button class="btn d-flex align-items-center gap-1 px-3 py-1" (click)="moPopup()"
-      style="background-color: #6c757d; border-color: #6c757d; color: white; font-size: 13px; border-radius: 6px;">
+      style="background-color: #0d6efd; color: white; font-weight: bold; font-size: 13px; border-radius: 6px;">
       <span style="font-size: 14px;">+</span> Đăng bài
     </button>
   </div>
@@ -36,90 +36,109 @@
               placeholder="Ví dụ: Tuyển lập trình viên Java">
           </div>
 
-          <!-- Mô tả công việc -->
           <div class="mb-3">
             <label>Mô tả công việc</label>
             <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" rows="3" class="form-control"
               placeholder="Mô tả ngắn gọn trách nhiệm và công việc..."></textarea>
           </div>
 
-          <!-- Yêu cầu ứng viên -->
           <div class="mb-3">
             <label>Yêu cầu ứng viên</label>
             <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"
               placeholder="Trình độ, kỹ năng, kinh nghiệm..."></textarea>
           </div>
 
-          <!-- Địa điểm -->
           <div class="mb-3">
             <label>Địa điểm làm việc</label>
             <input [(ngModel)]="dia_diem_moi" name="dia_diem" type="text" class="form-control"
               placeholder="Ví dụ: Hà Nội, TP. HCM...">
           </div>
 
-          <!-- Mức lương -->
           <div class="mb-3">
             <label>Mức lương</label>
-            <select [(ngModel)]="muc_luong" name="muc_luong" class="form-select">
-              <option value="duoi_7">Dưới 7 triệu</option>
-              <option value="7_10">7 – 10 triệu</option>
-              <option value="10_15">10 – 15 triệu</option>
-              <option value="15_20">15 – 20 triệu</option>
-              <option value="20_30">20 – 30 triệu</option>
-              <option value="tren_30">Trên 30 triệu</option>
-              <option value="thoathuan">Thỏa thuận</option>
-            </select>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ muc_luong_label || 'Mức lương' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let muc of mucLuongList">
+                  <button class="dropdown-item" type="button"
+                    (click)="muc_luong = muc.value; muc_luong_label = muc.label">
+                    {{ muc.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <!-- Ngành nghề -->
           <div class="mb-3">
             <label>Ngành nghề</label>
-            <select [(ngModel)]="nganh_nghe" name="nganh_nghe" class="form-select">
-              <option value="it">Công nghệ thông tin</option>
-              <option value="ke_toan">Kế toán / Tài chính</option>
-              <option value="marketing">Marketing</option>
-              <option value="ban_hang">Bán hàng</option>
-              <option value="san_xuat">Sản xuất</option>
-              <option value="khac">Khác</option>
-            </select>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ nganh_nghe_label || 'Ngành nghề' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let nganh of nganhNgheList">
+                  <button class="dropdown-item" type="button"
+                    (click)="nganh_nghe = nganh.value; nganh_nghe_label = nganh.label">
+                    {{ nganh.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <!-- Vị trí tuyển dụng -->
           <div class="mb-3">
             <label>Vị trí tuyển dụng</label>
             <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control"
               placeholder="Ví dụ: Nhân viên, Trưởng phòng, Quản lý...">
           </div>
 
-          <!-- Kinh nghiệm -->
           <div class="mb-3">
             <label>Kinh nghiệm</label>
-            <select [(ngModel)]="kinh_nghiem" name="kinh_nghiem" class="form-select">
-              <option value="none">Không yêu cầu</option>
-              <option value="1nam">1 năm</option>
-              <option value="2_3nam">2 – 3 năm</option>
-              <option value="3_5nam">3 – 5 năm</option>
-              <option value="tren_5nam">Trên 5 năm</option>
-            </select>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ kinh_nghiem_label || 'Kinh nghiệm' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let kn of kinhNghiemList">
+                  <button class="dropdown-item" type="button"
+                    (click)="kinh_nghiem = kn.value; kinh_nghiem_label = kn.label">
+                    {{ kn.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <!-- Loại hình -->
           <div class="mb-3">
             <label>Loại hình</label>
-            <select [(ngModel)]="loai_hinh" name="loai_hinh" class="form-select">
-              <option value="full_time">Toàn thời gian</option>
-              <option value="part_time">Bán thời gian</option>
-              <option value="remote">Remote</option>
-              <option value="thuc_tap">Thực tập</option>
-            </select>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ loai_hinh_label || 'Loại hình' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let loai of loaiHinhList">
+                  <button class="dropdown-item" type="button"
+                    (click)="loai_hinh = loai.value; loai_hinh_label = loai.label">
+                    {{ loai.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
+
 
         </form>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-        <button class="btn btn-primary" (click)="themBaiDang()">Đăng bài</button>
+        <button class="btn btn-primary" (click)="themBaiDang()" style="background-color: #0d6efd; color: white; font-weight: bold;">Đăng bài</button>
       </div>
     </div>
   </div>

@@ -13,6 +13,7 @@
                     <th>Ngành nghề</th>
                     <th>Mức lương</th>
                     <th>Kinh nghiệm</th>
+                    <th>Tên công ty</th>
                     <th>Địa điểm</th>
                     <th>Trạng thái</th>
                     <th>Ngày ứng tuyển</th>
@@ -22,9 +23,10 @@
                 <tr *ngFor="let ls of danh_sach_lich_su_ung_tuyen; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>{{ ls.viec_Lam?.vi_tri }}</td>
-                    <td>{{ ls.viec_Lam?.nganh_nghe }}</td>
+                    <td>{{ laynganhnghe(ls.viec_Lam?.nganh_nghe) }}</td>
                     <td>{{ ls.viec_Lam?.muc_luong }}</td>
                     <td>{{ ls.viec_Lam?.kinh_nghiem }}</td>
+                    <td>{{ ls.cong_Ty?.ten_cong_ty }}</td>
                     <td>{{ ls.cong_Ty?.dia_chi }}</td>
                     <td [ngClass]="{
                         'text-warning': ls.trang_thai === 1,

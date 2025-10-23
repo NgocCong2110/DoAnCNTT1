@@ -41,15 +41,10 @@ export class TrangViecLamDaLuu implements OnInit {
           if(data.success){
             this.danh_sach_bai_dang_da_luu = data.danh_sach || [];
           }
-          else{
-            this.pop_up_lay_thong_tin_that_bai = true;
-            setTimeout(() => {
-              this.pop_up_lay_thong_tin_that_bai = false;
-            },1500);
-          }
           this.cd.detectChanges();
         },
         error: (err) => {
+          this.pop_up_lay_thong_tin_that_bai = true;
           this.loading = false;
           this.danh_sach_bai_dang_da_luu = [];
           this.cd.detectChanges();

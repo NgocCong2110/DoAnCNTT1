@@ -26,14 +26,14 @@ namespace DotNet_WEB
         {
             if (nguoi_Dung.email == null)
             {
-                return BadRequest(new { success = false, message = "Email không được để trống." });
+                return Ok(new { success = false, message = "Email không được để trống." });
             }
             bool ket_Qua = await XacThuc_ND.xacThucGmail(new MailAddress(nguoi_Dung.email));
             if (ket_Qua)
             {
                 return Ok(new { success = true, message = "Email hợp lệ." });
             }
-            return BadRequest(new { success = false, message = "Email không hợp lệ." });
+            return Ok(new { success = false, message = "Email không hợp lệ." });
         }
 
 
@@ -42,14 +42,14 @@ namespace DotNet_WEB
         {
             if (string.IsNullOrWhiteSpace(cong_Ty.ma_so_thue))
             {
-                return BadRequest(new { success = false, message = "Mã số thuế không được để trống" });
+                return Ok(new { success = false, message = "Mã số thuế không được để trống" });
             }
             bool ketQua = await XacThuc_ND.kiemTraMaSoThue(cong_Ty.ma_so_thue);
             if (ketQua == true)
             {
                 return Ok(new { success = true, message = "Mã số thuế hợp lệ." });
             }
-            return BadRequest(new { success = false, message = "Mã số thuế không hợp lệ." });
+            return Ok(new { success = false, message = "Mã số thuế không hợp lệ." });
         }
 
         [HttpPost("xacThucNguoiDung")]
@@ -114,7 +114,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Thêm thông tin công ty thành công." });
             }
-            return BadRequest(new { success = false, message = "Thêm thông tin công ty thất bại." });
+            return Ok(new { success = false, message = "Thêm thông tin công ty thất bại." });
         }
 
         [HttpPost("themThongTinNguoiTimViec")]
@@ -125,7 +125,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Thêm thông tin người tìm việc thành công." });
             }
-            return BadRequest(new { success = false, message = "Thêm thông tin người tìm việc thất bại." });
+            return Ok(new { success = false, message = "Thêm thông tin người tìm việc thất bại." });
         }
 
         [HttpPost("themThongTinQuanTriVien")]
@@ -136,7 +136,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Thêm thông tin quản trị viên thành công." });
             }
-            return BadRequest(new { success = false, message = "Thêm thông tin quản trị viên thất bại." });
+            return Ok(new { success = false, message = "Thêm thông tin quản trị viên thất bại." });
         }
 
 
@@ -161,7 +161,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_Sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách người tìm việc thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách người tìm việc thất bại." });
         }
 
         [HttpPost("layDanhSachCongTy")]
@@ -172,7 +172,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách công ty thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách công ty thất bại." });
         }
 
         [HttpPost("laySoLuongNguoiDung")]
@@ -183,7 +183,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, so_luong });
             }
-            return BadRequest(new { success = false, message = "Lấy số lượng người dùng thất bại." });
+            return Ok(new { success = false, message = "Lấy số lượng người dùng thất bại." });
         }
 
         [HttpPost("layDanhSachViPham")]
@@ -194,7 +194,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách vi phạm thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách vi phạm thất bại." });
         }
 
         [HttpPost("layLichSuThanhToan")]
@@ -205,7 +205,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách thất bại." });
         }
 
         [HttpPost("taoDichVuMoi")]
@@ -216,7 +216,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "Thêm dịch vụ mới thất bại" });
+            return Ok(new { success = false, message = "Thêm dịch vụ mới thất bại" });
         }
 
         [HttpPost("xoaCongTy")]
@@ -227,7 +227,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "Xóa công ty thất bại" });
+            return Ok(new { success = false, message = "Xóa công ty thất bại" });
         }
 
         [HttpPost("xoaNguoiTimViec")]
@@ -238,7 +238,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "Xóa công ty thất bại" });
+            return Ok(new { success = false, message = "Xóa công ty thất bại" });
         }
 
 
@@ -259,7 +259,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách ứng viên thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách ứng viên thất bại." });
         }
 
         [HttpPost("layBaiDangTheoIDCongTy")]
@@ -270,7 +270,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach_bai_dang });
             }
-            return BadRequest(new { success = false, message = "Lấy bài đăng theo ID công ty thất bại." });
+            return Ok(new { success = false, message = "Lấy bài đăng theo ID công ty thất bại." });
         }
 
         [HttpPost("laySoLuongUngVien")]
@@ -281,7 +281,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, so_luong });
             }
-            return BadRequest(new { success = false, message = "Lấy số lượng ứng viên thất bại." });
+            return Ok(new { success = false, message = "Lấy số lượng ứng viên thất bại." });
         }
 
         [HttpPost("guiThuMoiPhongVan")]
@@ -292,7 +292,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = " Gửi thư mời không thành công " });
+            return Ok(new { success = false, message = " Gửi thư mời không thành công " });
         }
 
 
@@ -304,7 +304,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Từ chối ứng viên thành công" });
             }
-            return BadRequest(new { success = false, message = "Có lỗi trong quá trình từ chối ứng viên" });
+            return Ok(new { success = false, message = "Có lỗi trong quá trình từ chối ứng viên" });
         }
 
         [HttpPost("xoaUngVien")]
@@ -315,7 +315,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = " Có lỗi trong quá trình " });
+            return Ok(new { success = false, message = " Có lỗi trong quá trình " });
         }
 
         [HttpPost("layDanhSachDichVu")]
@@ -326,7 +326,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = " Không lấy được danh sách dịch vụ " });
+            return Ok(new { success = false, message = " Không lấy được danh sách dịch vụ " });
         }
 
 
@@ -347,7 +347,18 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "Email đã tồn tại" });
+            return Ok(new { success = false, message = "Email đã tồn tại" });
+        }
+
+        [HttpPost("layNganhNgheNoiBat")]
+        public IActionResult layNganhNgheNoiBat()
+        {
+            var danh_sach = ChucNang_WEB.layNganhNgheNoiBat();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return Ok(new { success = false, message = "Không lấy được danh sách ngành nghề nổi bật" });
         }
 
         [HttpPost("layToaDoCongTy")]
@@ -375,7 +386,13 @@ namespace DotNet_WEB
         [HttpPost("doiMatKhauMoi")]
         public IActionResult doiMatKhauMoi([FromBody] nguoi_dung nguoi_Dung)
         {
+            if (nguoi_Dung == null || string.IsNullOrEmpty(nguoi_Dung.email) || string.IsNullOrEmpty(nguoi_Dung.mat_khau))
+            {
+                return Ok(new { success = false, message = "Thông tin không hợp lệ" });
+            }
+
             bool ket_qua = ChucNang_WEB.doiMatKhauMoi(nguoi_Dung.email, nguoi_Dung.mat_khau);
+            
             if (ket_qua)
             {
                 return Ok(new { success = true });
@@ -388,7 +405,7 @@ namespace DotNet_WEB
                     return Ok(new { success = true });
                 }
             }
-            return BadRequest(new { success = false });
+            return Ok(new { success = false });
         }
 
         [HttpPost("layDanhSachBaiDang")]
@@ -397,7 +414,7 @@ namespace DotNet_WEB
             var danh_sach = ChucNang_WEB.layDanhSachBaiDang();
             if (danh_sach == null || !danh_sach.Any())
             {
-                return BadRequest(new { success = false, message = "Không lấy được danh sách bài đăng" });
+                return Ok(new { success = false, message = "Không lấy được danh sách bài đăng" });
             }
 
             var ket_qua = danh_sach.Select(bd => new
@@ -422,19 +439,15 @@ namespace DotNet_WEB
         public IActionResult themBaiDangMoi([FromBody] thong_tin_bai_dang thong_Tin)
         {
             if (thong_Tin == null || thong_Tin.bai_Dang == null || thong_Tin.viec_Lam == null)
-                return BadRequest(new { success = false, message = "Dữ liệu không hợp lệ" });
+                return Ok(new { success = false, message = "Dữ liệu không hợp lệ" });
             var bai_d = thong_Tin.bai_Dang;
             var viec_l = thong_Tin.viec_Lam;
-            bai_d.loai_bai = LoaiBai.tuyen_Dung;
-            bai_d.trang_thai = TrangThaiBai.cong_Khai;
-            bai_d.ngay_tao = DateTime.Now;
-            bai_d.ngay_cap_nhat = DateTime.Now;
             bool luu_bai_moi = ChucNang_WEB.themBaiDangMoi(bai_d, viec_l);
             if (luu_bai_moi)
             {
                 return Ok(new { success = true, message = "Thêm bài đăng thành công" });
             }
-            return BadRequest(new { success = false, message = "Thêm bài đăng không thành công" });
+            return Ok(new { success = false, message = "Thêm bài đăng không thành công" });
         }
 
         [HttpPost("baoCaoBaiDang")]
@@ -445,7 +458,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Báo cáo bài đăng thành công." });
             }
-            return BadRequest(new { success = false, message = "Báo cáo bài đăng không thành công." });
+            return Ok(new { success = false, message = "Báo cáo bài đăng không thành công." });
         }
 
         [HttpPost("xoaBaiDang")]
@@ -456,7 +469,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false });
+            return Ok(new { success = false });
         }
 
         [HttpPost("luuBaiDang")]
@@ -467,7 +480,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Lưu bài đăng thành công." });
             }
-            return BadRequest(new { success = false, message = "Lưu bài đăng không thành công." });
+            return Ok(new { success = false, message = "Lưu bài đăng không thành công." });
         }
 
         [HttpPost("layDanhSachBaiDangDaLuu")]
@@ -478,7 +491,18 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách bài đăng đã lưu thất bại." });
+            return Ok(new { success = false, message = "Lấy danh sách bài đăng đã lưu thất bại." });
+        }
+
+        [HttpPost("kiemTraUngTuyen")]
+        public IActionResult kiemTraUngTuyen([FromBody] ung_tuyen ung_Tuyen)
+        {
+            bool ktra = ChucNang_WEB.kiemTraUngTuyen(ung_Tuyen);
+            if (ktra)
+            {
+                return Ok(new { success = false, message = "Đã ứng tuyển công việc rồi." });  
+            }
+            return Ok(new { success = true });
         }
 
         [HttpPost("ungTuyenCongViec")]
@@ -489,7 +513,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Ứng tuyển công việc thành công." });
             }
-            return BadRequest(new { success = false, message = "Ứng tuyển công việc không thành công." });
+            return Ok(new { success = false, message = "Ứng tuyển công việc không thành công." });
         }
 
         [HttpPost("layDanhSachThongBao")]
@@ -500,18 +524,40 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách thông báo thất bại" });
+            return Ok(new { success = false, message = "Lấy danh sách thông báo thất bại" });
+        }
+
+        [HttpPost("layDanhSachDanhGia")]
+        public IActionResult layDanhSachDanhGia()
+        {
+            var danh_sach = ChucNang_WEB.layDanhSachDanhGia();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return Ok(new { success = false });
+        }
+
+        [HttpPost("themDanhGia")]
+        public IActionResult themDanhGia([FromBody] danh_gia danh_Gia)
+        {
+            bool ket_Qua = ChucNang_WEB.themDanhGiaMoi(danh_Gia);
+            if (ket_Qua)
+            {
+                return Ok(new { success = true });
+            }
+            return Ok(new { success = false });
         }
 
         [HttpPost("chonThongBaoCoDinh")]
         public IActionResult layDanhSachThongBaoChoNguoiDung([FromBody] thong_bao thong_Bao)
         {
-            var danh_sach = ChucNang_WEB.chonThongBaoCoDinh(Enum.Parse<LoaiThongBao>(thong_Bao.loai_thong_bao.ToString(), true));
+            var danh_sach = ChucNang_WEB.chonThongBaoCoDinh(thong_Bao);
             if (danh_sach != null)
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy danh sách thông báo thất bại" });
+            return Ok(new { success = false, message = "Lấy danh sách thông báo thất bại" });
         }
 
         [HttpPost("deXuatViecLamSelector")]
@@ -522,7 +568,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Không lấy được danh sách" });
+            return Ok(new { success = false, message = "Không lấy được danh sách" });
         }
 
         [HttpPost("layChiTietViecLam")]
@@ -561,7 +607,7 @@ namespace DotNet_WEB
             var danh_sach = ChucNang_WEB.layDanhSachBaiDang();
             if (danh_sach == null || !danh_sach.Any())
             {
-                return BadRequest(new { success = false, message = "Không lấy được danh sách bài đăng" });
+                return Ok(new { success = false, message = "Không lấy được danh sách bài đăng" });
             }
 
             var ket_qua = danh_sach.Select(bd => new
@@ -575,6 +621,7 @@ namespace DotNet_WEB
                 bd.trang_thai,
                 bd.ngay_tao,
                 bd.ngay_cap_nhat,
+                logo = bd.cong_Ty?.logo,
                 viec_lam = ChucNang_WEB.layViecLamTheoBaiDang(bd.ma_bai_dang)
             });
 
@@ -589,7 +636,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, thong_tin });
             }
-            return BadRequest(new { success = false, message = "Không có thông tin việc làm" });
+            return Ok(new { success = false, message = "Không có thông tin việc làm" });
         }
 
         [HttpPost("guiThongBaoMoi")]
@@ -600,7 +647,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "Gửi thông báo thất bại" });
+            return Ok(new { success = false, message = "Gửi thông báo thất bại" });
         }
 
         [HttpPost("guiYeuCauOTP")]
@@ -609,7 +656,7 @@ namespace DotNet_WEB
             bool ket_qua = ChucNang_WEB.kiemTraOTPTonTai(email_yeu_cau);
             if (!ket_qua)
             {
-                return BadRequest(new { success = false, message = "Đã tồn tại OTP hãy sử dụng OTP cũ" });
+                return Ok(new { success = false, message = "Đã tồn tại OTP hãy sử dụng OTP cũ" });
 
             }
             int otp = ChucNang_WEB.taoOTPMoi(email_yeu_cau);
@@ -621,7 +668,7 @@ namespace DotNet_WEB
                     return Ok(new { success = true });
                 }
             }
-            return BadRequest(new { success = false, message = "Tạo otp không thành công " });
+            return Ok(new { success = false, message = "Tạo otp không thành công " });
         }
 
         [HttpPost("xacNhanOTP")]
@@ -632,54 +679,8 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true });
             }
-            return BadRequest(new { success = false, message = "OTP sai" });
+            return Ok(new { success = false, message = "OTP sai" });
         }
-
-        [HttpPost("thanhToanVNPAY")]
-        public IActionResult thanhToanVNPAY([FromBody] tao_don_hang don_hang_thong_tin)
-        {
-            var urlThanhToan = ChucNang_WEB.taoDonHang(don_hang_thong_tin);
-            if (!string.IsNullOrEmpty(urlThanhToan))
-            {
-                return Ok(new { success = true, urlThanhToan });
-            }
-            return BadRequest(new { success = false, message = "Không tạo được url" });
-        }
-        [HttpGet("VNPayReturn")]
-        public IActionResult VNPayReturn()
-        {
-            var query = Request.Query;
-            string? vnp_SecureHash = query["vnp_SecureHash"];
-            string? vnp_TxnRef = query["vnp_TxnRef"];
-            string? vnp_Amount = query["vnp_Amount"];
-            string? vnp_ResponseCode = query["vnp_ResponseCode"];
-
-            var fields = query.Where(kv => kv.Key.StartsWith("vnp_") && kv.Key != "vnp_SecureHash" && kv.Key != "vnp_SecureHashType")
-            .OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
-            var hashData = string.Join("&", fields.Select(kv => $"{kv.Key}={kv.Value}"));
-            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("I7LL3FX1ZJQZ6OCXQ9EGY9DVT0W0Q3EE"));
-            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(hashData));
-            var calculatedHash = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
-            if (calculatedHash != vnp_SecureHash)
-                return BadRequest("Sai hash, không hợp lệ");
-            if (vnp_ResponseCode != "00")
-                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={vnp_TxnRef}");
-            int ma_don_hang = int.Parse(vnp_TxnRef);
-            decimal so_tien = Convert.ToDecimal(vnp_Amount) / 100m;
-            bool ket_qua = ChucNang_WEB.capNhatTrangThaiDonHang(ma_don_hang, so_tien, vnp_ResponseCode);
-            if (ket_qua)
-            {
-                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=true&ma_don_hang={ma_don_hang}");
-            }
-            return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={ma_don_hang}");
-        }
-
-
-
-
-
-
-
 
 
 
@@ -698,7 +699,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Lấy thông tin thất bại" });
+            return Ok(new { success = false, message = "Lấy thông tin thất bại" });
         }
 
         [HttpPost("dangTaiCV")]
@@ -710,7 +711,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Upload thành công" });
             }
-            return BadRequest(new { success = false, message = "Chưa có file CV" });
+            return Ok(new { success = false, message = "Chưa có file CV" });
         }
 
         [HttpPost("luuCV")]
@@ -721,7 +722,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, message = "Lưu cv thành công" });
             }
-            return BadRequest(new { success = false, message = "Chưa có file CV" });
+            return Ok(new { success = false, message = "Chưa có file CV" });
         }
 
         [HttpPost("layDanhSachCV")]
@@ -732,7 +733,7 @@ namespace DotNet_WEB
             {
                 return Ok(new { success = true, danh_sach });
             }
-            return BadRequest(new { success = false, message = "Chưa có file CV" });
+            return Ok(new { success = false, message = "Chưa có file CV" });
         }
 
         [HttpPost("capNhatThongTinNguoiTimViec")]
@@ -741,12 +742,12 @@ namespace DotNet_WEB
             int ma_Nguoi_Tim_Viec = du_lieu_ntv["ma_nguoi_tim_viec"]?.Value<int>() ?? 0;
             if (ma_Nguoi_Tim_Viec == 0)
             {
-                return BadRequest(new { success = false, message = "Không có mã người tìm việc" });
+                return Ok(new { success = false, message = "Không có mã người tìm việc" });
             }
             var field = du_lieu_ntv.Properties().FirstOrDefault(p => p.Name != "ma_nguoi_tim_viec");
             if (field == null)
             {
-                return BadRequest(new { success = false, message = "Không có trường dữ liệu cần cập nhật" });
+                return Ok(new { success = false, message = "Không có trường dữ liệu cần cập nhật" });
             }
             try
             {
@@ -755,7 +756,7 @@ namespace DotNet_WEB
                 {
                     return Ok(new { success = true });
                 }
-                return BadRequest(new { success = false, message = "Cập nhật thông tin không thành công" });
+                return Ok(new { success = false, message = "Cập nhật thông tin không thành công" });
             }
             catch (Exception ex)
             {

@@ -9,10 +9,52 @@
 
 button {
   border-radius: 8px;
-  background-color: #6c757d;
-  color: white;
+  background-color: #ffffff;
+  color: black;
 }
 
 button:hover {
-  background-color: #5a6268;
+  background-color: #adafb0;
+}
+
+.dropdown-scroll {
+  max-height: 200px;      
+  overflow-y: auto;      
+  overflow-x: hidden;     
+}
+
+.job-card {
+  background-color: #f8faff;
+  transition: all 0.2s ease;
+}
+
+.job-card:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 6px 16px rgba(13,110,253,0.1);
+}
+
+.logo-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.content-wrapper h5 {
+  font-size: 1rem;
+}
+
+.button-wrapper .btn {
+  white-space: nowrap;
+}
+
+.btn.dropdown-toggle {
+  font-weight: bold;
+}
+
+
+.dropdown-toggle {
+  font-weight: bold;
 }

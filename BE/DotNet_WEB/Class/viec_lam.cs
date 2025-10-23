@@ -13,7 +13,7 @@ namespace DotNet_WEB.Class
         public int ma_viec { get; set; }
         public int ma_cong_ty { get; set; }
         [ForeignKey(nameof(ma_cong_ty))]
-        public cong_ty? cong_ty { get; set; }
+        public cong_ty? cong_Ty { get; set; }
         public string? nganh_nghe { get; set; }
         public string? vi_tri { get; set; }
         public string? kinh_nghiem { get; set; }

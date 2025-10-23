@@ -26,6 +26,12 @@ export class TrangDanhSachChungChi {
         continue;
       }
 
+      const kich_co_file = 5 * 1024 * 1024;
+      if(file.size > kich_co_file){
+        alert("Tep co dung luong qua lon");
+        return;
+      }
+
       const chung_chi: ChungChi = { file };
 
       if (file.type.startsWith('image/')) {

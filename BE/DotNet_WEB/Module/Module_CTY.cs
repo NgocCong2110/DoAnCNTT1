@@ -188,9 +188,10 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                     }
 
 
-                    string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_Thai where ma_nguoi_tim_viec = @ma_ntv";
+                    string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_Thai where ma_nguoi_tim_viec = @ma_ntv and ma_viec = @ma_viec";
                     using (var cmd = new MySqlCommand(cap_nhat_trang_thai, coon, trans))
                     {
+                        cmd.Parameters.AddWithValue("@ma_viec", ttpv.ma_viec);
                         cmd.Parameters.AddWithValue("@trang_Thai", ttpv.trang_thai);
                         cmd.Parameters.AddWithValue("@ma_ntv", ttpv.ma_nguoi_tim_viec);
                         cmd.ExecuteNonQuery();

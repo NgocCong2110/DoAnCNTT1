@@ -144,6 +144,7 @@ export class TrangDanhSachUngVien implements OnInit {
 
   guiMoiPhongVan() {
     const thong_tin_phong_van = {
+      ma_viec: this.uvDangChon.ma_viec,
       ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
       ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec,
       thoi_gian: new Date(this.thoiGianPhongVan).toISOString(),
@@ -151,7 +152,7 @@ export class TrangDanhSachUngVien implements OnInit {
       noi_dung: this.noiDungPhongVan,
       trang_thai: "chap_Nhan"
     };
-    console.log(thong_tin_phong_van);
+
     this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiThuMoiPhongVan',  thong_tin_phong_van )
       .subscribe(data => {
         if (data.success) {

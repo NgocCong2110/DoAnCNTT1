@@ -26,3 +26,22 @@
   object-fit: cover;
   border: 1px solid #e9ecef;
 }
+
+.dropdown-scroll {
+  max-height: 200px;       
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dropdown-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.dropdown-scroll:hover::-webkit-scrollbar-thumb {
+  background: #999;
+}

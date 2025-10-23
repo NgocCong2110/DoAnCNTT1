@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-center align-items-center py-5 bg-light">
+    <div class="container" style="max-width: 1200px;">
+        <div class="row g-4">
+
+            <h1 class="text-center fw-bold mb-5 display-5" style="color: #333; letter-spacing: 0.5px;">
+                Ngành nghề nổi bật
+            </h1>
+
+            <div class="col-6 col-md-3" *ngFor="let job of danh_sach_viec_lam_noi_bat">
+                <div class="card h-100 text-center p-3 job-card" (click)="xemDanhSachViecLam(job)" role="button">
+                    <div class="icon-wrapper mx-auto mb-3">
+                        <img [src]="icon_viec_lam[job.nganh_nghe]" [alt]="job.nganh_nghe" class="img-fluid">
+                    </div>
+                    <h5 class="fw-semibold mb-0">{{ layTenNganhNghe(job.nganh_nghe) }}</h5>
+                    <p> Số lượng việc làm: {{ job.so_luong }} </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

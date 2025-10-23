@@ -11,6 +11,7 @@ interface thongTinDangNhap {
   ma_dang_nhap?: string;
   vai_Tro?: string;
   ten_dang_nhap?: string;
+  ma_quan_tri?: any;
   kieu_nguoi_dung?: string;
   ho_ten?: string;
   thong_tin_chi_tiet?: any;
@@ -67,7 +68,9 @@ export class TrangDangNhap {
             .subscribe({
               next: (data_qtri) => {
                 if (data_qtri.success) {
-                  thongTin_DangNhap.ma_dang_nhap = data_qtri.ma_quan_tri;
+
+                  thongTin_DangNhap.ma_quan_tri = data_qtri.ma_quan_tri;
+
                   thongTin_DangNhap.ten_dang_nhap = data_qtri.ten_dang_nhap;
 
                   thongTin_DangNhap.kieu_nguoi_dung = "quan_Tri_Vien";

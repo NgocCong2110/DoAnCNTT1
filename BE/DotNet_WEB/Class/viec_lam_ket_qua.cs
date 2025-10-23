@@ -10,6 +10,8 @@ namespace DotNet_WEB.Class
     public class viec_lam_ket_qua
     {
         public int ma_viec { get; set; }
+        [ForeignKey(nameof(ma_viec))]
+        public viec_lam? viec_Lam { get; set; }
         public string? nganh_nghe { get; set; }
         public string? vi_tri { get; set; }
         public string? kinh_nghiem { get; set; }

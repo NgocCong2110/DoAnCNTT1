@@ -1,0 +1,39 @@
+ .job-card {
+    border: none;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    cursor: pointer;
+  }
+
+  .job-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background: #f8fbff;
+  }
+
+  .icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: #f0f4f8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .icon-wrapper img {
+    max-width: 45px;
+    height: auto;
+  }
+
+  @media (max-width: 576px) {
+    .icon-wrapper {
+      width: 60px;
+      height: 60px;
+    }
+    .icon-wrapper img {
+      max-width: 35px;
+    }
+  }

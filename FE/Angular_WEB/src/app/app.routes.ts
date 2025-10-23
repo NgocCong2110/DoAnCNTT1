@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { VaiTroGuard } from './vai-tro-guard';
 import { TrangDangKyNTV } from './Trang_WEB/trang-dang-ky-ntv/trang-dang-ky-ntv';
 import { TrangDangNhap } from './Trang_WEB/trang-dang-nhap/trang-dang-nhap';
 import { TrangDangKyCongTy } from './Trang_WEB/trang-dang-ky-cong-ty/trang-dang-ky-cong-ty';
@@ -40,6 +41,8 @@ import { TrangChiTietViecLam } from './Trang_WEB/trang-tim-viec-bang-tu-khoa/com
 import { TrangKetQuaThanhToan } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/dich-vu/trang-danh-sach-goi-dich-vu-cong-ty/trang-ket-qua-thanh-toan/trang-ket-qua-thanh-toan';
 import { TrangQuenMatKhau } from './Trang_WEB/trang-dang-nhap/trang-quen-mat-khau/trang-quen-mat-khau';
 import { TrangDoiMatKhau } from './Trang_WEB/trang-doi-mat-khau/trang-doi-mat-khau';
+import { MauCvMacDinh } from './Trang_WEB/mau-cv/mau-cv-mac-dinh/mau-cv-mac-dinh';
+
 
 // ==== thang nao import vao trang cha thi khoi can import vao trang nay ====
 export const routes: Routes = [
@@ -57,6 +60,7 @@ export const routes: Routes = [
     { path: 'trang-chi-tiet-viec-lam/:ma_bai_dang', component: TrangChiTietViecLam},
     { path: 'trang-quen-mat-khau', component: TrangQuenMatKhau},
     { path: 'trang-doi-mat-khau/:email', component: TrangDoiMatKhau},
+    { path: 'app-mau-cv-mac-dinh', component: MauCvMacDinh},
     {
 
         // component trang nguoi tim viec
@@ -71,8 +75,10 @@ export const routes: Routes = [
 
             { path: 'trang-thong-bao-ntv', component: TrangThongBaoNtv },
             
-            { path: 'trang-cv-ntv', component: TrangCvNtv }
-        ]
+            { path: 'trang-cv-ntv', component: TrangCvNtv}
+        ],
+        canActivate: [VaiTroGuard],
+        data: { allowedRoles: ['nguoi_Tim_Viec'] }
     },
         // component trang cong ty
     {
@@ -92,7 +98,9 @@ export const routes: Routes = [
             { path: 'trang-thong-bao-cong-ty', component: TrangThongBaoCongTy },
 
             { path: 'trang-danh-sach-goi-dich-vu-cong-ty', component: TrangDanhSachGoiDichVuCongTy }
-        ]
+        ],
+        canActivate: [VaiTroGuard],
+        data: { allowedRoles: ['cong_Ty'] }
     },
 
     {
@@ -128,6 +136,8 @@ export const routes: Routes = [
             { path: 'trang-gui-thong-bao', component: TrangGuiThongBao },
 
             { path: 'trang-danh-sach-thong-bao', component: TrangDanhSachThongBao }
-        ]
+        ],
+        canActivate: [VaiTroGuard],
+        data: { allowedRoles: ['quan_Tri_Vien'] }
     }
 ];
