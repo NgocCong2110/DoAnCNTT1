@@ -43,9 +43,19 @@
           </div>
 
           <div class="mb-3">
-            <label>Yêu cầu ứng viên</label>
+            <label>Yêu cầu công việc</label>
             <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"
               placeholder="Trình độ, kỹ năng, kinh nghiệm..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Trình độ học vấn yêu cầu</label>
+            <select [(ngModel)]="trinh_do_hoc_van" name="hoc_van" class="form-control">
+              <option [value]="0">Không yêu cầu</option>
+              <option *ngFor="let td of trinhDoHocVanList" [value]="td.value">
+                {{ td.label }}
+              </option>
+            </select>
           </div>
 
           <div class="mb-3">
@@ -55,20 +65,30 @@
           </div>
 
           <div class="mb-3">
+            <label>Giờ làm việc</label>
+            <input [(ngModel)]="gio_lam_viec" name="thoi_gian" type="text" class="form-control"
+              placeholder="Ví dụ: Từ 8:00 đến 10:00">
+          </div>
+
+          <div class="mb-3">
             <label>Mức lương</label>
-            <div class="dropdown w-100">
+            <div class="dropdown w-100 mb-2">
               <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 {{ muc_luong_label || 'Mức lương' }}
               </button>
               <ul class="dropdown-menu dropdown-scroll w-100">
                 <li *ngFor="let muc of mucLuongList">
-                  <button class="dropdown-item" type="button"
-                    (click)="muc_luong = muc.value; muc_luong_label = muc.label">
+                  <button class="dropdown-item" type="button" (click)="chonMucLuong(muc)">
                     {{ muc.label }}
                   </button>
                 </li>
               </ul>
+            </div>
+
+            <div *ngIf="showCustomLuong" class="d-flex gap-2">
+              <input type="number" [(ngModel)]="muc_luong_min" name="muc_luong_min" class="form-control" placeholder="Min (triệu)">
+              <input type="number" [(ngModel)]="muc_luong_max" name="muc_luong_max"class="form-control" placeholder="Max (triệu)">
             </div>
           </div>
 
@@ -132,13 +152,36 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <label>Quyền lợi khác</label>
+            <textarea [(ngModel)]="quyen_loi_khac" name="quyen_loi_khac" rows="3" class="form-control" placeholder="Nhập mỗi quyền lợi một dòng, ví dụ:
+• Phụ cấp ăn trưa
+• Lương tháng 13
+• Thưởng Tết..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Phúc lợi</label>
+            <div class="form-check" *ngFor="let phuc of phucLoiList">
+              <input class="form-check-input" type="checkbox" [value]="phuc.ma_phuc_loi"
+                (change)="chonPhucLoi($event, phuc)">
+              <label class="form-check-label">{{ phuc.ten_phuc_loi }}</label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Thời hạn nộp cv</label>
+            <input type="date" [(ngModel)]="thoi_han_nop_cv" name="thoi_han" placeholder="Thời gian hết hạn nộp cv"
+              class="form-control">
+          </div>
 
         </form>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-        <button class="btn btn-primary" (click)="themBaiDang()" style="background-color: #0d6efd; color: white; font-weight: bold;">Đăng bài</button>
+        <button class="btn btn-primary" (click)="themBaiDang()"
+          style="background-color: #0d6efd; color: white; font-weight: bold;">Đăng bài</button>
       </div>
     </div>
   </div>

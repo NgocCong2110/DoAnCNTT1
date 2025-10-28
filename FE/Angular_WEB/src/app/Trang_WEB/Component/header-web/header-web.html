@@ -26,11 +26,24 @@
       </ul>
 
       <form class="d-flex search-bar me-3" role="search">
-        <input class="form-control search-input" type="search" placeholder="Tìm kiếm việc làm..." aria-label="Search">
-        <button class="btn search-btn" type="submit">
-          <i class="bi bi-search"></i>
-        </button>
+        <input class="form-control search-input" type="search" [(ngModel)]="tu_khoa" name="tu_khoa" (input)="layGoiY()" (focus)="focusVao()" (blur)="roiKhoi()"
+          placeholder="Tìm kiếm việc làm, công ty..." aria-label="Search" autocomplete="off">
+
+        <ul class="list-group position-absolute mt-1 w-100 shadow" *ngIf="goiY?.length">
+          <li class="list-group-item list-group-item-action d-flex align-items-center" *ngFor="let item of goiY"
+            (click)="chonGoiY(item)">
+
+            <img *ngIf="item.logo" [src]="'http://localhost:65001/' + item.logo" alt="logo" class="me-2"
+              style="width:30px; height:30px; object-fit:cover; border-radius:4px">
+
+            <span>{{ item.ten }}</span>
+
+            <small class="text-muted ms-2">{{ item.loai === 'viec_lam' ? 'Việc làm' : 'Công ty' }}</small>
+          </li>
+        </ul>
       </form>
+
+
 
 
       <ul class="navbar-nav">
@@ -60,9 +73,7 @@
   </div>
 </nav>
 
-<!-- van de voi responsive can thoi gian fix-->
-
-<div class="offcanvas offcanvas-start bg-white d-lg-none" tabindex="-1" id="offcanvasSidebar" 
+<div class="offcanvas offcanvas-start bg-white d-lg-none" tabindex="-1" id="offcanvasSidebar"
   aria-labelledby="offcanvasSidebarLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title text-dark" id="offcanvasSidebarLabel">Menu</h5>
@@ -90,7 +101,8 @@
       <li><a class="dropdown-item" (click)="dangXuat()" *ngIf="auth.layThongTinNguoiDung()">Đăng Xuất</a></li>
       <li><a class="nav-link text-dark" [routerLink]="['/dang-nhap']" *ngIf="!auth.layThongTinNguoiDung()">Đăng Nhập</a>
       </li>
-      <li><a class="nav-link text-dark" [routerLink]="['/lua-chon-dang-ky']" *ngIf="!auth.layThongTinNguoiDung()">Đăng Ký</a></li>
+      <li><a class="nav-link text-dark" [routerLink]="['/lua-chon-dang-ky']" *ngIf="!auth.layThongTinNguoiDung()">Đăng
+          Ký</a></li>
     </ul>
   </div>
 </div>

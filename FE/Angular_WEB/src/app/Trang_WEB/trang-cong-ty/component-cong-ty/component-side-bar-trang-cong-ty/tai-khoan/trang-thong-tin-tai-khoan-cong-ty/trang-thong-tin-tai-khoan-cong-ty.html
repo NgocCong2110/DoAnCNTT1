@@ -3,14 +3,10 @@
     <h2>Thông tin công ty</h2>
 
     <div class="card">
-      <!-- Header -->
       <div class="card-header">
         <div class="logo-wrapper">
-          <img
-            [src]="thongTin?.logo || 'assets/default-logo.png'"
-            alt="Logo công ty"
-            class="avatar"
-          />
+          <img *ngIf="thongTin?.cong_ty?.logo" [src]="taoDuongDanLogo(thongTin.cong_ty.logo)" alt="Logo công ty"
+            class="img-fluid rounded shadow-sm" style="max-height: 120px;">
           <button class="btn-edit-logo" (click)="moForm('logo')">🖋 Thay đổi</button>
         </div>
 
@@ -27,8 +23,6 @@
           </p>
         </div>
       </div>
-
-      <!-- Body -->
       <div class="card-body">
         <h4>Thông tin cơ bản</h4>
         <div class="grid-container">
@@ -44,17 +38,13 @@
             <strong>Năm thành lập:</strong> {{ thongTin?.nam_thanh_lap }}
             <button (click)="moForm('nam_thanh_lap')">✏️</button>
           </div>
-          <div class="grid-item">
-            <strong>Quy mô nhân sự:</strong> {{ thongTin?.quy_mo }}
-            <button (click)="moForm('quy_mo')">✏️</button>
-          </div>
           <div class="grid-item full-width">
             <strong>Địa chỉ:</strong> {{ thongTin?.dia_chi }}
             <button (click)="moForm('dia_chi')">✏️</button>
           </div>
         </div>
 
-        <h4>Thông tin tuyển dụng</h4>
+        <!-- <h4>Thông tin tuyển dụng</h4>
         <div class="grid-container">
           <div class="grid-item">
             <strong>Ngành nghề chính:</strong> {{ thongTin?.nganh_nghe }}
@@ -72,7 +62,7 @@
             <strong>Phúc lợi nổi bật:</strong> {{ thongTin?.phuc_loi }}
             <button (click)="moForm('phuc_loi')">✏️</button>
           </div>
-        </div>
+        </div> -->
 
         <h4>Giới thiệu công ty</h4>
         <div class="grid-item full-width">

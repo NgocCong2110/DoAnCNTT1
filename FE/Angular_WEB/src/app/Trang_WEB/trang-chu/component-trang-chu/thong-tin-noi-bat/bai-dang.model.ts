@@ -8,6 +8,10 @@ export interface ViecLam {
   tieu_de: string;
   mo_ta: string;
   yeu_cau: string;
+  trinh_do_hoc_van_yeu_cau: number;
+  quyen_loi_cong_viec: string;
+  thoi_gian_lam_viec: string;
+  thoi_han_nop_cv?: string | Date;
   muc_luong: string;
   dia_diem: string;
   loai_hinh: number;

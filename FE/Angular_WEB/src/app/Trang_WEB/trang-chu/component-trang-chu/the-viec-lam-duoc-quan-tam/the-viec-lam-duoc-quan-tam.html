@@ -1,28 +1,29 @@
 <div class="d-flex justify-content-center align-items-center py-5 bg-light">
   <div class="container" style="max-width: 1200px;">
     <h1 class="text-center fw-bold mb-5 display-5" style="color: #333; letter-spacing: 0.5px;">
-      Việc làm nổi bật
+      Việc làm được quan tâm
     </h1>
 
     <div class="job-cards">
-    <div class="job-card" *ngFor="let job of jobs">
-      <div class="job-header">
-        <h3 class="job-title">{{ job.tieu_de }}</h3>
-        <span class="company-name">{{ job.ten_cong_ty }}</span>
+      <div class="job-card d-flex align-items-start p-3 mb-4 shadow-sm rounded-3 bg-white" *ngFor="let job of danh_sach_viec_lam_qt"
+        (click)="xemViecLamNoiBat(job.viec_Lam?.bai_dang?.ma_bai_dang)">
+
+        <img class="company-logo me-3" [src]="taoDuongDanLogo(job.viec_Lam?.cong_Ty?.logo)" alt="{{ job.ten_cong_ty }} logo">
+
+        <div class="job-content">
+          <div class="job-header">
+            <h3 class="job-title">{{ job.viec_Lam?.tieu_de }}</h3>
+            <span class="company-name">{{ job.viec_Lam?.cong_Ty?.ten_cong_ty }}</span>
+          </div>
+
+          <p class="job-description">{{ job.viec_Lam?.mo_ta }}</p>
+
+          <div class="job-info">
+            <span class="salary">Mức lương: {{ job.viec_Lam?.muc_luong }}</span>
+            <span class="location"> {{ job.viec_Lam?.dia_diem }}</span>
+          </div>
+        </div>
       </div>
-
-      <p class="job-description">{{ job.mo_ta }}</p>
-
-      <div class="job-info">
-        <span class="salary"> Mức lương: {{ job.muc_luong }}</span>
-        <span class="location"> {{ job.dia_diem }}</span>
-      </div>
-
-      <button class="apply-btn">Ứng tuyển ngay</button>
     </div>
   </div>
-  </div>
 </div>
-
-
-

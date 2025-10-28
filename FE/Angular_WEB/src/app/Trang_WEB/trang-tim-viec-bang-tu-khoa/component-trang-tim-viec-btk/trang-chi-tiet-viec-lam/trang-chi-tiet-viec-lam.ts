@@ -34,11 +34,13 @@ export class TrangChiTietViecLam {
   }
 
   ngOnInit() {
-    this.ma_bai_dang = Number(this.route.snapshot.paramMap.get('ma_bai_dang'));
-    this.layChiTiet(this.ma_bai_dang);
+    this.route.queryParams.subscribe(params => {
+      const ma_bai_dang = params["ma_bai_dang"]
+      this.layChiTiet(ma_bai_dang);
+    })
   }
 
-  layChiTiet(ma_bai_dang: number) {
+  layChiTiet(ma_bai_dang: any) {
     this.httpclient
       .post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layChiTietViecLam', {ma_bai_dang})
       .subscribe({
@@ -52,6 +54,18 @@ export class TrangChiTietViecLam {
       });
   }
 
+  taoDuongDanLogo(url : string) : string {
+    if(!url)
+    {
+      return "";
+    }
+    if(!url.startsWith('http')) 
+    {
+      return `http://localhost:65001/${url}`;
+    }
+    return url;
+  }
+
   ungTuyenCongViec() {
     const ma_Nguoi_Ung_Tuyen = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
 
@@ -60,8 +74,6 @@ export class TrangChiTietViecLam {
       ma_cong_ty: this.chi_tiet?.ma_nguoi_dang,
       ma_nguoi_tim_viec: ma_Nguoi_Ung_Tuyen,
     }
-
-    console.log(thong_Tin);
 
     this.httpclient.post<any>("http://localhost:65001/api/API_WEB/ungTuyenCongViec", thong_Tin).subscribe({
       next: (data) => {
@@ -110,5 +122,43 @@ export class TrangChiTietViecLam {
   };
   laynganhnghe(ma: string): string {
     return this.nganhNgheMapping[ma] || '';
+  }
+
+  luuViecLam(){
+     const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
+    
+        if (ma_Nguoi_Luu == null) {
+          alert("Vui lòng đăng nhập để lưu bài đăng.");
+          return;
+        }
+    
+        const thong_tin = {
+          ma_bai_dang: this.chi_tiet?.ma_bai_dang,
+          ma_nguoi_luu: ma_Nguoi_Luu
+        }
+    
+        this.httpclient.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/luuBaiDang", thong_tin).subscribe({
+          next: (data) => {
+            if (data.success) {
+              alert("Đã lưu bài đăng.");
+              this.cd.detectChanges();
+            }
+          },
+          error: () => {
+            alert("Không thể lưu bài đăng.");
+          }
+        });
+  }
+  trinhDoHocVanMap:{ [key: number]: string} = {
+    1 : 'Trung học',
+    2 : 'Cao đẳng',
+    3 : 'Đại học',
+    4 : 'Tốt nghiệp',
+    5 : 'Khác',
+    6 : 'Không yêu cầu'
+  }
+
+  layTrinhDoHocVan(ma: number) : string {
+    return this.trinhDoHocVanMap[ma] || '';
   }
 }

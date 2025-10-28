@@ -1,0 +1,12 @@
+<app-header-web></app-header-web>
+<div class="cv-container">
+  <h2>Chọn mẫu CV bạn thích</h2>
+  <div class="cv-grid">
+    <div class="cv-card" *ngFor="let cv of mau_cv_co_san">
+      <a [routerLink]="cv.route">
+        <img [src]="cv.image" [alt]="cv.name" class="cv-img" />
+        <div class="cv-name">{{ cv.name }}</div>
+      </a>
+    </div>
+  </div>
+</div>

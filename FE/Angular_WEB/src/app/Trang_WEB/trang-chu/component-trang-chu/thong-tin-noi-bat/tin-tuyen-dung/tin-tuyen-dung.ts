@@ -243,4 +243,17 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   laynganhnghe(ma: string): string {
     return this.nganhNgheMapping[ma] || '';
   }
+
+  trinhDoHocVanMap:{ [key: number]: string} = {
+    1 : 'Trung học',
+    2 : 'Cao đẳng',
+    3 : 'Đại học',
+    4 : 'Tốt nghiệp',
+    5 : 'Khác',
+    6 : 'Không yêu cầu'
+  }
+
+  layTrinhDoHocVan(ma: number) : string {
+    return this.trinhDoHocVanMap[ma] || '';
+  }
 }

@@ -148,3 +148,7 @@ h4 {
     align-items: flex-start;
   }
 }
+
+.footer .brand img {
+  cursor: pointer;
+}

@@ -1,0 +1,67 @@
+.create-cv-form {
+  width: 100%;
+  height: 350px;
+  border-radius: 16px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.cv-content {
+  width: 45%;
+  background-color: #fff;
+  color: #0d6efd;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.btn-create-cv {
+  background-color: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.btn-create-cv:hover {
+  background-color: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.cv-image {
+  overflow: hidden;
+}
+
+.cv-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 992px) {
+  .create-cv-form {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .cv-content, .cv-image {
+    width: 100%;
+  }
+
+  .cv-banner-img {
+    height: 250px;
+  }
+}

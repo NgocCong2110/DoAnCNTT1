@@ -56,7 +56,7 @@ namespace DotNet_WEB.Module
             return danh_sach_lich_su;
         }
 
-        public static async Task<bool> UploadCvAsync(IFormFile cvFile, int ma_Nguoi_Tim_Viec)
+        public static async Task<bool> dangTaiCV(IFormFile cvFile, int ma_Nguoi_Tim_Viec)
         {
             if (cvFile == null || cvFile.Length == 0)
                 return false;
@@ -89,37 +89,6 @@ namespace DotNet_WEB.Module
             }
 
             return true;
-        }
-
-        public static bool luuCv(cv_online_nguoi_tim_viec cv_on)
-        {
-            using var coon = new MySqlConnection(chuoi_KetNoi);
-            string sql = @"INSERT INTO cv_nguoi_tim_viec_online 
-                       (ma_nguoi_tim_viec, ho_ten, email, dien_thoai, ngay_sinh, dia_chi,
-                        truong_hoc, chuyen_nganh, kinh_nghiem, ky_nang, du_an, muc_tieu, ngay_tao)
-                       VALUES (@ma, @hoTen, @email, @dienThoai, @ngaySinh, @diaChi,
-                               @truongHoc, @chuyenNganh, @kinhNghiem, @kyNang, @duAn, @mucTieu, GETDATE())";
-
-            using var cmd = new MySqlCommand(sql, coon);
-            cmd.Parameters.AddWithValue("@ma", (int)cv_on.ma_nguoi_tim_viec);
-            cmd.Parameters.AddWithValue("@hoTen", cv_on.ho_ten);
-            cmd.Parameters.AddWithValue("@email", cv_on.email);
-            cmd.Parameters.AddWithValue("@dienThoai", cv_on.dien_thoai);
-            cmd.Parameters.AddWithValue("@ngaySinh", cv_on.ngay_sinh);
-            cmd.Parameters.AddWithValue("@diaChi", cv_on.dia_chi);
-            cmd.Parameters.AddWithValue("@truongHoc", cv_on.truong_hoc);
-            cmd.Parameters.AddWithValue("@chuyenNganh", cv_on.chuyen_nganh);
-            cmd.Parameters.AddWithValue("@kinhNghiem", cv_on.kinh_nghiem);
-            cmd.Parameters.AddWithValue("@kyNang", cv_on.ky_nang);
-            cmd.Parameters.AddWithValue("@duAn", cv_on.du_an);
-            cmd.Parameters.AddWithValue("@mucTieu", cv_on.muc_tieu);
-
-            coon.Open();
-            if (cmd.ExecuteNonQuery() > 0)
-            {
-                return true;
-            }
-            return false;
         }
 
         public static List<cv_nguoi_tim_viec> layDanhSachCV(int ma_Nguoi_Tim_Viec)

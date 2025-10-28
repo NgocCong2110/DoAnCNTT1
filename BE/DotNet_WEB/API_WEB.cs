@@ -77,7 +77,7 @@ namespace DotNet_WEB
             }
             string matKhauDaMaHoa = XacThuc_ND.maHoaMatKhau(quan_Tri.mat_khau);
             bool ket_Qua = XacThuc_ND.xacThucQuanTriVien(quan_Tri.email, matKhauDaMaHoa);
-            var thong_tin = ChucNang_WEB.layDanhSachQuanTri(quan_Tri.email);
+            var thong_tin = ChucNang_WEB.layThongTinQuanTri(quan_Tri.email);
             if (ket_Qua)
             {
                 return Ok(new
@@ -241,6 +241,16 @@ namespace DotNet_WEB
             return Ok(new { success = false, message = "Xóa công ty thất bại" });
         }
 
+        [HttpPost("guiThongBaoToiServer")]
+        public IActionResult guiThongBaoToiServer([FromBody] thong_bao thong_Bao)
+        {
+            bool ket_qua = Module_QTV.guiThongBaoToiServer(thong_Bao);
+            if (ket_qua)
+            {
+                return Ok(new { success = true });
+            }
+            return Ok(new { success = false, message = "Gửi thông báo thất bại" });
+        }
 
 
 
@@ -327,6 +337,23 @@ namespace DotNet_WEB
                 return Ok(new { success = true, danh_sach });
             }
             return Ok(new { success = false, message = " Không lấy được danh sách dịch vụ " });
+        }
+
+        [HttpPost("capNhatLogoCongTy")]
+        public async Task<IActionResult> capNhatLogoCongTy([FromForm] IFormFile logo, [FromForm] int ma_cong_ty)
+        {
+            if (logo == null || logo.Length == 0)
+            {
+                return Ok(new { success = false, message = "Không thấy đường dẫn file" });
+            }
+
+            string url = await Module_CTY.capNhatLogoCongTy(logo, ma_cong_ty);
+
+            if (url != null )
+            {
+                return Ok(new { success = true, url });
+            }
+            return Ok(new { success = false });
         }
 
 
@@ -442,7 +469,8 @@ namespace DotNet_WEB
                 return Ok(new { success = false, message = "Dữ liệu không hợp lệ" });
             var bai_d = thong_Tin.bai_Dang;
             var viec_l = thong_Tin.viec_Lam;
-            bool luu_bai_moi = ChucNang_WEB.themBaiDangMoi(bai_d, viec_l);
+            var phuc_l = thong_Tin.phuc_Loi;
+            bool luu_bai_moi = ChucNang_WEB.themBaiDangMoi(bai_d, viec_l, phuc_l);
             if (luu_bai_moi)
             {
                 return Ok(new { success = true, message = "Thêm bài đăng thành công" });
@@ -564,11 +592,22 @@ namespace DotNet_WEB
         public IActionResult deXuatViecLamSelector([FromBody] viec_lam viec_Lam)
         {
             var danh_sach = ChucNang_WEB.deXuatViecLamSelector(viec_Lam);
-            if (danh_sach != null)
+            if (danh_sach != null && danh_sach.Any())
             {
                 return Ok(new { success = true, danh_sach });
             }
             return Ok(new { success = false, message = "Không lấy được danh sách" });
+        }
+
+        [HttpPost("layDanhSachViecLamDuocQuanTam")]
+        public IActionResult layDanhSachViecLamDuocQuanTam()
+        {
+            var danh_sach = ChucNang_WEB.layDanhSachViecLamDuocQuanTam();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return Ok(new { success = false, message = "Lay that bai " });
         }
 
         [HttpPost("layChiTietViecLam")]
@@ -639,16 +678,7 @@ namespace DotNet_WEB
             return Ok(new { success = false, message = "Không có thông tin việc làm" });
         }
 
-        [HttpPost("guiThongBaoMoi")]
-        public IActionResult guiThongBaoMoi([FromBody] thong_bao thong_Bao)
-        {
-            bool ket_qua = ChucNang_WEB.guiThongBaoMoi(thong_Bao);
-            if (ket_qua)
-            {
-                return Ok(new { success = true });
-            }
-            return Ok(new { success = false, message = "Gửi thông báo thất bại" });
-        }
+        
 
         [HttpPost("guiYeuCauOTP")]
         public async Task<IActionResult> guiYeuCauOTP([FromBody] string email_yeu_cau)
@@ -682,6 +712,17 @@ namespace DotNet_WEB
             return Ok(new { success = false, message = "OTP sai" });
         }
 
+        [HttpPost("goiYTuKhoa")]
+        public IActionResult goiYTuKhoa([FromBody] string tu_khoa)
+        {
+            var danh_sach = ChucNang_WEB.goiYTuKhoa(tu_khoa);
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return Ok(new { success = false });
+        }
+
 
 
 
@@ -705,7 +746,7 @@ namespace DotNet_WEB
         [HttpPost("dangTaiCV")]
         public async Task<IActionResult> dangTaiCV([FromForm] IFormFile cv_file, [FromForm] int ma_Nguoi_Tim_Viec)
         {
-            var result = await Module_NTV.UploadCvAsync(cv_file, ma_Nguoi_Tim_Viec);
+            var result = await Module_NTV.dangTaiCV(cv_file, ma_Nguoi_Tim_Viec);
 
             if (result)
             {
@@ -715,12 +756,12 @@ namespace DotNet_WEB
         }
 
         [HttpPost("luuCV")]
-        public IActionResult luuCV([FromBody] cv_online_nguoi_tim_viec cv_on)
+        public async Task<IActionResult> luuCV([FromBody] cv_online_nguoi_tim_viec cv_Online_Nguoi_Tim_Viec)
         {
-            bool luu_cv = Module_NTV.luuCv(cv_on);
-            if (luu_cv)
+            string duong_dan = await ChucNang_WEB.luuCVOnLine(cv_Online_Nguoi_Tim_Viec);
+            if (duong_dan != null && !string.IsNullOrEmpty(duong_dan))
             {
-                return Ok(new { success = true, message = "Lưu cv thành công" });
+                return Ok(new { success = true, message = "Lưu cv thành công",  duong_dan});
             }
             return Ok(new { success = false, message = "Chưa có file CV" });
         }

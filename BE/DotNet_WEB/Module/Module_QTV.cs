@@ -8,6 +8,7 @@ using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_thong_bao;
 
 namespace DotNet_WEB.Module
 {
@@ -34,6 +35,11 @@ namespace DotNet_WEB.Module
                 return true;
             }
             return false;
+        }
+
+        public static bool guiThongBaoToiServer(thong_bao thong_Bao)
+        {
+            return chuc_nang_thong_bao_web.guiThongBaoToiServer(thong_Bao);
         }
 
         public static List<nguoi_tim_viec> layDanhSachNguoiTimViec()

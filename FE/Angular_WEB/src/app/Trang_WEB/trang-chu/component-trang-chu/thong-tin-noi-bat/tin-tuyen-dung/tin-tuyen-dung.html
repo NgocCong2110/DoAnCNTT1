@@ -55,6 +55,18 @@
 
     <h5>Yêu cầu</h5>
     <p>{{ bai_dang_duoc_chon.viec_lam.yeu_cau }}</p>
+
+    <h5>Quyền lợi công việc</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.quyen_loi_cong_viec }}</p>
+
+    <h5>Trình độ học vấn yêu cầu</h5>
+    <p>{{ layTrinhDoHocVan(bai_dang_duoc_chon.viec_lam.trinh_do_hoc_van_yeu_cau) }}</p>
+
+    <h5>Thời gian làm việc</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.thoi_gian_lam_viec }}</p>
+
+    <h5>Thời hạn nộp cv</h5>
+    <p>{{ bai_dang_duoc_chon.viec_lam.thoi_han_nop_cv }}</p>
   </div>
   <div class="d-flex justify-content-center align-items-center p-3">
     <button class="btn btn-primary mx-2" style="background-color: gray; border: 0;" (click)="moPopUpBaoCao()">Báo cáo

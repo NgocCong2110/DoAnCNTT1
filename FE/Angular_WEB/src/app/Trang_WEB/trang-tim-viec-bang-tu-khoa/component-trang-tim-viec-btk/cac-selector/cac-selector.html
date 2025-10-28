@@ -113,6 +113,48 @@
   {{ error }}
 </div>
 
+<div class="card p-3 shadow-sm rounded-3 mb-3" style="background-color: white;">
+  <div class="d-flex gap-2 flex-wrap align-items-center">
+
+    <span class="fw-bold me-2">Sắp xếp theo:</span>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ sap_xep_ngay_label || 'Ngày đăng tuyển' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <button class="dropdown-item" type="button" (click)="boLocNgay('moi_nhat'); sap_xep_ngay_label = 'Mới nhất'">
+            Mới nhất
+          </button>
+        </li>
+        <li>
+          <button class="dropdown-item" type="button" (click)="boLocNgay('cu_nhat'); sap_xep_ngay_label = 'Cũ nhất'">
+            Cũ nhất
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        {{ sap_xep_luong_label || 'Mức lương' }}
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <button class="dropdown-item" type="button" (click)="boLocLuong('cao_Nhat'); sap_xep_luong_label = 'Cao nhất'">
+            Cao nhất
+          </button>
+          <button class="dropdown-item" type="button" (click)="boLocLuong('thap_Nhat'); sap_xep_luong_label = 'Thấp nhất'">
+            Thấp nhất
+          </button>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <div class="container py-4">
   <div class="row gy-4" *ngIf="toan_bo">
     <div class="col-12" *ngFor="let job of danh_sach_de_xuat">
@@ -120,7 +162,7 @@
         style="min-height: 140px; background-color: white;">
 
         <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
-          <img [src]="'/anh_WEB/logo_cong_ty/' + job.logo" alt="Logo công ty" class="img-fluid rounded"
+          <img [src]="layDuongDanLogo(job.viec_lam?.cong_Ty?.logo)" alt="Logo công ty" class="img-fluid rounded"
             style="width: 90px; height: 90px; object-fit: contain;">
         </div>
 
@@ -156,8 +198,8 @@
         style="min-height: 140px; background-color: white;">
 
         <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
-          <img [src]="'/anh_WEB/logo_cong_ty/' + (job.viec_Lam?.cong_Ty?.logo || 'anh_Logo.png')" alt="Logo công ty"
-            class="img-fluid rounded" style="width: 90px; height: 90px; object-fit: contain;">
+          <img [src]="layDuongDanLogo(job.viec_Lam?.cong_Ty?.logo)" alt="Logo công ty" class="img-fluid rounded"
+            style="width: 90px; height: 90px; object-fit: contain;">
         </div>
 
         <div class="content-wrapper flex-grow-1">
@@ -192,7 +234,7 @@
         style="min-height: 140px; background-color: white;">
 
         <div class="logo-wrapper d-flex align-items-center justify-content-center me-4">
-          <img [src]="'/anh_WEB/logo_cong_ty/' + job.logo" alt="Logo công ty" class="img-fluid rounded"
+          <img [src]="layDuongDanLogo(job.cong_Ty?.logo)" alt="Logo công ty" class="img-fluid rounded"
             style="width: 90px; height: 90px; object-fit: contain;">
         </div>
 

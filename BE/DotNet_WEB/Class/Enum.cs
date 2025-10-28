@@ -34,7 +34,9 @@ namespace DotNet_WEB.Class
         [Display(Name = "Tốt nghiệp")]
         tot_Nghiep = 4,
         [Display(Name = "Khác")]
-        khac = 5
+        khac = 5,
+        [Display(Name = "Không yêu cầu")]        
+        khong_Yeu_Cau = 6
     }
 
     public enum LoaiHinhCongTy

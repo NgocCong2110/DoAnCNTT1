@@ -21,12 +21,20 @@ namespace DotNet_WEB.Class
         public string? mo_ta { get; set; }
         public string? yeu_cau { get; set; }
         public string? muc_luong { get; set; }
+        public decimal? muc_luong_thap_nhat { get; set; }
+        public decimal? muc_luong_cao_nhat { get; set; }
+        public string? quyen_loi_cong_viec { get; set; }
+        public TrinhDoHocVan trinh_do_hoc_van_yeu_cau { get; set; } = TrinhDoHocVan.None;
+        public string? thoi_gian_lam_viec { get; set; }
         public string? dia_diem { get; set; }
+        public DateTime thoi_han_nop_cv { get; set; }
         public LoaiHinhViecLam loai_hinh { get; set; } = LoaiHinhViecLam.toan_Thoi_Gian;
         public DateTime ngay_tao { get; set; } = DateTime.Now;
         public DateTime ngay_cap_nhat { get; set; } = DateTime.Now;
         public int ma_bai_dang { get; set; }
         [ForeignKey(nameof(ma_bai_dang))]
         public bai_dang? bai_dang { get; set; }
+        public phuc_loi? phuc_Loi { get; set; }
+        public phuc_loi_viec_lam? phuc_Loi_Viec_Lam { get; set; }
     }
 }

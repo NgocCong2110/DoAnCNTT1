@@ -1,0 +1,85 @@
+<app-header-web></app-header-web>
+<div *ngIf="loading" class="cw-loading">Đang tải...</div>
+
+<div *ngIf="!loading && company" class="company-page container">
+  <div class="company-hero d-flex align-items-center gap-3">
+    <img class="logo" [src]="company.logoUrl || '/assets/default-logo.png'" alt="logo" />
+    <div class="meta">
+      <h1 class="name">{{ company.name }}</h1>
+      <div class="sub">
+        <span class="industry">{{ company.industry }}</span>
+        <span class="dot">•</span>
+        <span class="location">{{ company.location }}</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="company-tabs mt-3">
+    <ul class="nav nav-tabs">
+      <li class="nav-item"><a (click)="activeTab='overview'" [class.active]="activeTab==='overview'">Tổng quan</a></li>
+      <li class="nav-item"><a (click)="activeTab='jobs'" [class.active]="activeTab==='jobs'">Việc làm <span *ngIf="company.totalJobs">({{company.totalJobs}})</span></a></li>
+      <li class="nav-item"><a (click)="activeTab='reviews'" [class.active]="activeTab==='reviews'">Đánh giá</a></li>
+    </ul>
+  </nav>
+
+  <div class="tab-content mt-4">
+    <div *ngIf="activeTab==='overview'">
+      <div class="row">
+        <div class="col-lg-8">
+          <h4>Giới thiệu</h4>
+          <p [innerHTML]="company.description"></p>
+
+          <h5 class="mt-4">Việc làm nổi bật</h5>
+          <div *ngIf="company.featuredJobs?.length; else noFeatured">
+            <div *ngFor="let job of company.featuredJobs" class="job-card" (click)="openJob(job)">
+              <h6>{{ job.title }}</h6>
+              <div class="small text-muted">{{ job.location || 'Remote' }}</div>
+            </div>
+          </div>
+          <ng-template #noFeatured><div class="text-muted">Không có việc làm nổi bật.</div></ng-template>
+        </div>
+
+        <aside class="col-lg-4">
+          <div class="info-card p-3">
+            <p><strong>Địa chỉ:</strong> {{ company.location }}</p>
+            <p><strong>Quy mô:</strong> {{ company.size }}</p>
+            <p><strong>Thành lập:</strong> {{ company.foundedYear }}</p>
+            <p><strong>Email:</strong> <a href="mailto:{{company.contactEmail}}">{{company.contactEmail}}</a></p>
+          </div>
+          <div class="benefits mt-3 p-3">
+            <h6>Phúc lợi</h6>
+            <ul>
+              <li *ngFor="let b of company.benefits">{{b}}</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab==='jobs'">
+      <div *ngIf="company.jobs?.length; else noJobs">
+        <div *ngFor="let j of company.jobs" class="job-list-item p-3 mb-2" (click)="openJob(j)">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6>{{j.title}}</h6>
+              <div class="small text-muted">{{j.location}} • {{j.salary || '—'}}</div>
+            </div>
+            <div class="text-end"><small>{{ j.postedAt | date:'shortDate'}}</small></div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noJobs><div class="text-muted">Hiện không có vị trí tuyển dụng.</div></ng-template>
+    </div>
+
+    <div *ngIf="activeTab==='reviews'">
+      <div *ngIf="company.reviews?.length; else noReviews">
+        <div *ngFor="let r of company.reviews" class="review p-3 mb-2">
+          <strong>{{r.author}}</strong>
+          <div class="small text-muted">{{r.date | date}}</div>
+          <p>{{r.content}}</p>
+        </div>
+      </div>
+      <ng-template #noReviews><div class="text-muted">Chưa có đánh giá.</div></ng-template>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../../../services/auth';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-trang-thong-tin-tai-khoan-cong-ty',
@@ -20,7 +21,7 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
   fileLogo: File | null = null;
   previewLogo: string | null = null;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const duLieu = this.auth.layThongTinNguoiDung();
@@ -66,6 +67,11 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
     this.dongForm();
   }
 
+  capNhatThongTin(thongTin: any) {
+    console.log(thongTin.cong_ty.logo);
+  }
+
+
   private async capNhatLogo() {
     const formData = new FormData();
     formData.append('ma_cong_ty', this.thongTin.cong_ty.ma_cong_ty);
@@ -79,7 +85,12 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
       const data = await res.json();
 
       if (data.success) {
-        this.thongTin.cong_ty.logo = data.url || this.previewLogo;
+        this.thongTin.cong_ty.logo = data.url ? `http://localhost:65001/${data.url}` : this.previewLogo;
+        const duLieu = this.auth.layThongTinNguoiDung();;
+        duLieu.thong_tin_chi_tiet.cong_ty.logo = data.url;
+        this.auth.dangNhap(duLieu);
+
+        this.cdr.detectChanges();
         alert(' Cập nhật logo thành công!');
       } else {
         alert(' Cập nhật logo thất bại.');
@@ -90,5 +101,11 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
     } finally {
       this.dongForm();
     }
+  }
+
+  taoDuongDanLogo(duongDan: string): string {
+    if (!duongDan) return '';
+    if (duongDan.startsWith('http')) return duongDan;
+    return `http://localhost:65001/${duongDan}`;
   }
 }

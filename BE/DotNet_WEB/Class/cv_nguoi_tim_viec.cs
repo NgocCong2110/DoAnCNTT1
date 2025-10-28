@@ -16,6 +16,7 @@ namespace DotNet_WEB.Class
         public nguoi_tim_viec? nguoi_Tim_Viec {get; set;}
         public string? ten_file {get; set;}
         public string? duong_dan_file {get; set;}
-        public DateTime ngay_tao {get; set;}
+        public DateTime ngay_tao { get; set; }
+        
     }
 }

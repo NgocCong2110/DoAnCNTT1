@@ -10,10 +10,11 @@ import { TheBanner } from './component-trang-chu/the-banner/the-banner';
 import { TheDanhGiaTuNguoiDung } from './component-trang-chu/the-danh-gia-tu-nguoi-dung/the-danh-gia-tu-nguoi-dung';
 import { TheViecLamDuocQuanTam } from './component-trang-chu/the-viec-lam-duoc-quan-tam/the-viec-lam-duoc-quan-tam';
 import { TheNganhNgheNoiBat } from './component-trang-chu/the-nganh-nghe-noi-bat/the-nganh-nghe-noi-bat';
+import { TheChuyenTrangTaoCv } from './component-trang-chu/the-chuyen-trang-tao-cv/the-chuyen-trang-tao-cv';
 
 @Component({
   selector: 'app-trang-chu',
-  imports: [RouterModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam],
+  imports: [RouterModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv],
   templateUrl: './trang-chu.html',
   styleUrls: ['./trang-chu.css']
 })

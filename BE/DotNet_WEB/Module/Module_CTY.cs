@@ -5,12 +5,19 @@ using DotNet_WEB.Class;
 using System.Text.Json.Nodes;
 using Mysqlx.Crud;
 using Newtonsoft.Json.Linq;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_logo;
+using Org.BouncyCastle.Tls;
 
 namespace DotNet_WEB.Module
 {
     public class Module_CTY
     {
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
+
+        public static async Task<string> capNhatLogoCongTy(IFormFile file, int ma_cong_ty)
+        {
+            return await thay_doi_logo_cong_ty.capNhatLogoCongTy(file, ma_cong_ty);
+        }
 
         public static List<ung_tuyen> layDanhSachUngVien(int ma_Cong_Ty)
         {
