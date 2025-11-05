@@ -18,7 +18,7 @@ interface mau_cv{
 export class TrangTaoCv {
   mau_cv_co_san: mau_cv[] = [
     { name: 'Mẫu CV 1', image: 'anh_WEB/anh-mau-cv/anh-mau-cv-mac-dinh.png', route: '/app-mau-cv-mac-dinh' },
-    { name: 'Mẫu CV 2', image: 'assets/cv2.png', route: '/cv-detail/2' },
+    { name: 'Mẫu CV 2', image: 'assets/cv2.png', route: '/app-mau-cv-cong-nghe' },
     { name: 'Mẫu CV 3', image: 'assets/cv3.png', route: '/cv-detail/3' }
   ]
 }

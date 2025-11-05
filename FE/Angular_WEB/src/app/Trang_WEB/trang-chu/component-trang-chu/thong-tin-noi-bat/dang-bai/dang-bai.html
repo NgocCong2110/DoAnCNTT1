@@ -1,20 +1,9 @@
 <div class="card-body py-2 px-3">
-  <div class="d-flex flex-column gap-2">
-    <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text"
-      class="form-control border-0 border-bottom shadow-none py-1" placeholder="Tiêu đề tin tuyển dụng"
-      style="font-size: 14px;">
-
-    <div class="d-flex align-items-start gap-2">
-      <img src="anh_WEB/anh_Logo.png" alt="avatar" class="rounded-circle" style="width:32px; height:32px;">
-      <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" class="form-control border-0 shadow-none py-1" rows="1"
-        placeholder="Mô tả ngắn..." style="font-size: 14px; resize: none;"></textarea>
-    </div>
-  </div>
 
   <div class="d-flex justify-content-end mt-2" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty' 
            || auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">
-    <button class="btn d-flex align-items-center gap-1 px-3 py-1" (click)="moPopup()"
-      style="background-color: #0d6efd; color: white; font-weight: bold; font-size: 13px; border-radius: 6px;">
+    <button class="btn d-flex justify-content-center align-items-center px-3 py-1" (click)="moPopup()"
+      style="background-color: #0d6efd; color: white; font-weight: bold; font-size: 13px; border-radius: 6px; width: 100vw;">
       <span style="font-size: 14px;">+</span> Đăng bài
     </button>
   </div>
@@ -87,8 +76,10 @@
             </div>
 
             <div *ngIf="showCustomLuong" class="d-flex gap-2">
-              <input type="number" [(ngModel)]="muc_luong_min" name="muc_luong_min" class="form-control" placeholder="Min (triệu)">
-              <input type="number" [(ngModel)]="muc_luong_max" name="muc_luong_max"class="form-control" placeholder="Max (triệu)">
+              <input type="number" [(ngModel)]="muc_luong_min" name="muc_luong_min" class="form-control"
+                placeholder="Min (triệu)">
+              <input type="number" [(ngModel)]="muc_luong_max" name="muc_luong_max" class="form-control"
+                placeholder="Max (triệu)">
             </div>
           </div>
 

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Auth } from '../../../../../../services/auth';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-trang-thong-tin-tai-khoan-cong-ty',
@@ -12,36 +12,76 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./trang-thong-tin-tai-khoan-cong-ty.css']
 })
 export class TrangThongTinTaiKhoanCongTy implements OnInit {
-  thongTin: any;
-  formDangMo = false;
-  duLieuSua = '';
-  giaTriMoi: any = '';
-  giaTriCu: any = '';
+  thongTin: any = { cong_ty: {} };
+  editingSection: string | null = null;
+  editingValues: Record<string, any> = {}; 
 
   fileLogo: File | null = null;
   previewLogo: string | null = null;
 
-  constructor(private auth: Auth, private cdr: ChangeDetectorRef) { }
+  isCompanyOwner = true; 
+
+  constructor(
+    private auth: Auth,
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     const duLieu = this.auth.layThongTinNguoiDung();
-    this.thongTin = duLieu?.thong_tin_chi_tiet || {};
+    this.thongTin = duLieu?.thong_tin_chi_tiet || { cong_ty: {} };
+    this.thongTin.cong_ty = this.thongTin.cong_ty || {};
   }
 
-  moForm(field: string) {
-    this.duLieuSua = field;
-    this.giaTriMoi = this.thongTin?.cong_ty[field] || '';
-    this.giaTriCu = this.giaTriMoi;
-    this.formDangMo = true;
+  enableEdit(section: string) {
+    this.editingSection = section;
+    this.editingValues[section] = this.thongTin.cong_ty[section] || '';
   }
 
-  dongForm() {
-    this.formDangMo = false;
-    this.duLieuSua = '';
-    this.giaTriMoi = '';
-    this.giaTriCu = '';
+  cancelEdit() {
+    this.editingSection = null;
+    this.editingValues = {};
     this.fileLogo = null;
     this.previewLogo = null;
+  }
+
+  saveEdit() {
+    if (!this.editingSection) return;
+
+    if (this.editingSection === 'logo' && this.fileLogo) {
+      this.capNhatLogo();
+      return;
+    }
+
+    const key = this.editingSection;
+    const payload = {
+      ma_cong_ty: this.thongTin.cong_ty.ma_cong_ty,
+      truong: key,
+      gia_tri: this.editingValues[key]
+    };
+
+    this.http.patch<any>('http://localhost:65001/api/API_WEB/capNhatThongTinCongTy', payload)
+      .subscribe({
+        next: data => {
+          if (data.success) {
+            this.thongTin.cong_ty[key] = this.editingValues[key];
+
+            const duLieu = this.auth.layThongTinNguoiDung();
+            duLieu.thong_tin_chi_tiet.cong_ty[key] = this.editingValues[key];
+            this.auth.dangNhap(duLieu);
+
+            alert('Cập nhật thành công!');
+          } else {
+            alert('Cập nhật thất bại!');
+          }
+          this.cancelEdit();
+        },
+        error: err => {
+          console.error('Lỗi kết nối server:', err);
+          alert('Không thể kết nối server.');
+          this.cancelEdit();
+        }
+      });
   }
 
   chonLogo(event: Event) {
@@ -50,62 +90,55 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
     if (!file) return;
 
     this.fileLogo = file;
-
     const reader = new FileReader();
     reader.onload = () => (this.previewLogo = reader.result as string);
     reader.readAsDataURL(file);
   }
 
-  async luuForm() {
-    if (!this.thongTin?.cong_ty) return;
-
-    if (this.duLieuSua === 'logo' && this.fileLogo) {
-      await this.capNhatLogo();
-      return;
-    }
-
-    this.dongForm();
-  }
-
-  capNhatThongTin(thongTin: any) {
-    console.log(thongTin.cong_ty.logo);
-  }
-
-
-  private async capNhatLogo() {
+  private capNhatLogo() {
     const formData = new FormData();
     formData.append('ma_cong_ty', this.thongTin.cong_ty.ma_cong_ty);
     formData.append('logo', this.fileLogo!);
 
-    try {
-      const res = await fetch('http://localhost:65001/api/API_WEB/capNhatLogoCongTy', {
-        method: 'POST',
-        body: formData
+    this.http.post<any>('http://localhost:65001/api/API_WEB/capNhatLogoCongTy', formData)
+      .subscribe({
+        next: data => {
+          if (data.success) {
+            this.thongTin.cong_ty.logo = data.url ? `http://localhost:65001/${data.url}` : this.previewLogo;
+
+            const duLieu = this.auth.layThongTinNguoiDung();
+            duLieu.thong_tin_chi_tiet.cong_ty.logo = data.url;
+            this.auth.dangNhap(duLieu);
+
+            this.cdr.detectChanges();
+            alert('Cập nhật logo thành công!');
+          } else {
+            alert('Cập nhật logo thất bại.');
+          }
+          this.cancelEdit();
+        },
+        error: err => {
+          console.error('Lỗi upload logo:', err);
+          alert('Không thể tải ảnh lên server.');
+          this.cancelEdit();
+        }
       });
-      const data = await res.json();
-
-      if (data.success) {
-        this.thongTin.cong_ty.logo = data.url ? `http://localhost:65001/${data.url}` : this.previewLogo;
-        const duLieu = this.auth.layThongTinNguoiDung();;
-        duLieu.thong_tin_chi_tiet.cong_ty.logo = data.url;
-        this.auth.dangNhap(duLieu);
-
-        this.cdr.detectChanges();
-        alert(' Cập nhật logo thành công!');
-      } else {
-        alert(' Cập nhật logo thất bại.');
-      }
-    } catch (err) {
-      console.error('Lỗi upload logo:', err);
-      alert(' Không thể tải ảnh lên server.');
-    } finally {
-      this.dongForm();
-    }
   }
 
   taoDuongDanLogo(duongDan: string): string {
     if (!duongDan) return '';
     if (duongDan.startsWith('http')) return duongDan;
     return `http://localhost:65001/${duongDan}`;
+  }
+
+  layTenLoaiHinh(value: number): string {
+    switch (value) {
+      case 1: return 'Công Ty TNHH';
+      case 2: return 'Công Ty Cổ Phần';
+      case 3: return 'Doanh Nghiệp Tư Nhân';
+      case 4: return 'Công Ty Hợp Danh';
+      case 5: return 'Khác';
+      default: return '';
+    }
   }
 }

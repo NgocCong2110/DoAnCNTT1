@@ -1,8 +1,8 @@
-<div class="bg-light">
-  <app-header-web></app-header-web>
+<app-header-web></app-header-web>
+<div class="bg-light" style="height: 75vh;">
+
 
   <div class="container py-3">
-
     <div class="card shadow-sm p-4 rounded-3">
       <h3 class="mb-3 text-center">Danh sách bài đăng đã lưu</h3>
 
@@ -15,16 +15,40 @@
 
       <div *ngIf="danh_sach_bai_dang_da_luu.length > 0" class="mt-4">
         <div class="list-group">
-          <div class="list-group-item list-group-item-action"
-               *ngFor="let bai of danh_sach_bai_dang_da_luu">
-            <h5 class="mb-1">{{ bai?.tieu_de }}</h5>
-            <p class="mb-1"><b>Người đăng:</b> {{ bai?.ten_nguoi_dang }}</p>
+          <div class="list-group-item list-group-item-action py-3 mb-3 border shadow-sm"
+            *ngFor="let bai of danh_sach_bai_dang_da_luu; let i = index">
+
+            <div class="d-flex align-items-start" (click)="dieuHuongToiTrangViecLam(bai)" style="cursor: pointer;">
+              <div class="me-3">
+                <img [src]="'http://localhost:65001/' + bai.cong_Ty?.logo" alt="Logo công ty" class="rounded border"
+                  style="width:80px; height:80px; object-fit:contain;">
+              </div>
+
+              <div class="flex-grow-1">
+                <h5 class="mb-1 text-primary fw-semibold">{{ bai?.tieu_de }}</h5>
+                <p class="mb-1"><b>Công ty:</b> {{ bai?.ten_nguoi_dang }}</p>
+                <p class="mb-1 text-muted"><b>Ngày đăng:</b> {{ bai?.ngay_tao | date:'dd/MM/yyyy' }}</p>
+                <p class="mt-2 text-secondary small">{{ bai?.noi_dung }}</p>
+              </div>
+            </div>
+            <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
+              <button class="btn btn-light btn-sm rounded-circle border-0" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <h3 style="font-weight: bold;">⋮</h3>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li>
+                  <a class="dropdown-item text-danger" (click)="huyLuuBaiDang(bai, i)">
+                    <i class="bi bi-bookmark-x me-2"></i> Hủy lưu bài đăng
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
 
-      <div *ngIf="danh_sach_bai_dang_da_luu.length === 0"
-           class="text-center text-muted mt-4">
+      <div *ngIf="danh_sach_bai_dang_da_luu.length === 0" class="text-center text-muted mt-4">
         Không có bài đăng nào được lưu.
       </div>
 
@@ -35,16 +59,17 @@
   </div>
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3"
-     *ngIf="pop_up_lay_thong_tin_that_bai">
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
   <div class="toast show text-bg-danger border-0">
     <div class="d-flex">
       <div class="toast-body">
         ❌ Lấy thông tin thất bại!
       </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_lay_thong_tin_that_bai=false"></button>
     </div>
   </div>
 </div>
+
+<app-footer-web></app-footer-web>

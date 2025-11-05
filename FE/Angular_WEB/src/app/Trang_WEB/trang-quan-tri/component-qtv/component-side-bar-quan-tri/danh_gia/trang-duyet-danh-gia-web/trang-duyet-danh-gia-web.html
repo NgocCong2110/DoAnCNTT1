@@ -1,0 +1,46 @@
+<div class="container ds-danhgia-container">
+  <h2 class="ds-danhgia-title">Danh sách đánh giá</h2>
+
+  <div *ngIf="loading">Đang tải dữ liệu...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && !error">
+    <select class="form-select w-auto d-inline-block ms-2" [(ngModel)]="selectedSao" (ngModelChange)="locSoSao()">
+      <option [ngValue]="0">Tất cả</option>
+      <option [ngValue]="5">5 sao</option>
+      <option [ngValue]="4">4 sao</option>
+      <option [ngValue]="3">3 sao</option>
+      <option [ngValue]="2">2 sao</option>
+      <option [ngValue]="1">1 sao</option>
+    </select>
+
+
+    <table class="table table-bordered table-striped ds-danhgia-table">
+      <thead>
+        <tr>
+          <th>Người đánh giá</th>
+          <th>Điểm</th>
+          <th>Nội dung</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dg of danh_sach_danh_gia">
+          <td>{{ dg.ten_nguoi_danh_gia }}</td>
+          <td>{{ dg.so_diem_danh_gia }}</td>
+          <td>{{ dg.noi_dung_danh_gia }}</td>
+          <td>
+            <span *ngIf="dg.trang_thai_danh_gia === 1" class="text-success">Hiển thị</span>
+            <span *ngIf="dg.trang_thai_danh_gia === 2" class="text-wait">Chưa hiển thị</span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="capNhatTrangThaiDanhGia(dg)">
+              {{ dg.trang_thai_danh_gia === 1 ? 'Ẩn' : 'Hiển thị' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

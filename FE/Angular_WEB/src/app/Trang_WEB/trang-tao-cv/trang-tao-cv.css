@@ -1,36 +1,61 @@
 .cv-container {
-  padding: 20px;
+  padding: 60px 20px; 
   text-align: center;
+  background: white;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cv-container h2 {
+  font-size: 2.5rem; 
+  margin-bottom: 40px;
+  color: #333;
 }
 
 .cv-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 40px; 
   justify-content: center;
 }
 
 .cv-card {
-  width: 200px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  width: 420px; 
+  border-radius: 20px; 
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  background-color: #fff;
 }
 
 .cv-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-10px) scale(1.08); 
+  box-shadow: 0 15px 30px rgba(0,0,0,0.25); 
 }
 
 .cv-img {
   width: 100%;
-  height: 250px;
+  height: 480px;
   object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.cv-card:hover .cv-img {
+  transform: scale(1.12); 
 }
 
 .cv-name {
-  padding: 10px;
+  padding: 18px;
   font-weight: bold;
-  background-color: #f8f8f8;
+  font-size: 1.2rem;
+  background-color: #007BFF;
+  color: #fff;
+  text-align: center;
+  transition: background-color 0.3s;
+  letter-spacing: 0.5px;
+}
+
+.cv-card:hover .cv-name {
+  background-color: #0056b3;
 }

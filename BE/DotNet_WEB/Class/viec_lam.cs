@@ -34,7 +34,6 @@ namespace DotNet_WEB.Class
         public int ma_bai_dang { get; set; }
         [ForeignKey(nameof(ma_bai_dang))]
         public bai_dang? bai_dang { get; set; }
-        public phuc_loi? phuc_Loi { get; set; }
-        public phuc_loi_viec_lam? phuc_Loi_Viec_Lam { get; set; }
+        public List<phuc_loi>? danh_sach_phuc_loi { get; set; }
     }
 }

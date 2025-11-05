@@ -43,38 +43,14 @@ export class TrangCvNtv implements OnInit {
   lua_chon_cv: any = null;
 
   ngOnInit() {
-    this.loadCvs();
+    this.layDanhSachCVOnlineNguoiTimViec();
   }
-
-  dsMauCV = [
-    { key: 'modern', ten: 'Hiện đại', preview: 'assets/cv/modern.png' },
-    { key: 'mac-dinh', ten: 'Mac dinh', preview: 'assets/cv/classic.png' },
-    { key: 'minimal', ten: 'Tối giản', preview: 'assets/cv/minimal.png' }
-  ];
-
-  pdfUrl: SafeResourceUrl | null = null;
 
   thongTin: any;
 
-  formCv: CvForm = {
-    hoTen: '',
-    email: '',
-    dienThoai: '',
-    ngay_sinh: '',
-    dia_chi: '',
-    truong_hoc: '',
-    chuyen_nganh: '',
-    kinh_nghiem: '',
-    kyNang: '',
-    duAn: '',
-    mucTieu: '',
-  };
-
   ma_nguoi_dung = 1;
   danh_sach_cv: any[] = [];
-  hienModal = false;
 
-  allBlocks = ['thongTinCoBan', 'hocVan', 'kinhNghiem', 'kyNang', 'duAn', 'mucTieu'];
   blocks: string[] = [];
 
 
@@ -82,124 +58,53 @@ export class TrangCvNtv implements OnInit {
     this.thongTin = this.auth.layThongTinNguoiDung();
   }
 
-  moForm() {
-    this.hienModal = true;
-    this.blocks = [...this.allBlocks];
-    this.cdr.markForCheck();
-  }
-
-  dongForm() {
-    this.hienModal = false;
-    this.blocks = [];
-    this.formCv = {
-      hoTen: '',
-      email: '',
-      dienThoai: '',
-      ngay_sinh: '',
-      dia_chi: '',
-      truong_hoc: '',
-      chuyen_nganh: '',
-      kinh_nghiem: '',
-      kyNang: '',
-      duAn: '',
-      mucTieu: '',
-    };
-    this.cdr.markForCheck();
-  }
-
-  onFileSelected(event: any) {
-
-    const file: File = event.target.files[0];
-    if (file && file.type !== 'application/pdf') {
-      alert('Vui lòng chọn file PDF!');
-      return;
-    }
-
-    if (file && file.size > 5 * 1024 * 1024) {
-      alert('Kích thước file vượt quá 5MB!');
-      return;
-    }
-
-    this.dang_tai_file = file;
-    if (this.dang_tai_file) this.uploadedFileName = this.dang_tai_file.name;
-    this.cdr.markForCheck();
-  }
-
-  dangTaiForm() {
-    if (!this.dang_tai_file) {
-      alert('Chưa chọn file!');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('cv_file', this.dang_tai_file);
-    formData.append('ma_Nguoi_Tim_Viec', this.thongTin?.thong_tin_chi_tiet.ma_nguoi_tim_viec);
-
-    this.httpclient.post('http://localhost:65001/api/API_WEB/dangTaiCV', formData)
-      .subscribe({
-        next: () => {
-          alert('Upload CV thành công!');
-          this.loadCvs();
-          window.location.reload();
-        },
-        error: (err) => {
-          alert(`Upload lỗi: ${err.message}`);
-        }
-      });
-  }
-
-
-
-  luuCV() {
-    const body = { ...this.formCv, userId: this.ma_nguoi_dung };
-
-    this.httpclient.post('http://localhost:65001/api/API_WEB/luuCV', body)
-      .subscribe({
-        next: () => {
-          alert('CV online lưu thành công!');
-          this.loadCvs();
-          this.dongForm();
-        },
-        error: (err) => {
-          alert(`Lưu lỗi: ${err.message}`);
-        }
-      });
-  }
-
-  loadCvs() {
-    this.httpclient.post<API_RESPONSE>(`http://localhost:65001/api/API_WEB/layDanhSachCV`, { ma_nguoi_tim_viec: this.thongTin?.thong_tin_chi_tiet.ma_nguoi_tim_viec })
+  layDanhSachCVOnlineNguoiTimViec() {
+    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachCVOnlineNguoiTimViec', ma_nguoi_tim_viec,
+      { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
           if (data.success) {
             this.danh_sach_cv = data.danh_sach;
-            this.cdr.markForCheck();
+            this.cdr.detectChanges();
           }
+          else {
+            console.log("loi")
+          }
+          this.cdr.markForCheck();
         },
         error: (err) => {
-          console.error('Lỗi khi tải CV:', err);
+          console.log(err)
         }
-      });
+      })
   }
 
   xemCV(cv: any) {
-    this.lua_chon_cv = cv;
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`http://localhost:65001/cv-files/${cv.duong_dan_file}`);
+    this.lua_chon_cv = "http://localhost:65001/" + cv.duong_dan_file_pdf;
+    window.open(this.lua_chon_cv);
   }
-
-  chonMauCV(mau_cv : any){
-    this.maucv = mau_cv;
-  }
-
-  xacNhanChonMau(){
-    if(this.maucv == null){
-      alert('chua chon mau cv');
-      return;
-    }
-
-     console.log(this.maucv.key);
-
-    if(this.maucv.key == 'mac-dinh'){
-      this.router.navigate(['app-mau-cv-mac-dinh']);
-    }
+  xoaCV(cv: any , index: number){
+    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung().thong_tin_chi_tiet.ma_nguoi_tim_viec;
+    const thong_tin = {
+      ma_cv: cv.ma_cv,
+      ma_nguoi_tim_viec: ma_nguoi_tim_viec,
+      duong_dan_file_pdf: cv.duong_dan_file_pdf
+    };
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/xoaCVNguoiTimViec', thong_tin)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_cv.splice(index, 1);
+            this.cdr.detectChanges();
+          }
+          else {
+            alert("loi xoa cv");
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      })
   }
 }

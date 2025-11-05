@@ -31,6 +31,8 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.danh_gia_web
             {
                 var danh_Gia = new danh_gia
                 {
+                     ma_danh_gia = reader.IsDBNull(reader.GetOrdinal("ma_danh_gia")) ? 0 : reader.GetInt32("ma_danh_gia"),
+
                     ma_nguoi_danh_gia = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_danh_gia")) ? 0 : reader.GetInt32("ma_nguoi_danh_gia"),
 
                     ten_nguoi_danh_gia = reader.IsDBNull(reader.GetOrdinal("ten_nguoi_danh_gia")) ? null : reader.GetString("ten_nguoi_danh_gia"),
@@ -38,6 +40,8 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.danh_gia_web
                     so_diem_danh_gia = reader.IsDBNull(reader.GetOrdinal("so_diem_danh_gia")) ? 0 : reader.GetInt32("so_diem_danh_gia"),
 
                     noi_dung_danh_gia = reader.IsDBNull(reader.GetOrdinal("noi_dung_danh_gia")) ? null : reader.GetString("noi_dung_danh_gia"),
+
+                    trang_thai_danh_gia = reader.IsDBNull(reader.GetOrdinal("trang_thai_danh_gia")) ? TrangThaiDanhGia.chua_Hien_Thi : (TrangThaiDanhGia)Enum.Parse(typeof(TrangThaiDanhGia), reader.GetString("trang_thai_danh_gia")),
 
                     ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao")
                 };

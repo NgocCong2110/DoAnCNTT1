@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 import { HeaderWEB } from '../../../Component/header-web/header-web';
 import { ChangeDetectorRef } from '@angular/core';
 import { Auth } from '../../../../services/auth';
+import { Router } from '@angular/router';
 
 interface API_RESPONSE {
   success: boolean;
   chi_tiet: any; 
+  danh_sach: any;
 }
 
 @Component({
@@ -20,7 +22,9 @@ interface API_RESPONSE {
 export class TrangChiTietViecLam {
   chi_tiet: any;
 
-  ma_bai_dang = 0;
+  ma_bai_dang_chi_tiet = 0;
+
+  danh_sach_viec_lam_cung_cong_ty: any;
 
   thongTin: any;
 
@@ -28,6 +32,7 @@ export class TrangChiTietViecLam {
     private route: ActivatedRoute,
     private httpclient: HttpClient,
     private cd: ChangeDetectorRef,
+    private router: Router,
     public auth: Auth
   ) {
     this.thongTin = this.auth.layThongTinNguoiDung();
@@ -36,6 +41,7 @@ export class TrangChiTietViecLam {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const ma_bai_dang = params["ma_bai_dang"]
+      this.ma_bai_dang_chi_tiet = ma_bai_dang;
       this.layChiTiet(ma_bai_dang);
     })
   }
@@ -47,11 +53,39 @@ export class TrangChiTietViecLam {
         next: (data) => {
           this.chi_tiet = data.chi_tiet;  
           this.cd.detectChanges();
+          this.layViecLamLienQuan();
         },
         error: (err) => {
           console.error(err);
         },
       });
+  }
+
+  layViecLamLienQuan(){
+    const thong_tin = {
+      ma_bai_dang: this.ma_bai_dang_chi_tiet,
+      ma_nguoi_dang: this.chi_tiet?.ma_nguoi_dang
+    }
+    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachViecLamCungCongTy', thong_tin)
+      .subscribe({
+        next: (data) => {
+          if(data.success){
+            this.danh_sach_viec_lam_cung_cong_ty = data.danh_sach;
+            this.cd.detectChanges();
+          }
+          else{
+            console.log("loi");
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+  }
+
+  dieuHuongToiViecLam(viec: any){
+    this.router.navigate(['trang-chi-tiet-viec-lam'], {queryParams: { ma_bai_dang: viec.bai_dang.ma_bai_dang }});
   }
 
   taoDuongDanLogo(url : string) : string {
@@ -125,7 +159,7 @@ export class TrangChiTietViecLam {
   }
 
   luuViecLam(){
-     const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
+     const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.nguoi_tim_viec.ma_nguoi_tim_viec;
     
         if (ma_Nguoi_Luu == null) {
           alert("Vui lòng đăng nhập để lưu bài đăng.");
@@ -160,5 +194,13 @@ export class TrangChiTietViecLam {
 
   layTrinhDoHocVan(ma: number) : string {
     return this.trinhDoHocVanMap[ma] || '';
+  }
+
+  dieuHuongToiTrangGioiThieu(ma_cong_ty: number){
+    this.router.navigate(['trang-gioi-thieu-cong-ty'], {queryParams: {ma_cong_ty}})
+  }
+
+  viecLamLienQuan(){
+
   }
 }

@@ -84,34 +84,12 @@
       </ul>
     </div>
 
-    <!-- <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        {{ phuc_loi_label || 'Phúc lợi' }}
-      </button>
-      <ul class="dropdown-menu">
-        <li *ngFor="let gia_tri of phucLoiList">
-          <button class="dropdown-item" type="button" 
-                  (click)="phuc_loi = gia_tri.value; phuc_loi_label = gia_tri.label">
-            {{ gia_tri.label }}
-          </button>
-        </li>
-      </ul>
-    </div> -->
-
-
-
     <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()"
       style="background-color: #0d6efd; color: white; font-weight: bold;">Lọc</button>
   </div>
 </div>
 
-<div *ngIf="!loading && danh_sach_de_xuat.length === 0" class="text-center text-muted mt-4">
-  Không có việc làm đề xuất
-</div>
 
-<div *ngIf="error" class="text-center text-danger mb-3">
-  {{ error }}
-</div>
 
 <div class="card p-3 shadow-sm rounded-3 mb-3" style="background-color: white;">
   <div class="d-flex gap-2 flex-wrap align-items-center">
@@ -153,6 +131,17 @@
     </div>
 
   </div>
+</div>
+
+<div class="job-count bg-white border-bottom py-3 px-3">
+  <h6 class="mb-0 text-secondary">
+    Tìm thấy <span class="fw-bold text-dark">{{ so_luong_viec_lam }}</span> việc làm phù hợp
+  </h6>
+</div>
+
+
+<div *ngIf="!loading && danh_sach_de_xuat.length === 0" class="text-center text-muted mt-4">
+  Không có việc làm đề xuất
 </div>
 
 <div class="container py-4">

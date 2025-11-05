@@ -1,0 +1,429 @@
+<app-header-web></app-header-web>
+<div class="container-fluid py-4" style="background-color: #f8f9fa;">
+    <div class="row gx-4">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <button class="btn btn-primary w-100 py-3 fw-semibold" style="background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%); 
+                               border: none; 
+                               box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+                               transition: all 0.3s ease;" (click)="moPopup()">
+                    <i class="bi bi-plus-circle me-2"></i>Đăng bài mới
+                </button>
+            </div>
+
+            <div *ngIf="bai_dang_duoc_chon as bai" class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h2 class="mb-0 fw-bold" style="color: #2c3e50;">{{ bai.tieu_de }}</h2>
+                        <div class="dropdown">
+                            <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" style="font-size: 1.5rem; text-decoration: none;">
+                                ⋮
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                <li>
+                                    <a class="dropdown-item text-danger" (click)="moPopUpXoa()">
+                                        <i class="bi bi-trash me-2"></i>Xóa bài đăng
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 pb-3" style="border-bottom: 2px solid #e9ecef;">
+                        <p class="mb-2 text-secondary">
+                            <i class="bi bi-building me-2" style="color: #007BFF;"></i>
+                            <strong>Công ty:</strong> {{ bai.cong_Ty.ten_cong_ty }}
+                        </p>
+                        <p class="mb-0 text-secondary">
+                            <i class="bi bi-calendar me-2" style="color: #007BFF;"></i>
+                            <strong>Ngày đăng:</strong> {{ bai.ngay_tao | date:'dd/MM/yyyy HH:mm' }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded" style="background-color: #f8f9fa;">
+                        <h4 class="mb-4 fw-bold" style="color: #2c3e50;">
+                            <i class="bi bi-info-circle me-2" style="color: #007BFF;"></i>
+                            Thông tin công việc
+                        </h4>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Ngành nghề</label>
+                                    <p class="mb-0">{{ laynganhnghe(bai.nganh_nghe) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Vị trí</label>
+                                    <p class="mb-0">{{ bai.vi_tri }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Kinh nghiệm</label>
+                                    <p class="mb-0">{{ bai.kinh_nghiem }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Mức lương</label>
+                                    <p class="mb-0 fw-semibold">{{ bai.muc_luong }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Địa điểm</label>
+                                    <p class="mb-0">{{ bai.dia_diem }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Loại hình</label>
+                                    <p class="mb-0">{{ layLoaiHinh(bai.loai_hinh) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Mô tả</label>
+                                    <p class="mb-0">{{ bai.mo_ta }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Yêu cầu</label>
+                                    <p class="mb-0">{{ bai.yeu_cau }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Quyền lợi</label>
+                                    <p class="mb-0">{{ bai.quyen_loi_cong_viec }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Trình độ</label>
+                                    <p class="mb-0">{{ layTrinhDoHocVan(bai.trinh_do_hoc_van_yeu_cau) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Thời gian làm việc</label>
+                                    <p class="mb-0">{{ bai.thoi_gian_lam_viec }}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <label class="fw-semibold text-secondary d-block mb-1">Hạn nộp CV</label>
+                                    <p class="mb-0">{{ bai.thoi_han_nop_cv |
+                                        date:'dd/MM/yyyy' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header border-0 bg-white pt-4 px-4">
+                    <h5 class="mb-0 fw-bold text-center" style="color: #2c3e50;">
+                        <i class="bi bi-file-text me-2" style="color: #007BFF;"></i>
+                        Bài đăng khác của tôi
+                    </h5>
+                </div>
+                <div class="card-body p-2">
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action border-0 rounded mb-3"
+                            *ngFor="let b of danh_sach_bai_lien_quan" (click)="bai_dang_duoc_chon = b"
+                            [class.active]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang"
+                            [style.background-color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? '#c4c4c6' : '#f8f9fa'"
+                            [style.color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? 'black' : '#2c3e50'"
+                            style="cursor: pointer; transition: all 0.3s ease; padding: 12px 16px;">
+
+                            {{ b.tieu_de }}
+
+                            <div class="mt-2">
+                                <span>{{ b.muc_luong }}</span> |
+                                <span>{{ b.kinh_nghiem }}</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- button dang bai -->
+
+<div class="modal fade" tabindex="-1" id="modalDangBai" #modalDangBai>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h5 class="modal-title">Đăng tin tuyển dụng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label>Tiêu đề</label>
+            <input [(ngModel)]="tieu_de_moi" name="tieu_de" type="text" class="form-control"
+              placeholder="Ví dụ: Tuyển lập trình viên Java">
+          </div>
+
+          <div class="mb-3">
+            <label>Mô tả công việc</label>
+            <textarea [(ngModel)]="noi_dung_moi" name="noi_dung" rows="3" class="form-control"
+              placeholder="Mô tả ngắn gọn trách nhiệm và công việc..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Yêu cầu công việc</label>
+            <textarea [(ngModel)]="yeu_cau_moi" name="yeu_cau" rows="3" class="form-control"
+              placeholder="Trình độ, kỹ năng, kinh nghiệm..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Trình độ học vấn yêu cầu</label>
+            <select [(ngModel)]="trinh_do_hoc_van" name="hoc_van" class="form-control">
+              <option [value]="0">Không yêu cầu</option>
+              <option *ngFor="let td of trinhDoHocVanList" [value]="td.value">
+                {{ td.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>Địa điểm làm việc</label>
+            <input [(ngModel)]="dia_diem_moi" name="dia_diem" type="text" class="form-control"
+              placeholder="Ví dụ: Hà Nội, TP. HCM...">
+          </div>
+
+          <div class="mb-3">
+            <label>Giờ làm việc</label>
+            <input [(ngModel)]="gio_lam_viec" name="thoi_gian" type="text" class="form-control"
+              placeholder="Ví dụ: Từ 8:00 đến 10:00">
+          </div>
+
+          <div class="mb-3">
+            <label>Mức lương</label>
+            <div class="dropdown w-100 mb-2">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ muc_luong_label || 'Mức lương' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let muc of mucLuongList">
+                  <button class="dropdown-item" type="button" (click)="chonMucLuong(muc)">
+                    {{ muc.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div *ngIf="showCustomLuong" class="d-flex gap-2">
+              <input type="number" [(ngModel)]="muc_luong_min" name="muc_luong_min" class="form-control"
+                placeholder="Min (triệu)">
+              <input type="number" [(ngModel)]="muc_luong_max" name="muc_luong_max" class="form-control"
+                placeholder="Max (triệu)">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Ngành nghề</label>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ nganh_nghe_label || 'Ngành nghề' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let nganh of nganhNgheList">
+                  <button class="dropdown-item" type="button"
+                    (click)="nganh_nghe = nganh.value; nganh_nghe_label = nganh.label">
+                    {{ nganh.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Vị trí tuyển dụng</label>
+            <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control"
+              placeholder="Ví dụ: Nhân viên, Trưởng phòng, Quản lý...">
+          </div>
+
+          <div class="mb-3">
+            <label>Kinh nghiệm</label>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ kinh_nghiem_label || 'Kinh nghiệm' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let kn of kinhNghiemList">
+                  <button class="dropdown-item" type="button"
+                    (click)="kinh_nghiem = kn.value; kinh_nghiem_label = kn.label">
+                    {{ kn.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Loại hình</label>
+            <div class="dropdown w-100">
+              <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ loai_hinh_label || 'Loại hình' }}
+              </button>
+              <ul class="dropdown-menu dropdown-scroll w-100">
+                <li *ngFor="let loai of loaiHinhList">
+                  <button class="dropdown-item" type="button"
+                    (click)="loai_hinh = loai.value; loai_hinh_label = loai.label">
+                    {{ loai.label }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Quyền lợi khác</label>
+            <textarea [(ngModel)]="quyen_loi_khac" name="quyen_loi_khac" rows="3" class="form-control" placeholder="Nhập mỗi quyền lợi một dòng, ví dụ:
+• Phụ cấp ăn trưa
+• Lương tháng 13
+• Thưởng Tết..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label>Phúc lợi</label>
+            <div class="form-check" *ngFor="let phuc of phucLoiList">
+              <input class="form-check-input" type="checkbox" [value]="phuc.ma_phuc_loi"
+                (change)="chonPhucLoi($event, phuc)">
+              <label class="form-check-label">{{ phuc.ten_phuc_loi }}</label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Thời hạn nộp cv</label>
+            <input type="date" [(ngModel)]="thoi_han_nop_cv" name="thoi_han" placeholder="Thời gian hết hạn nộp cv"
+              class="form-control">
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button class="btn btn-primary" (click)="themBaiDang()"
+          style="background-color: #0d6efd; color: white; font-weight: bold;">Đăng bài</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- pop-up -->
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_thanh_cong">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Đăng bài thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_dang_bai_thanh_cong=false"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_that_bai">
+  <div class="toast show text-bg-danger border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        ❌ Đăng bài thất bại. Vui lòng thử lại!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_dang_bai_that_bai=false"></button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="pop_up_xoa_bai" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+     style="background: rgba(0,0,0,0.5); z-index: 2000;">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <h5 class="modal-title text-danger">Xác nhận xoá</h5>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xoá bài đăng: <b>{{ bai_dang_duoc_chon?.tieu_de }}</b> không?</p>
+      </div>
+      <div class="text-end">
+        <button class="btn btn-secondary mx-1" (click)="huyXoa()">Huỷ</button>
+        <button class="btn btn-danger mx-1" (click)="xacNhanXoa()">Xoá</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="thong_tin_bai_xoa">
+  <div class="toast show text-bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body">
+        Xoá bài đăng thành công!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="thong_tin_bai_xoa=false"></button>
+    </div>
+  </div>
+</div>

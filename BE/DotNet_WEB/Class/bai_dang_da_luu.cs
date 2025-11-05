@@ -14,7 +14,7 @@ namespace DotNet_WEB.Class
         public bai_dang? bai_Dang { get; set; }
         public int ma_nguoi_luu {get; set;}
         [ForeignKey(nameof(ma_nguoi_luu))]
-        public nguoi_dung? nguoi_Dung { get; set; }
+        public nguoi_tim_viec? nguoi_Tim_Viec { get; set; }
 
     }
 }

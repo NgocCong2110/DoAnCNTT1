@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../../../services/auth';
-import { BaiDang } from '../../../../../services/bai-dang-service/bai-dang';
 import { Subscription } from 'rxjs';
 import { BaiDangComponent } from '../bai-dang.model';
 import { HttpClient } from '@angular/common/http';
@@ -27,34 +26,75 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   thongTin: any;
   pop_up_ung_tuyen = false;
   pop_up_xoa_bai = false;
+  pop_up_chon_cv = false;
   thong_tin_bai_xoa = false;
+  danh_sach_cv: any;
+  cv_duoc_chon: number | null = null;
+  loai_cv: string = '';
+  file_cv_upload: File | null = null;
+  danh_sach_bai_dang: any;
+  danh_sach_bai_dang_full: any;
+
+  error = '';
+  loading = false;
+
+  trang_hien_tai = 1;
+  so_luong_moi_trang = 8;
+  tong_trang = 1;
 
   constructor(
-    public baiDangService: BaiDang,
     public auth: Auth,
-    private http: HttpClient,
+    private httpclient: HttpClient,
     private cdr: ChangeDetectorRef
   ) {
     this.thongTin = this.auth.layThongTinNguoiDung();
   }
 
   ngOnInit(): void {
-    this.sub = this.baiDangService.bai_dang_duoc_chon$.subscribe(bai_dang => {
-      this.bai_dang_duoc_chon = bai_dang;
-      this.cdr.detectChanges();
-    });
+    const mang = this.layDanhSachBaiDang();
+  }
 
-    this.baiDangService.layDanhSachBaiDang().then(res => {
-      const danh_sach = res.danh_sach;
-      if(danh_sach.length > 0 && !this.bai_dang_duoc_chon) {
-        this.baiDangService.chonBaiDang(danh_sach[0]);
-        this.cdr.detectChanges();
-      }
-    });
+  layDanhSachBaiDang() {
+    this.loading = true;
+    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachBaiDang', {})
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_bai_dang_full = data.danh_sach;
+            this.tong_trang = Math.ceil(this.danh_sach_bai_dang_full.length / this.so_luong_moi_trang);
+            this.loadTrang(1);
+            this.bai_dang_duoc_chon = this.danh_sach_bai_dang[0] || null;
+          } else {
+            this.error = 'Không lấy được danh sách bài đăng.';
+          }
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.error = 'Lỗi kết nối máy chủ.';
+          this.loading = false;
+          console.error(err);
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  loadTrang(trang: number) {
+    this.trang_hien_tai = trang;
+    const start = (trang - 1) * this.so_luong_moi_trang;
+    const end = start + this.so_luong_moi_trang;
+    this.danh_sach_bai_dang = this.danh_sach_bai_dang_full.slice(start, end);
+    this.cdr.detectChanges();
+  }
+
+  chuyenTrang(trang: number) {
+    if (trang < 1 || trang > this.tong_trang) return;
+    this.loadTrang(trang);
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.bai_dang_duoc_chon;
   }
 
   loaiHinhMap: { [key: number]: string } = {
@@ -66,6 +106,10 @@ export class TinTuyenDung implements OnInit, OnDestroy {
 
   layLoaiHinh(loaiHinh: number) {
     return this.loaiHinhMap[loaiHinh] || 'Không xác định';
+  }
+
+  chonFile(event: any) {
+    this.file_cv_upload = event.target.files[0];
   }
 
   baoCaoBaiDang() {
@@ -86,7 +130,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
       ngay_bao_cao: new Date()
     }
 
-    this.http.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", thong_tin).subscribe({
+    this.httpclient.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", thong_tin).subscribe({
       next: (data) => {
         if (data.success) {
           alert("Báo cáo bài đăng thành công.");
@@ -104,7 +148,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   }
 
   luuBaiDang() {
-    const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
+    const ma_Nguoi_Luu = this.thongTin?.thong_tin_chi_tiet?.nguoi_tim_viec.ma_nguoi_tim_viec;
 
     if (ma_Nguoi_Luu == null) {
       alert("Vui lòng đăng nhập để lưu bài đăng.");
@@ -116,7 +160,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
       ma_nguoi_luu: ma_Nguoi_Luu
     }
 
-    this.http.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/luuBaiDang", thong_tin).subscribe({
+    this.httpclient.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/luuBaiDang", thong_tin).subscribe({
       next: (data) => {
         if (data.success) {
           alert("Đã lưu bài đăng.");
@@ -129,85 +173,143 @@ export class TinTuyenDung implements OnInit, OnDestroy {
     });
   }
 
+  moPopUpUngTuyen() {
+    this.pop_up_chon_cv = true;
+    this.cv_duoc_chon = null;
+
+    const maNguoiTimViec = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    if (!maNguoiTimViec) return;
+
+    this.layDanhSachCVOnlineNguoiTimViec();
+  }
+
+  canSubmit(): boolean {
+    if (this.loai_cv === 'he_thong') {
+      return this.cv_duoc_chon !== null;
+    } else if (this.loai_cv === 'upload') {
+      return !!this.file_cv_upload;
+    }
+    return false;
+  }
+
   ungTuyenCongViec() {
 
-    const ma_Nguoi_Ung_Tuyen = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
-    if (ma_Nguoi_Ung_Tuyen == null) {
+    const maNguoiTimViec = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    if (!maNguoiTimViec) {
       alert("Vui lòng đăng nhập để ứng tuyển công việc.");
       return;
     }
+
     const ktra = {
       ma_viec: this.bai_dang_duoc_chon?.viec_lam?.ma_viec,
       ma_cong_ty: this.bai_dang_duoc_chon?.ma_nguoi_dang,
-      ma_nguoi_tim_viec: ma_Nguoi_Ung_Tuyen
+      ma_nguoi_tim_viec: maNguoiTimViec
     };
 
-    this.http.post<any>("http://localhost:65001/api/API_WEB/kiemTraUngTuyen", ktra)
+    this.httpclient.post<any>("http://localhost:65001/api/API_WEB/kiemTraUngTuyen", ktra)
       .subscribe({
         next: (data) => {
           if (!data.success) {
             alert("Bạn đã ứng tuyển công việc này rồi.");
             return;
-          } this.http.post<any>("http://localhost:65001/api/API_WEB/ungTuyenCongViec", {
+          }
+
+          const thong_tin = {
             ma_viec: this.bai_dang_duoc_chon?.viec_lam?.ma_viec,
             ma_cong_ty: this.bai_dang_duoc_chon?.ma_nguoi_dang,
-            ma_nguoi_tim_viec: ma_Nguoi_Ung_Tuyen,
-          }).subscribe({
-            next: (data) => {
-              if (data.success) {
-                this.pop_up_ung_tuyen = true;
-                this.cdr.detectChanges();
-                setTimeout(() => {
-                  this.pop_up_ung_tuyen = false;
-                  this.cdr.detectChanges();
-                }, 2000);
-              }
-            },
-            error: () => {
-              alert("Ứng tuyển thất bại.");
-            }
-          });
+            ma_nguoi_tim_viec: maNguoiTimViec,
+            ma_cv: this.cv_duoc_chon
+          };
+
+          if (this.loai_cv === 'he_thong' && this.cv_duoc_chon) {
+            this.httpclient.post<any>("http://localhost:65001/api/API_WEB/ungTuyenCongViec", thong_tin).subscribe({
+              next: (res) => {
+                if (res.success) {
+                  alert("Ứng tuyển thành công bằng CV hệ thống!");
+                  this.pop_up_chon_cv = false;
+                  this.pop_up_ung_tuyen = true;
+                  this.autoHidePopup();
+                }
+              },
+              error: () => alert("Ứng tuyển thất bại.")
+            });
+          }
+
+          else if (this.loai_cv === 'upload' && this.file_cv_upload) {
+            const formData = new FormData();
+            formData.append('ma_viec', String(this.bai_dang_duoc_chon?.viec_lam?.ma_viec) || '');
+            formData.append('ma_cong_ty', String(this.bai_dang_duoc_chon?.ma_nguoi_dang) || '');
+            formData.append('ma_nguoi_tim_viec', maNguoiTimViec || '');
+            formData.append('duong_dan_file_cv_upload', this.file_cv_upload);
+
+            console.log('FormData chuẩn bị gửi:', formData);
+
+            this.httpclient.post<any>(
+              'http://localhost:65001/api/API_WEB/ungTuyenCongViecUploadCV',
+              formData
+            ).subscribe({
+              next: (res) => {
+                if (res.success) {
+                  alert("Ứng tuyển thành công với CV tải lên!");
+                  this.pop_up_chon_cv = false;
+                  this.pop_up_ung_tuyen = true;
+                  this.autoHidePopup();
+                }
+              },
+              error: () => alert("Ứng tuyển thất bại khi tải lên CV.")
+            });
+          } else {
+            alert("Vui lòng chọn loại CV hoặc tải lên file.");
+          }
+        },
+        error: () => {
+          alert("Lỗi khi kiểm tra ứng tuyển.");
         }
-      })
-  }
-
-  moPopUpXoa() {
-    this.pop_up_xoa_bai = true;
-    this.cdr.detectChanges();
-  }
-
-  huyXoa() {
-    this.pop_up_xoa_bai = false;
-    this.cdr.detectChanges();
-  }
-
-  xacNhanXoa() {
-    if (!this.bai_dang_duoc_chon?.ma_bai_dang) return;
-
-    this.baiDangService.xoaBaiDang(this.bai_dang_duoc_chon.ma_bai_dang)
-      .then((data) => {
-        if (data?.success) {
-          this.thong_tin_bai_xoa = true;
-          this.cdr.markForCheck();
-          setTimeout(() => {
-            this.thong_tin_bai_xoa = false;
-            this.baiDangService.chonBaiDang(null);
-            this.cdr.markForCheck();
-            setTimeout(() => {
-              window.location.reload();
-            }, 500);
-          }, 2000);
-        } else {
-          alert("Xoá bài đăng thất bại.");
-        }
-      })
-      .catch(() => {
-        alert("Có lỗi xảy ra khi xoá.");
       });
   }
+  autoHidePopup() {
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.pop_up_ung_tuyen = false;
+      this.cdr.detectChanges();
+    }, 2000);
+  }
 
-  xoaBaiDang() {
-    alert(this.bai_dang_duoc_chon?.ma_bai_dang);
+  xoaFileDangChon() {
+    this.file_cv_upload = null;
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement | null;
+    if (input) input.value = '';
+  }
+
+  xemFileTamThoi() {
+    if (!this.file_cv_upload) return;
+    const url = "http://localhost:65001/" + this.file_cv_upload;
+    window.open(url);
+  }
+
+  layDanhSachCVOnlineNguoiTimViec() {
+    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachCVOnlineNguoiTimViec', ma_nguoi_tim_viec,
+      { headers: { "Content-Type": "application/json" } })
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_cv = data.danh_sach;
+            this.cdr.detectChanges();
+          }
+          else {
+            console.log("loi")
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      })
+  }
+
+  huyChonCV() {
+    this.pop_up_chon_cv = false;
   }
 
   moPopUpBaoCao() {
@@ -221,6 +323,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
     this.noi_dung_bao_cao = '';
     this.cdr.detectChanges();
   }
+
   nganhNgheMapping: { [key: string]: string } = {
     cong_nghe_thong_tin: 'Công nghệ thông tin',
     cham_soc_khach_hang: 'Chăm sóc khách hàng',
@@ -244,16 +347,18 @@ export class TinTuyenDung implements OnInit, OnDestroy {
     return this.nganhNgheMapping[ma] || '';
   }
 
-  trinhDoHocVanMap:{ [key: number]: string} = {
-    1 : 'Trung học',
-    2 : 'Cao đẳng',
-    3 : 'Đại học',
-    4 : 'Tốt nghiệp',
-    5 : 'Khác',
-    6 : 'Không yêu cầu'
+  trinhDoHocVanMap: { [key: number]: string } = {
+    1: 'Trung học',
+    2: 'Cao đẳng',
+    3: 'Đại học',
+    4: 'Tốt nghiệp',
+    5: 'Khác',
+    6: 'Không yêu cầu'
   }
 
-  layTrinhDoHocVan(ma: number) : string {
+  layTrinhDoHocVan(ma: number): string {
     return this.trinhDoHocVanMap[ma] || '';
   }
+
+
 }

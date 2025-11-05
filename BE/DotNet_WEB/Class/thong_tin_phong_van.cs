@@ -16,5 +16,6 @@ namespace DotNet_WEB.Class
         public string dia_diem { get; set; } = "";
         public string noi_dung { get; set; } = "";
         public string trang_thai { get; set; } = "";
+        public string trang_thai_duyet { get; set; } = "";
     }
 }

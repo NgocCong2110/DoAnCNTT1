@@ -22,17 +22,54 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_ung_tuyen
             using var reader = cmd.ExecuteReader();
             return reader.Read();
         }
-        public static bool ungTuyenCongViec(int ma_Viec, int ma_Cong_Ty, int ma_Nguoi_Tim_Viec)
+        public static bool ungTuyenCongViec(ung_tuyen ung_Tuyen)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string ung_tuyen = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, trang_thai) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @trang_Thai)";
-            using var cmd = new MySqlCommand(ung_tuyen, coon);
-            cmd.Parameters.AddWithValue("@ma_Viec", ma_Viec);
-            cmd.Parameters.AddWithValue("@ma_Cong_Ty", ma_Cong_Ty);
-            cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ma_Nguoi_Tim_Viec);
+            string ut = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, ma_cv, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @ma_CV, @trang_Thai, @trang_Thai_Duyet)";
+            using var cmd = new MySqlCommand(ut, coon);
+            cmd.Parameters.AddWithValue("@ma_Viec", ung_Tuyen.ma_viec);
+            cmd.Parameters.AddWithValue("@ma_Cong_Ty", ung_Tuyen.ma_cong_ty);
+            cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ung_Tuyen.ma_nguoi_tim_viec);
+            cmd.Parameters.AddWithValue("@ma_CV", ung_Tuyen.ma_cv);
             cmd.Parameters.AddWithValue("@trang_Thai", "dang_Cho");
+            cmd.Parameters.AddWithValue("@trang_Thai_Duyet", "chua_Duyet");
             if (cmd.ExecuteNonQuery() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, IFormFile duong_dan_file_cv_upload)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+
+            var duong_dan_folder = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCVUngTuyen");
+            if (!Directory.Exists(duong_dan_folder))
+            {
+                Directory.CreateDirectory(duong_dan_folder);
+            }
+
+            string ten_file = $"{Guid.NewGuid()}_{duong_dan_file_cv_upload.FileName}";
+            var duong_dan_file = Path.Combine(duong_dan_folder, ten_file);
+            using (var stream = new FileStream(duong_dan_file, FileMode.Create))
+            {
+                await duong_dan_file_cv_upload.CopyToAsync(stream);
+            }
+
+            var duong_dan = $"LuuTruCVUngTuyen/{ten_file}";
+
+            string ung_tuyen = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, duong_dan_file_cv_upload, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @duong_dan_file_cv_upload, @trang_Thai, @trang_Thai_Duyet)";
+            using var cmd = new MySqlCommand(ung_tuyen, coon);
+            cmd.Parameters.AddWithValue("@ma_Viec", ma_viec);
+            cmd.Parameters.AddWithValue("@ma_Cong_Ty", ma_cong_ty);
+            cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ma_nguoi_tim_viec);
+            cmd.Parameters.AddWithValue("@duong_dan_file_cv_upload", duong_dan);
+            cmd.Parameters.AddWithValue("@trang_Thai", "dang_Cho");
+            cmd.Parameters.AddWithValue("@trang_Thai_Duyet", "chua_Duyet");
+            if (await cmd.ExecuteNonQueryAsync() > 0)
             {
                 return true;
             }

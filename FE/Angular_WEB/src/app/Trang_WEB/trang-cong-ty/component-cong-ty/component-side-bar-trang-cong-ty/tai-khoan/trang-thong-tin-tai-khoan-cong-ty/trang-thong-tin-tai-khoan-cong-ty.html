@@ -1,113 +1,116 @@
 <div class="cong-ty-container">
-  <section class="thong-tin-cong-ty">
-    <h2>Thông tin công ty</h2>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="logo-wrapper">
-          <img *ngIf="thongTin?.cong_ty?.logo" [src]="taoDuongDanLogo(thongTin.cong_ty.logo)" alt="Logo công ty"
-            class="img-fluid rounded shadow-sm" style="max-height: 120px;">
-          <button class="btn-edit-logo" (click)="moForm('logo')">🖋 Thay đổi</button>
-        </div>
-
-        <div class="header-info">
-          <h3>{{ thongTin?.ten_cong_ty }}</h3>
-          <p><strong>Email:</strong> {{ thongTin?.email }}
-            <button (click)="moForm('email')">✏️</button>
-          </p>
-          <p><strong>Điện thoại:</strong> {{ thongTin?.dien_thoai }}
-            <button (click)="moForm('dien_thoai')">✏️</button>
-          </p>
-          <p><strong>Website:</strong> {{ thongTin?.website }}
-            <button (click)="moForm('website')">✏️</button>
-          </p>
-        </div>
-      </div>
-      <div class="card-body">
-        <h4>Thông tin cơ bản</h4>
-        <div class="grid-container">
-          <div class="grid-item">
-            <strong>Người đại diện:</strong> {{ thongTin?.nguoi_dai_dien }}
-            <button (click)="moForm('nguoi_dai_dien')">✏️</button>
-          </div>
-          <div class="grid-item">
-            <strong>Mã số thuế:</strong> {{ thongTin?.ma_so_thue }}
-            <button (click)="moForm('ma_so_thue')">✏️</button>
-          </div>
-          <div class="grid-item">
-            <strong>Năm thành lập:</strong> {{ thongTin?.nam_thanh_lap }}
-            <button (click)="moForm('nam_thanh_lap')">✏️</button>
-          </div>
-          <div class="grid-item full-width">
-            <strong>Địa chỉ:</strong> {{ thongTin?.dia_chi }}
-            <button (click)="moForm('dia_chi')">✏️</button>
-          </div>
-        </div>
-
-        <!-- <h4>Thông tin tuyển dụng</h4>
-        <div class="grid-container">
-          <div class="grid-item">
-            <strong>Ngành nghề chính:</strong> {{ thongTin?.nganh_nghe }}
-            <button (click)="moForm('nganh_nghe')">✏️</button>
-          </div>
-          <div class="grid-item">
-            <strong>Loại hình DN:</strong> {{ thongTin?.loai_hinh }}
-            <button (click)="moForm('loai_hinh')">✏️</button>
-          </div>
-          <div class="grid-item">
-            <strong>Người phụ trách tuyển dụng:</strong> {{ thongTin?.nguoi_tuyen_dung }}
-            <button (click)="moForm('nguoi_tuyen_dung')">✏️</button>
-          </div>
-          <div class="grid-item full-width">
-            <strong>Phúc lợi nổi bật:</strong> {{ thongTin?.phuc_loi }}
-            <button (click)="moForm('phuc_loi')">✏️</button>
-          </div>
-        </div> -->
-
-        <h4>Giới thiệu công ty</h4>
-        <div class="grid-item full-width">
-          <strong>Mô tả:</strong>
-          <p>{{ thongTin?.mo_ta }}</p>
-          <button (click)="moForm('mo_ta')">✏️</button>
-        </div>
-      </div>
+  <div class="field-card logo-card">
+    <div class="field-header">
+      <span><i class="bi bi-building text-primary"></i> Logo công ty</span>
+      <button *ngIf="isCompanyOwner && editingSection !== 'logo'" class="btn-edit" (click)="enableEdit('logo')">
+        <i class="bi bi-pencil-square"></i> Sửa
+      </button>
     </div>
-  </section>
-</div>
 
-<div class="popup" *ngIf="formDangMo">
-  <form class="popup-form" (ngSubmit)="luuForm()">
-    <h3>Chỉnh sửa {{ duLieuSua }}</h3>
-
-    <ng-container [ngSwitch]="duLieuSua">
-
-      <div *ngSwitchCase="'logo'" class="upload-logo">
+    <div class="field-body">
+      <div *ngIf="editingSection === 'logo'; else viewLogo">
         <input type="file" (change)="chonLogo($event)" accept="image/*" />
-        <div *ngIf="previewLogo" class="preview">
-          <img [src]="previewLogo" alt="Xem trước logo mới" />
+        <div *ngIf="previewLogo" class="logo-preview">
+          <img [src]="previewLogo" alt="Preview" />
+        </div>
+        <div class="button-group">
+          <button class="btn-save" (click)="saveEdit()">Lưu</button>
+          <button class="btn-cancel" (click)="cancelEdit()">Hủy</button>
         </div>
       </div>
 
-      <input *ngSwitchCase="'email'" [(ngModel)]="giaTriMoi" name="email" type="email" required />
-      <input *ngSwitchCase="'dien_thoai'" [(ngModel)]="giaTriMoi" name="dien_thoai" />
-      <input *ngSwitchCase="'website'" [(ngModel)]="giaTriMoi" name="website" />
-      <input *ngSwitchCase="'nguoi_dai_dien'" [(ngModel)]="giaTriMoi" name="nguoi_dai_dien" />
-      <input *ngSwitchCase="'ma_so_thue'" [(ngModel)]="giaTriMoi" name="ma_so_thue" />
-      <input *ngSwitchCase="'dia_chi'" [(ngModel)]="giaTriMoi" name="dia_chi" />
-      <input *ngSwitchCase="'quy_mo'" [(ngModel)]="giaTriMoi" name="quy_mo" />
-      <input *ngSwitchCase="'nam_thanh_lap'" [(ngModel)]="giaTriMoi" name="nam_thanh_lap" type="number" />
-      <input *ngSwitchCase="'nganh_nghe'" [(ngModel)]="giaTriMoi" name="nganh_nghe" />
-      <input *ngSwitchCase="'loai_hinh'" [(ngModel)]="giaTriMoi" name="loai_hinh" />
-      <input *ngSwitchCase="'nguoi_tuyen_dung'" [(ngModel)]="giaTriMoi" name="nguoi_tuyen_dung" />
-      <textarea *ngSwitchCase="'phuc_loi'" [(ngModel)]="giaTriMoi" name="phuc_loi"></textarea>
-      <textarea *ngSwitchCase="'mo_ta'" [(ngModel)]="giaTriMoi" name="mo_ta"></textarea>
-      <input *ngSwitchDefault [(ngModel)]="giaTriMoi" [name]="duLieuSua" />
-
-    </ng-container>
-
-    <div class="popup-actions">
-      <button type="submit">Lưu</button>
-      <button type="button" (click)="dongForm()">Hủy</button>
+      <ng-template #viewLogo>
+        <img *ngIf="thongTin.cong_ty.logo" [src]="taoDuongDanLogo(thongTin.cong_ty.logo)" alt="Logo"
+          class="logo-preview" />
+      </ng-template>
     </div>
-  </form>
+  </div>
+
+  <div class="grid-container">
+    <ng-container *ngFor="let field of [
+      {label:'Tên công ty', icon:'bi bi-person-badge-fill', key:'ten_cong_ty', type:'text'},
+      {label:'Email', icon:'bi bi-envelope-fill', key:'email', type:'email'},
+      {label:'Điện thoại', icon:'bi bi-telephone-fill', key:'dien_thoai', type:'text'},
+      {label:'Website', icon:'bi bi-globe', key:'website', type:'text'},
+      {label:'Người đại diện', icon:'bi bi-person-fill', key:'nguoi_dai_dien', type:'text'},
+      {label:'Mã số thuế', icon:'bi bi-card-text', key:'ma_so_thue', type:'text'},
+      {label:'Năm thành lập', icon:'bi bi-calendar-fill', key:'nam_thanh_lap', type:'number'},
+      {label:'Địa chỉ', icon:'bi bi-geo-alt-fill', key:'dia_chi', type:'text'},
+      {label:'Loại hình công ty', icon:'bi bi-building-fill', key:'loai_hinh_cong_ty', type:'loaihinh'},
+      {label:'Quy mô', icon:'bi bi-people-fill', key:'quy_mo', type:'text'},
+      {label:'Trạng thái', icon:'bi bi-toggle-on', key:'trang_thai', type:'select'}
+    ]">
+      <div class="field-card">
+        <div class="field-header">
+          <span><i class="{{field.icon}} text-primary"></i> {{field.label}}</span>
+          <button *ngIf="isCompanyOwner && editingSection !== field.key" class="btn-edit"
+            (click)="enableEdit(field.key)">
+            <i class="bi bi-pencil-square"></i> Sửa
+          </button>
+        </div>
+        <div class="field-body">
+          <ng-container *ngIf="editingSection === field.key; else viewField">
+            <ng-container [ngSwitch]="field.type">
+              <input *ngSwitchCase="'text'" [(ngModel)]="editingValues[field.key]" class="field-input" />
+              <input *ngSwitchCase="'email'" type="email" [(ngModel)]="editingValues[field.key]" class="field-input" />
+              <input *ngSwitchCase="'number'" type="number" [(ngModel)]="editingValues[field.key]"
+                class="field-input" />
+
+              <select *ngSwitchCase="'loaihinh'" [(ngModel)]="editingValues[field.key]" class="field-input">
+                <option [value]="1">Công Ty TNHH</option>
+                <option [value]="2">Công Ty Cổ Phần</option>
+                <option [value]="3">Doanh Nghiệp Tư Nhân</option>
+                <option [value]="4">Công Ty Hợp Danh</option>
+                <option [value]="5">Khác</option>
+              </select>
+
+              <select *ngSwitchCase="'select'" [(ngModel)]="editingValues[field.key]" class="field-input">
+                <option [value]="1">Hoạt động</option>
+                <option [value]="0">Tạm ngừng</option>
+              </select>
+            </ng-container>
+            <div class="button-group">
+              <button class="btn-save" (click)="saveEdit()">Lưu</button>
+              <button class="btn-cancel" (click)="cancelEdit()">Hủy</button>
+            </div>
+          </ng-container>
+          <ng-template #viewField>
+            <p *ngIf="field.key === 'loai_hinh_cong_ty'">
+              {{ layTenLoaiHinh(thongTin.cong_ty.loai_hinh_cong_ty) }}
+            </p>
+            <p *ngIf="field.key !== 'trang_thai' && field.key !== 'loai_hinh_cong_ty'">
+              {{ thongTin.cong_ty[field.key] }}
+            </p>
+            <span *ngIf="field.key === 'trang_thai'"
+              [ngClass]="{'text-success': thongTin.cong_ty.trang_thai===1, 'text-danger': thongTin.cong_ty.trang_thai!==1}">
+              {{thongTin.cong_ty.trang_thai===1 ? 'Hoạt động' : 'Tạm ngừng'}}
+            </span>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="field-card full-width">
+    <div class="field-header">
+      <span><i class="bi bi-info-circle-fill text-primary"></i> Giới thiệu công ty</span>
+      <button *ngIf="isCompanyOwner && editingSection !== 'mo_ta'" class="btn-edit" (click)="enableEdit('mo_ta')">
+        <i class="bi bi-pencil-square"></i> Sửa
+      </button>
+    </div>
+    <div class="field-body">
+      <div *ngIf="editingSection==='mo_ta'; else viewMoTa">
+        <textarea [(ngModel)]="editingValues['mo_ta']" rows="5" class="field-input"></textarea>
+        <div class="button-group">
+          <button class="btn-save" (click)="saveEdit()">Lưu</button>
+          <button class="btn-cancel" (click)="cancelEdit()">Hủy</button>
+        </div>
+      </div>
+      <ng-template #viewMoTa>
+        <p>{{thongTin.cong_ty.mo_ta}}</p>
+      </ng-template>
+    </div>
+  </div>
+
 </div>

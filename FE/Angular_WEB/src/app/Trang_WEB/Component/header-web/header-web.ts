@@ -21,7 +21,7 @@ export class HeaderWEB implements OnInit {
   tu_khoa = "";
   focus = false;
 
-    du_lieu_mac_dinh = [
+  du_lieu_mac_dinh = [
     { ten_label: 'Công nghệ thông tin', ten: 'cong_nghe_thong_tin', loai: 'viec_lam', logo: '' },
     { ten_label: 'Marketing', ten: 'marketing', loai: 'viec_lam', logo: '' },
     { ten_label: 'Sales', ten: 'sales', loai: 'viec_lam', logo: '' },
@@ -62,15 +62,16 @@ export class HeaderWEB implements OnInit {
 
 
 
-  chonGoiY(thong_tin_chon: string){
+  chonGoiY(thong_tin_chon: any){
 
     this.item_chon = thong_tin_chon;
+    this.tu_khoa = thong_tin_chon.ten;
+    this.cdr.detectChanges();
     if(this.item_chon.loai == 'viec_lam'){
       this.router.navigate(['trang-tim-viec-theo-tu-khoa'], {
         queryParams: { nganh: this.item_chon.ten }
       })
     }
-    this.tu_khoa = thong_tin_chon;
     this.goiY = [];
   }
 

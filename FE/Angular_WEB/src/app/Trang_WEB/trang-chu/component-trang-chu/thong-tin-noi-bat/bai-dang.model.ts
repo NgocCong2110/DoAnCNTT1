@@ -17,6 +17,7 @@ export interface ViecLam {
   loai_hinh: number;
   ngay_tao?: string | Date;
   ngay_cap_nhat?: string | Date;
+  danh_sach_phuc_loi?: any[];
   ma_bai_dang?: number;
 }
 

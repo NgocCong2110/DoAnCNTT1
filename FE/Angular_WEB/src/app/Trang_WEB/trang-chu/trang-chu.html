@@ -2,17 +2,19 @@
   <app-header-web></app-header-web>
 
 
-  <app-the-banner></app-the-banner>
+  <div *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'cong_Ty' && auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'quan_Tri_Vien'">
+    <app-the-banner></app-the-banner>
 
-  <app-the-viec-lam-duoc-quan-tam></app-the-viec-lam-duoc-quan-tam>
-  
-  <app-the-nganh-nghe-noi-bat></app-the-nganh-nghe-noi-bat>
+    <app-the-viec-lam-duoc-quan-tam></app-the-viec-lam-duoc-quan-tam>
 
-  <app-thong-tin-noi-bat></app-thong-tin-noi-bat>
+    <app-the-nganh-nghe-noi-bat></app-the-nganh-nghe-noi-bat>
 
-  <app-the-chuyen-trang-tao-cv></app-the-chuyen-trang-tao-cv>
+    <app-thong-tin-noi-bat></app-thong-tin-noi-bat>
 
-  <app-the-danh-gia-tu-nguoi-dung></app-the-danh-gia-tu-nguoi-dung>
+    <app-the-chuyen-trang-tao-cv></app-the-chuyen-trang-tao-cv>
+
+    <app-the-danh-gia-tu-nguoi-dung></app-the-danh-gia-tu-nguoi-dung>
+  </div>
 
   <app-footer-web></app-footer-web>
 

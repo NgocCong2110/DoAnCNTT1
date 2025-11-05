@@ -1,71 +1,42 @@
 <div class="cv-container">
-  <div class="cv-card">
-    <h2 class="cv-title"> Upload CV sẵn có của bạn </h2>
 
-    <div class="cv-upload">
-      <input type="file" id="fileInput" class="cv-input" (change)="onFileSelected($event)" />
-      <label for="fileInput" class="btn-upload">+ Chọn tệp</label>
+  <div class="card tao-cv">
+    <div class="card-content">
+      <h2>Tạo CV trực tiếp trên web</h2>
+      <p>Bạn có thể thiết kế CV chuyên nghiệp chỉ trong vài phút.</p>
+      <button class="btn btn-primary" [routerLink]="['/trang-tao-cv']">
+        <span>＋</span> Tạo CV mới
+      </button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card ds-cv">
+    <div class="card-header">
+      <h2>Danh sách CV của bạn</h2>
     </div>
 
-    <p *ngIf="uploadedFileName" class="file-name">
-      File đã chọn: <strong>{{ uploadedFileName }}</strong>
-    </p>
+    <div *ngIf="danh_sach_cv.length === 0" class="empty">
+      <p>Bạn chưa có CV nào. Hãy tạo ngay để bắt đầu ứng tuyển!</p>
+    </div>
 
-    <button class="btn-submit" (click)="dangTaiForm()">
-      Đăng tải CV
-    </button>
-  </div>
-
-
-  <div class="divider"></div>
-
-  <div class="card">
-    <h2> Tạo CV trực tiếp trên web</h2>
-    <button class="btn-blue" (click)="moForm()" style="display: flex; justify-content: center; align-items: center;">+
-      Tạo CV mới</button>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="card">
-    <h2> Danh sách CV của bạn</h2>
-    <ul>
-      <li *ngFor="let cv of danh_sach_cv" style="text-decoration: none; list-style-type: none;">
-        <span>{{ cv.ten_file }}</span>
-        <button (click)="xemCV(cv)">Xem CV</button>
-        <button (click)="xemCV(null)">X</button>
-      </li>
-    </ul>
-  </div>
-
-  <div class="custom-backdrop" *ngIf="hienModal">
-    <div class="backdrop-click-layer" (click)="dongForm()"></div>
-    <div class="custom-modal">
-      <div class="custom-modal-header">
-        <h3> Chọn mẫu CV</h3>
-        <button class="close-btn" (click)="dongForm()">✖</button>
-      </div>
-
-      <div class="custom-modal-body">
-        <div class="cv-templates">
-          <button class="cv-template" *ngFor="let mau of dsMauCV" (click)="chonMauCV(mau)"
-            [class.selected]="maucv?.key === mau.key">
-            {{ mau.ten }}
+    <div class="cv-list">
+      <div class="cv-item" *ngFor="let cv of danh_sach_cv; let i = index">
+        <div class="cv-info">
+          <h3>{{ cv.ten_cv }}</h3>
+          <p class="text-muted">{{ cv.vi_tri_ung_tuyen || 'Chưa có vị trí' }}</p>
+          <p class="date">Ngày tạo: {{ cv.ngay_tao | date:'dd/MM/yyyy' }}</p>
+        </div>
+        <div class="cv-actions">
+          <button class="btn btn-outline" (click)="xemCV(cv)">
+            <i class="bi bi-eye"></i> Xem
+          </button>
+          <button class="btn btn-danger" (click)="xoaCV(cv, i)">
+            <i class="bi bi-trash"></i> Xóa
           </button>
         </div>
       </div>
-
-      <div class="custom-modal-footer">
-        <button type="button" class="btn-gray" (click)="dongForm()">Hủy</button>
-        <button type="button" class="btn-dark" (click)="xacNhanChonMau()">Xác nhận</button>
-      </div>
     </div>
   </div>
-
-  <div *ngIf="lua_chon_cv" class="pdf-preview" style="margin-top:20px; text-decoration: none;">
-    <h3>Preview: {{ lua_chon_cv.ten_file }}</h3>
-    <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
-  </div>
 </div>
-
-

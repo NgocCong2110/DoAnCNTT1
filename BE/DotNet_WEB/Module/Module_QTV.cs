@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_thong_bao;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_danh_gia;
 
 namespace DotNet_WEB.Module
 {
@@ -287,6 +288,16 @@ namespace DotNet_WEB.Module
                 Console.WriteLine("Lỗi khi xóa người tìm việc: " + ex.Message);
                 return false;
             }
+        }
+
+        public static List<danh_gia> layToanBoDanhSachDanhGia()
+        {
+            return chuc_nang_danh_gia_thong_bao_web.layToanBoDanhSachDanhGia();
+        }
+
+        public static bool capNhatTrangThaiDanhGia(danh_gia danh_Gia)
+        {
+            return chuc_nang_danh_gia_thong_bao_web.capNhatTrangThaiDanhGia(danh_Gia);
         }
 
     }

@@ -11,6 +11,10 @@ label{
   font-weight: bold;
 }
 
+.form-check-label{
+  color: #4e555b;
+}
+
 input, textarea{
   border-color: #6c757d
 }

@@ -25,6 +25,8 @@ export class CacSelector implements OnInit {
 
   danh_sach_de_xuat: any[] = [];
 
+  danh_sach_goc: any[] = [];
+
   loading = false;
 
   toan_bo = true;
@@ -37,10 +39,12 @@ export class CacSelector implements OnInit {
 
   ma_bai_dang: number = 0;
 
+  so_luong_viec_lam = 0;
+
   nganh_nghe = '';
   vi_tri = '';
   dia_diem = '';
-  muc_luong = '';
+  muc_luong: string = "";
   kinh_nghiem = '';
   hinh_thuc: number = 0;
   phuc_loi = '';
@@ -95,10 +99,10 @@ export class CacSelector implements OnInit {
   ];
 
   mucLuongList = [
-    { value: 'duoi_10', label: 'Dưới 10 triệu' },
-    { value: '10_20', label: '10 - 20 triệu' },
-    { value: '20_30', label: '20 - 30 triệu' },
-    { value: 'tren_30', label: 'Trên 30 triệu' }
+    { value: "10", label: 'Dưới 10 triệu' },
+    { value: "11", label: '10 - 20 triệu' },
+    { value: "21", label: '20 - 30 triệu' },
+    { value: "30", label: 'Trên 30 triệu' }
   ];
 
   kinhNghiemList = [
@@ -138,6 +142,43 @@ export class CacSelector implements OnInit {
     { value: 'tren_1000', label: 'Trên 1000 người' }
   ];
 
+  xoaBoLoc(loai: string) {
+    if (loai === 'nganh_nghe') {
+      this.nganh_nghe = '';
+      this.nganh_nghe_label = '';
+    }
+    if (loai === 'dia_diem') {
+      this.dia_diem = '';
+      this.dia_diem_label = '';
+    }
+    if (loai === 'muc_luong') {
+      this.muc_luong = "";
+      this.muc_luong_label = '';
+    }
+    if (loai === 'kinh_nghiem') {
+      this.kinh_nghiem = '';
+      this.kinh_nghiem_label = '';
+    }
+    if (loai === 'hinh_thuc') {
+      this.hinh_thuc = 0;
+      this.hinh_thuc_label = '';
+    }
+    if (loai === 'vi_tri') {
+      this.vi_tri = '';
+      this.vi_tri_label = '';
+    }
+
+    const conBoLocNao =
+      this.nganh_nghe || this.dia_diem || this.muc_luong ||
+      this.kinh_nghiem || this.hinh_thuc || this.vi_tri;
+
+    if (!conBoLocNao) {
+      this.layDanhSachViecLam();
+    } else {
+      this.locCongViec();
+    }
+  }
+
   locCongViec() {
     const bo_loc = {
       nganh_nghe: this.nganh_nghe,
@@ -147,32 +188,31 @@ export class CacSelector implements OnInit {
       muc_luong: this.muc_luong,
       loai_hinh: this.hinh_thuc,
     };
-    console.log(bo_loc)
     this.loading = true;
     this.duaRaDeXuat(bo_loc);
   }
 
   //tutu
-  boLocNgay(ngay: string){
+  boLocNgay(ngay: string) {
     let ds = [...this.danh_sach_de_xuat];
     this.sap_xep_ngay = ngay;
-    if(this.sap_xep_ngay == 'moi_nhat'){
+    if (this.sap_xep_ngay == 'moi_nhat') {
       // a- b > 0 dua b truoc a con a - b < 0 giu nguyen 
-      ds.sort((a,b) => new Date(b.ngay_cap_nhat).getTime() - new Date(a.ngay_cap_nhat).getTime());
+      ds.sort((a, b) => new Date(b.ngay_cap_nhat).getTime() - new Date(a.ngay_cap_nhat).getTime());
     }
-    if(this.sap_xep_ngay == 'cu_nhat'){
-      ds.sort((a,b) => new Date(a.ngay_cap_nhat).getTime() - new Date(b.ngay_cap_nhat).getTime())
+    if (this.sap_xep_ngay == 'cu_nhat') {
+      ds.sort((a, b) => new Date(a.ngay_cap_nhat).getTime() - new Date(b.ngay_cap_nhat).getTime())
     }
     this.danh_sach_de_xuat = ds;
   }
 
-  boLocLuong(luong: string){
+  boLocLuong(luong: string) {
     let ds = [...this.danh_sach_de_xuat];
-    if(luong == 'cao_Nhat'){
-      ds.sort((a,b) => b.viec_lam?.muc_luong_cao_nhat - a.viec_lam?.muc_luong_cao_nhat);
+    if (luong == 'cao_Nhat') {
+      ds.sort((a, b) => b.viec_lam?.muc_luong_cao_nhat - a.viec_lam?.muc_luong_cao_nhat);
     }
-    if(luong == 'thap_Nhat'){
-      ds.sort((a,b) => a.viec_lam?.muc_luong_cao_nhat - b.viec_lam?.muc_luong_cao_nhat);
+    if (luong == 'thap_Nhat') {
+      ds.sort((a, b) => a.viec_lam?.muc_luong_cao_nhat - b.viec_lam?.muc_luong_cao_nhat);
     }
     this.danh_sach_de_xuat = ds;
   }
@@ -186,6 +226,7 @@ export class CacSelector implements OnInit {
     this.vl.ket_qua$.subscribe(data => {
       if (data && data.length > 0) {
         this.danh_sach_de_xuat = data;
+        this.so_luong_viec_lam = this.danh_sach_de_xuat.length;
         this.de_xuat_thanh_tim_kiem = true;
         this.toan_bo = false;
         this.tung_phan = false;
@@ -206,14 +247,14 @@ export class CacSelector implements OnInit {
       if (found) {
         this.nganh_nghe_label = found.label;
       } else {
-        this.nganh_nghe_label = ''; 
+        this.nganh_nghe_label = '';
       }
 
       this.toan_bo = false;
       this.tung_phan = false;
       this.de_xuat_thanh_tim_kiem = true;
       this.duaRaDeXuat({ nganh_nghe: nganh });
-    } 
+    }
     else {
       this.de_xuat_thanh_tim_kiem = false;
       this.toan_bo = true;
@@ -235,10 +276,13 @@ export class CacSelector implements OnInit {
           if (data.success) {
             this.danh_sach_de_xuat = [];
             this.danh_sach_de_xuat = data.danh_sach;
+            this.danh_sach_goc = [...this.danh_sach_de_xuat];
+            this.so_luong_viec_lam = this.danh_sach_de_xuat.length;
             this.error = false;
           }
           else {
             this.error = true;
+            this.so_luong_viec_lam = 0;
           }
           this.cd.markForCheck();
         },
@@ -246,12 +290,14 @@ export class CacSelector implements OnInit {
           this.loading = false;
           this.error = true;
           this.danh_sach_de_xuat = [];
+          this.so_luong_viec_lam = 0
           this.cd.markForCheck();
         }
       })
   }
 
   duaRaDeXuat(viec_Lam: any) {
+    console.log(viec_Lam)
     if (Object.values(viec_Lam).every(v => [null, undefined, '', 0].includes(v as any))) {
       this.layDanhSachViecLam();
       return;
@@ -268,10 +314,14 @@ export class CacSelector implements OnInit {
           this.loading = false;
           if (data.success) {
             this.danh_sach_de_xuat = data.danh_sach || [];
+            this.danh_sach_goc = [...this.danh_sach_de_xuat];
+            this.so_luong_viec_lam = this.danh_sach_de_xuat.length;
             this.error = false;
           }
           else {
             this.error = true;
+            this.so_luong_viec_lam = 0;
+            this.danh_sach_de_xuat = [];
           }
           this.cd.markForCheck();
         },
@@ -279,6 +329,7 @@ export class CacSelector implements OnInit {
           this.loading = false;
           this.error = true;
           this.danh_sach_de_xuat = [];
+          this.so_luong_viec_lam = 0;
           this.cd.markForCheck();
         }
       })
@@ -290,9 +341,9 @@ export class CacSelector implements OnInit {
     });
   }
 
-  layDuongDanLogo(url : string) : string { 
-    if(!url) return "";
-    if(!url.startsWith('http')) return `http://localhost:65001/${url}`;
+  layDuongDanLogo(url: string): string {
+    if (!url) return "";
+    if (!url.startsWith('http')) return `http://localhost:65001/${url}`;
     return url;
   }
 

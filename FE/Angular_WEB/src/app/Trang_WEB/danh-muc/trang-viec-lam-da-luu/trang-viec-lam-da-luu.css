@@ -1,0 +1,6 @@
+.dropdown .btn {
+  transition: background-color 0.2s;
+}
+.dropdown .btn:hover {
+  background-color: #f8f9fa;
+}

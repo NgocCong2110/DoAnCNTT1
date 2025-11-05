@@ -75,6 +75,11 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_viec_lam_web.deXuatViecLamSelector(viec_Lam);
         }
+
+        public static List<viec_lam> layDanhSachViecLamLienQuan(bai_dang bai_Dang)
+        {
+            return chuc_nang_viec_lam_web.layDanhSachViecLamLienQuan(bai_Dang);
+        }
         //viec lam
 
 
@@ -172,6 +177,11 @@ namespace DotNet_WEB.Module
             return chuc_nang_bai_dang_web.luuBaiDang(bai_Dang_Da_Luu);
         }
 
+        public static bool huyLuuBaiDang(bai_dang_da_luu bai_Dang_Da_Luu)
+        {
+            return chuc_nang_bai_dang_web.huyLuuBaiDang(bai_Dang_Da_Luu);
+        }
+
         public static List<bai_dang> layDanhSachBaiDangDaLuu(int ma_Nguoi_Luu)
         {
             return chuc_nang_bai_dang_web.layDanhSachBaiDangDaLuu(ma_Nguoi_Luu);
@@ -181,6 +191,7 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_bai_dang_web.xoaBaiDang(ma_Bai_Dang);
         }
+
         //bai dang
 
 
@@ -192,9 +203,13 @@ namespace DotNet_WEB.Module
             return chuc_nang_ung_tuyen_web.kiemTraUngTuyen(ung_Tuyen);
         }
 
-        public static bool ungTuyenCongViec(int ma_Viec, int ma_Cong_Ty, int ma_Nguoi_Tim_Viec)
+        public static bool ungTuyenCongViec(ung_tuyen ung_Tuyen)
         {
-            return chuc_nang_ung_tuyen_web.ungTuyenCongViec(ma_Viec, ma_Cong_Ty, ma_Nguoi_Tim_Viec);
+            return chuc_nang_ung_tuyen_web.ungTuyenCongViec(ung_Tuyen);
+        }
+        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, IFormFile duong_dan_file_cv_upload)
+        {
+            return await chuc_nang_ung_tuyen_web.ungTuyenCongViecUploadCV(ma_viec, ma_cong_ty, ma_nguoi_tim_viec, duong_dan_file_cv_upload);
         }
         //ung tuyen
 

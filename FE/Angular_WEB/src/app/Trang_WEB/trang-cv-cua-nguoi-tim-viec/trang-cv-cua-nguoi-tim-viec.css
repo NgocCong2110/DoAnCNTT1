@@ -1,0 +1,154 @@
+.cv-container {
+  padding: 30px 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 70vh;
+}
+
+.cv-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1.8rem;
+  position: relative;
+}
+
+.cv-container h2::after {
+  content: '';
+  width: 60px;
+  height: 4px;
+  background: #0d6efd;
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+.cv-grid {
+  display: grid;
+  gap: 18px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cv-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: #0d6efd;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cv-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.cv-card:hover::before {
+  opacity: 1;
+}
+
+.cv-info h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.cv-info small {
+  color: #6c757d;
+  font-size: 0.88rem;
+}
+
+.cv-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cv-actions .btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.cv-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cv-actions .btn.xem {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.cv-actions .btn.tai {
+  background-color: #198754;
+  color: white;
+}
+
+.cv-actions .btn.xoa {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.cv-actions .btn.xoa:hover {
+  background-color: #c0392b;
+}
+
+.empty-message {
+  text-align: center;
+  color: #95a5a6;
+  font-size: 1.1rem;
+  margin-top: 40px;
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .cv-container {
+    padding: 20px;
+  }
+
+  .cv-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .cv-actions {
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cv-actions .btn {
+    flex: 1;
+    max-width: 100px;
+  }
+}

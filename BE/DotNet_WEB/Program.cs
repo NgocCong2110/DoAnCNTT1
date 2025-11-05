@@ -41,8 +41,8 @@ app.UseCors("AllowAllOrigins");
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCV")),
-    RequestPath = "/cv-files"
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCVUngTuyen")),
+    RequestPath = "/LuuTruCVUngTuyen"
 });
 
 app.UseStaticFiles(new StaticFileOptions
@@ -55,8 +55,22 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDien")),
-    RequestPath = "/LuuTruAnhDaiDien"
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV")),
+    RequestPath = "/LuuTruAnhDaiDienCV"
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienNguoiTimViec")),
+    RequestPath = "/LuuTruAnhDaiDienNguoiTimViec"
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruChungChiNguoiTimViec")),
+    RequestPath = "/LuuTruChungChiNguoiTimViec"
 });
 
 
@@ -64,7 +78,22 @@ app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCVOnline")),
-    RequestPath = "/LuuTruCVOnline"
+    RequestPath = "/LuuTruCVOnline",
+    ServeUnknownFileTypes = true, 
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, OPTIONS");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type");
+    }
+});
+
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhBiaCongTy")),
+    RequestPath = "/LuuTruAnhBiaCongTy"
 });
 
 app.MapControllers();

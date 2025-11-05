@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../services/auth';
 import { HeaderWEB } from '../Component/header-web/header-web';
@@ -14,10 +15,10 @@ import { TheChuyenTrangTaoCv } from './component-trang-chu/the-chuyen-trang-tao-
 
 @Component({
   selector: 'app-trang-chu',
-  imports: [RouterModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv],
+  imports: [RouterModule, CommonModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv],
   templateUrl: './trang-chu.html',
   styleUrls: ['./trang-chu.css']
 })
 export class TrangChu {
-  
+  constructor(public auth: Auth) {}
 }

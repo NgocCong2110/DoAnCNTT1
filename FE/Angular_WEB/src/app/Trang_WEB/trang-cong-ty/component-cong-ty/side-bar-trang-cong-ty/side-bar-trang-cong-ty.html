@@ -10,21 +10,32 @@
 
 
   <!-- tai khoan cong ty -->
-  <div class="mb-3">
+  <div class="mb-4">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTTaiKhoan()">
       <span><i class="bi bi-person-circle me-2 text-primary"></i> Tài khoản <span>{{ trangThai_TaiKhoan ? '▾' : '▸'
           }}</span></span>
     </button>
+
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-cong-ty', 'trang-thong-tin-tai-khoan-cong-ty']">Thông tin tài khoản</a>
     </div>
   </div>
 
+  <!-- trang gioi thieu cong ty -->
+  <div class="mb-4">
+    <button
+      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
+      type="button" [routerLink]="['/trang-cong-ty', 'trang-gioi-thieu-cua-cong-ty']">
+      <span><i class="bi bi-info-circle me-2 text-info"></i> Giới thiệu công ty</span>
+    </button>
+  </div>
+
+
   <!-- danh sach ung vien ung tuyen -->
-  <div class="mb-3">
+  <div class="mb-4">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTUngVien()">
@@ -40,25 +51,8 @@
     </div>
   </div>
 
-  <!-- danh sach bai dang -->
-  <div class="mb-3">
-    <button
-      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-      type="button" (click)="chuyenDoi_TTBaiDang()">
-      <span><i class="bi bi-building me-2 text-info"></i> Quản lý bài đăng <span>{{ trangThai_BaiDang ? '▾' : '▸'
-          }}</span></span>
-
-    </button>
-    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_BaiDang">
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-cong-ty', 'trang-danh-sach-bai-dang-cong-ty']">Danh sách bài đăng</a>
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-cong-ty', 'trang-bai-dang-da-xoa']">Bài đăng đã xóa</a>
-    </div>
-  </div>
-
   <!-- thong bao -->
-  <div class="mb-3">
+  <div class="mb-4">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" [routerLink]="['/trang-cong-ty', 'trang-thong-bao-cong-ty']">
@@ -68,7 +62,7 @@
   </div>
 
   <!-- dich vu  -->
-  <!-- <div class="mb-3">
+  <div class="mb-3">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTDichVu()">
@@ -79,5 +73,5 @@
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-cong-ty', 'trang-danh-sach-goi-dich-vu-cong-ty']">Danh sách gói dịch vụ</a>
     </div>
-  </div> -->
+  </div>
 </div>

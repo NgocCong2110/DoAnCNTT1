@@ -7,6 +7,13 @@ using Mysqlx.Crud;
 using Newtonsoft.Json.Linq;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_logo;
 using Org.BouncyCastle.Tls;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoan_cong_ty;
+using System.Security.Cryptography.X509Certificates;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_viec_lam_cong_ty;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_anh_bia_cong_ty;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_phuc_loi_cong_ty;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_mang_xa_hoi_cong_ty;
+using System.Threading.Tasks;
 
 namespace DotNet_WEB.Module
 {
@@ -25,15 +32,16 @@ namespace DotNet_WEB.Module
             coon.Open();
 
             string sql = @"
-SELECT u.ma_ung_tuyen, u.ma_viec, u.ma_nguoi_tim_viec, u.ma_cong_ty,
-       u.ngay_ung_tuyen, u.trang_thai,
+SELECT u.ma_ung_tuyen, u.ma_viec, u.ma_nguoi_tim_viec, u.ma_cong_ty, u.ma_cv, u.duong_dan_file_cv_upload,
+       u.ngay_ung_tuyen, u.trang_thai, u.trang_thai_duyet,
        v.ma_viec, v.ma_cong_ty, v.vi_tri, v.kinh_nghiem, v.tieu_de,
        v.mo_ta, v.yeu_cau, v.muc_luong, v.dia_diem, v.loai_hinh,
        v.ngay_tao, v.ngay_cap_nhat, v.ma_bai_dang,
-       n.ho_ten, n.email
+       n.ho_ten, n.email, cv.ten_cv, cv.duong_dan_file_pdf
 FROM ung_tuyen u
 INNER JOIN viec_lam v ON u.ma_viec = v.ma_viec
 INNER JOIN nguoi_tim_viec n ON u.ma_nguoi_tim_viec = n.ma_nguoi_tim_viec
+LEFT JOIN cv_online_nguoi_tim_viec cv ON u.ma_cv = cv.ma_cv
 WHERE u.ma_cong_ty = @ma_Cong_Ty;";
 
             using var cmd = new MySqlCommand(sql, coon);
@@ -61,7 +69,13 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
 
                     ma_cong_ty = reader.IsDBNull(reader.GetOrdinal("ma_cong_ty")) ? null : reader.GetInt32("ma_cong_ty"),
 
+                    ma_cv = reader.IsDBNull(reader.GetOrdinal("ma_cv")) ? 0 : reader.GetInt32("ma_cv"),
+
+                    duong_dan_file_cv_upload = reader.IsDBNull(reader.GetOrdinal("duong_dan_file_cv_upload")) ? null : reader.GetString("duong_dan_file_cv_upload"),
+
                     trang_thai = reader.IsDBNull(reader.GetOrdinal("trang_thai")) ? TrangThaiUngTuyen.None : (TrangThaiUngTuyen)Enum.Parse(typeof(TrangThaiUngTuyen), reader.GetString("trang_thai")),
+
+                    trang_thai_duyet = reader.IsDBNull(reader.GetOrdinal("trang_thai_duyet")) ? TrangThaiDuyetUngTuyen.None : (TrangThaiDuyetUngTuyen)Enum.Parse(typeof(TrangThaiDuyetUngTuyen), reader.GetString("trang_thai_duyet")),
 
                     ngay_ung_tuyen = reader.IsDBNull(reader.GetOrdinal("ngay_ung_tuyen")) ? DateTime.MinValue : reader.GetDateTime("ngay_ung_tuyen"),
                     viec_Lam = new viec_lam
@@ -92,6 +106,14 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
 
                         ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang")
                     },
+
+                    cv_Online_Nguoi_Tim_Viec = new cv_online_nguoi_tim_viec
+                    {
+                        ten_cv = reader.IsDBNull(reader.GetOrdinal("ten_cv")) ? null : reader.GetString("ten_cv"),
+
+                        duong_dan_file_pdf = reader.IsDBNull(reader.GetOrdinal("duong_dan_file_pdf")) ? null : reader.GetString("duong_dan_file_pdf")
+                    },
+
                     nguoi_tim_viec = ntv
                 };
 
@@ -195,12 +217,13 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                     }
 
 
-                    string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_Thai where ma_nguoi_tim_viec = @ma_ntv and ma_viec = @ma_viec";
+                    string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_Thai, trang_thai_duyet = @trang_thai_duyet where ma_nguoi_tim_viec = @ma_ntv and ma_viec = @ma_viec";
                     using (var cmd = new MySqlCommand(cap_nhat_trang_thai, coon, trans))
                     {
                         cmd.Parameters.AddWithValue("@ma_viec", ttpv.ma_viec);
                         cmd.Parameters.AddWithValue("@trang_Thai", ttpv.trang_thai);
                         cmd.Parameters.AddWithValue("@ma_ntv", ttpv.ma_nguoi_tim_viec);
+                        cmd.Parameters.AddWithValue("@trang_thai_duyet", ttpv.trang_thai_duyet);
                         cmd.ExecuteNonQuery();
                     }
 
@@ -218,6 +241,41 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
             {
                 return false;
             }
+        }
+
+        public static bool capNhatThongTinCongTy(thong_tin_truong_du_lieu_cap_nhat req)
+        {
+            return chuc_nang_tai_khoan_cong_ty_web.capNhatThongTinCongTy(req);
+        }
+
+        public static List<cong_ty> layThongTinCongTy(int ma_cong_ty)
+        {
+            return chuc_nang_tai_khoan_cong_ty_web.layThongTinCongTy(ma_cong_ty);
+        }
+
+        public static List<viec_lam> layDanhSachViecLamCuaCongTy(int ma_cong_ty)
+        {
+            return chuc_nang_viec_lam_cong_ty_web.layDanhSachViecLamCuaCongTy(ma_cong_ty);
+        }
+
+        public static async Task<string> capNhatAnhBiaCongTy(IFormFile file, int ma_cong_ty)
+        {
+            return await chuc_nang_anh_bia_cong_ty_web.capNhatAnhBiaCongTy(file, ma_cong_ty);
+        }
+
+        public static bool capNhatPhucLoiCongTy(phuc_loi_cong_ty_cap_nhat phuc_Loi_Cong_Ty)
+        {
+            return chuc_nang_phuc_loi_cong_ty_web.capNhatPhucLoiCongTy(phuc_Loi_Cong_Ty);
+        }
+
+        public static bool xoaPhucLoiCongTy(phuc_loi_cong_ty_cap_nhat phuc_Loi_Cong_Ty)
+        {
+            return chuc_nang_phuc_loi_cong_ty_web.xoaPhucLoiCongTy(phuc_Loi_Cong_Ty);
+        }
+
+        public static bool capNhatLienKetMangXaHoi(mang_xa_hoi_cong_ty_cap_nhat mang_Xa_Hoi_Cong_Ty_Cap_Nhat)
+        {
+            return chuc_nang_mang_xa_hoi_cong_ty_web.capNhatLienKetMangXaHoi(mang_Xa_Hoi_Cong_Ty_Cap_Nhat);
         }
 
         public static bool tuChoiUngVien(ung_tuyen ung_Tuyen)

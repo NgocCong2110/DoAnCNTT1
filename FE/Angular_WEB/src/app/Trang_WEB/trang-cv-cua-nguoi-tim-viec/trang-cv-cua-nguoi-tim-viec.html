@@ -1,0 +1,37 @@
+<app-header-web></app-header-web>
+
+<div class="cv-container">
+  <h2>Danh sách CV của tôi</h2>
+
+  <div class="cv-grid">
+    <div class="cv-card" *ngFor="let cv of danh_sach_cv_nguoi_tim_viec; let i = index">
+      <div class="cv-info">
+        <h3>{{ cv.ten_cv }}</h3>
+        <small class="text-muted">
+          {{ cv.ngay_tao ? (cv.ngay_tao | date:'dd/MM/yyyy') : 'Không rõ ngày' }}
+        </small>
+      </div>
+      <div class="cv-actions">
+        <button class="btn xem" (click)="xemCvPdf(cv)" title="Xem PDF">
+          <i class="fas fa-eye"></i> Xem
+        </button>
+        <button class="btn tai" (click)="taiCvPdf(cv)" title="Tải PDF">
+          <i class="fas fa-download"></i> Tải
+        </button>
+        <button class="btn xoa" (click)="xoaCvPdf(cv, i)" title="Xóa CV">
+          <i class="fas fa-trash-alt"></i> Xóa
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="danh_sach_cv_nguoi_tim_viec.length === 0" 
+    class = "empty-state d-flex flex-column justify-content-center align-items-center text-center">
+      <i class="fas fa-folder-open mb-3" style="font-size: 2rem; color: #ccc;"></i>
+      <p class="empty-message">Bạn chưa có CV nào. Hãy tạo CV đầu tiên!</p>
+      <button class = "btn btn-primary mt-2" [routerLink]="['/trang-tao-cv']">Tạo CV mới</button>
+    
+    </div>
+  </div>
+</div>
+
+<app-footer-web></app-footer-web>

@@ -29,7 +29,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
 
 
 
-            string duong_dan_folder_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDien");
+            string duong_dan_folder_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV");
             if (!Directory.Exists(duong_dan_folder_anh_dai_dien))
             {
                 Directory.CreateDirectory(duong_dan_folder_anh_dai_dien);
@@ -49,14 +49,14 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
 
                 var bytes = Convert.FromBase64String(base64Data);
                 string ten_file_anh = $"{cv.ten_cv.Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.{extension}";
-                string duong_dan_file_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDien", ten_file_anh);
+                string duong_dan_file_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), duong_dan_folder_anh_dai_dien, ten_file_anh);
 
-                if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDien")))
-                    Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDien"));
+                if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV")))
+                    Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV"));
 
                 await File.WriteAllBytesAsync(duong_dan_file_anh_dai_dien, bytes);
 
-                cv.anh_dai_dien = $"LuuTruAnhDaiDien/{ten_file_anh}";
+                cv.anh_dai_dien = $"LuuTruAnhDaiDienCV/{ten_file_anh}";
             }
 
             taoPDFMauCVMacDinh(cv, duong_dan_pdf);

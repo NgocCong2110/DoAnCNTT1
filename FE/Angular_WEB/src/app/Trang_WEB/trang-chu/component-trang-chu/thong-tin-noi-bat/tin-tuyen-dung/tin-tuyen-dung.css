@@ -65,3 +65,76 @@
   width: 400px;
   max-width: 90%;
 }
+
+.bai-dang-container {
+  max-height: 80vh;
+  overflow-y: auto; 
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.bai-dang-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bai-dang-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+.bai-dang {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
+
+.bai-dang h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.bai-dang p {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.bai-dang .section {
+  margin-bottom: 1rem;
+}
+
+.bai-dang .section h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.bai-dang .section p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.bai-dang .actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.bai_dang_ds{
+  background-color: white;
+}
+
+.bai_dang_ds:hover{
+  background-color: rgb(237, 234, 234);
+  transform: scale(1.03);
+  transition: all 0.2s;
+}
+
+.bai-dang_ds_select{
+  background-color: rgb(222, 221, 221);
+}
+

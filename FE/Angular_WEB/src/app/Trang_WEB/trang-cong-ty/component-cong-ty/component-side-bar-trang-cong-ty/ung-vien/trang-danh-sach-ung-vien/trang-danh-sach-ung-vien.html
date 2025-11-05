@@ -15,11 +15,9 @@
           <th>Tiêu đề tuyển dụng</th>
           <th>Mức lương</th>
           <th>Địa điểm</th>
-
           <th>Ngày ứng tuyển</th>
-
-          <th>Email</th>
           <th>Điện thoại</th>
+          <th>Trạng thái duyệt</th>
           <th></th>
           <th></th>
         </tr>
@@ -35,13 +33,20 @@
           <td>{{ uv.viec_Lam?.dia_diem }}</td>
           <td>{{ uv.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ uv.nguoi_tim_viec?.dien_thoai || 'Chưa có' }}</td>
+          <td [ngClass]="{
+      'text-warning': uv.trang_thai_duyet === 1,
+      'text-success': uv.trang_thai_duyet === 2
+    }">
+            {{ uv.trang_thai_duyet === 1 ? 'Chưa duyệt' : 'Đã duyệt' }}
+          </td>
           <td>
             <button class="btn btn-primary btn-sm" style="border: none;" (click)="moFormUV(uv)">
               Xem chi tiết
             </button>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" style="background-color: red; border: none;" (click)="moXacNhanXoa(uv, i)">
+            <button class="btn btn-primary btn-sm" style="background-color: red; border: none;"
+              (click)="moXacNhanXoa(uv, i)">
               Xóa ứng viên
             </button>
           </td>
@@ -91,7 +96,11 @@
     <p><strong>Điện thoại:</strong> {{ uvDangChon.nguoi_tim_viec.dien_thoai || 'Chưa có' }}</p>
     <p><strong>Ngày sinh:</strong> {{ uvDangChon.nguoi_tim_viec.ngay_sinh | date:'dd/MM/yyyy' }}</p>
     <p><strong>CV:</strong></p>
-    <iframe [src]="uvDangChon.safeCvUrl" width="100%" height="300px"></iframe>
+    <div class=cv-item (click)="moCV(uvDangChon?.cv_Online_Nguoi_Tim_Viec.duong_dan_file_pdf)">
+      <div class="cv-info">
+        <h3>{{ uvDangChon?.cv_Online_Nguoi_Tim_Viec.ten_cv }}</h3>
+      </div>
+    </div>
   </div>
 
   <div class="sidebar-body" *ngIf="themThongTinPhongVan">
@@ -119,13 +128,27 @@
   </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_xoa_thanh_cong">
   <div class="toast show text-bg-success border-0">
     <div class="d-flex">
       <div class="toast-body">
         ✅ Xóa ứng viên thành công!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_xoa_thanh_cong=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_xoa_thanh_cong=false"></button>
     </div>
   </div>
 </div>
@@ -147,7 +170,8 @@
       <div class="toast-body">
         ✅ Mời phỏng vấn ứng viên thành công!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_moi_phong_van_thanh_cong=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_moi_phong_van_thanh_cong=false"></button>
     </div>
   </div>
 </div>
@@ -158,7 +182,8 @@
       <div class="toast-body">
         ❌ Mời phỏng vấn ứng viên thất bại!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_moi_phong_van_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_moi_phong_van_that_bai=false"></button>
     </div>
   </div>
 </div>
@@ -169,7 +194,8 @@
       <div class="toast-body">
         ❌ Thao tác không thành công!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_tu_choi_that_bai=false"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_tu_choi_that_bai=false"></button>
     </div>
   </div>
 </div>
@@ -183,7 +209,7 @@
       </div>
       <div class="modal-body">
         <p>
-          Bạn có chắc muốn xóa ứng viên 
+          Bạn có chắc muốn xóa ứng viên
           <strong>{{ uvMuonXoa?.nguoi_tim_viec?.ho_ten }}</strong> không?
         </p>
       </div>

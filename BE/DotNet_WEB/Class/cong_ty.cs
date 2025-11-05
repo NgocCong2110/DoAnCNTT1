@@ -21,6 +21,7 @@ namespace DotNet_WEB.Class
         public string? email { get; set; }
         public string? website { get; set; }
         public string? logo { get; set; }
+        public string? anh_bia { get; set; }
         public string? mo_ta { get; set; }
         public LoaiHinhCongTy loai_hinh_cong_ty { get; set; } = LoaiHinhCongTy.congty_CoPhan;
         public string? quy_mo { get; set; }
@@ -28,5 +29,7 @@ namespace DotNet_WEB.Class
         public TrangThaiCongTy trang_thai { get; set; } = TrangThaiCongTy.hoat_Dong;
         public DateTime ngay_tao { get; set; } = DateTime.Now;
         public DateTime ngay_cap_nhat { get; set; } = DateTime.Now;
+        public List<phuc_loi_cong_ty>? phuc_Loi_Cong_Ty { get; set; }
+        public List<lien_ket_mang_xa_hoi>? lien_Ket_Mang_Xa_Hoi { get; set; }
     }
 }

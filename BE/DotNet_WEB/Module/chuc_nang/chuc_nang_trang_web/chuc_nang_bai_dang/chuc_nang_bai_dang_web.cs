@@ -150,6 +150,17 @@ ORDER BY bd.ngay_tao DESC;
             return danh_sach_bai_dang;
         }
 
+        public static bool huyLuuBaiDang(bai_dang_da_luu bai_Dang_Da_Luu)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "delete from bai_dang_da_luu where ma_bai_dang = @ma_bai_dang and ma_nguoi_luu = @ma_nguoi_luu";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_bai_dang", bai_Dang_Da_Luu.ma_bai_dang);
+            cmd.Parameters.AddWithValue("@ma_nguoi_luu", bai_Dang_Da_Luu.ma_nguoi_luu);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
 
         public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam, List<int> phuc_loi)
         {
@@ -237,40 +248,47 @@ ORDER BY bd.ngay_tao DESC;
             return false;
         }
 
-        public static List<bai_dang> layDanhSachBaiDangDaLuu(int ma_Nguoi_Luu)
-        {
-            using var coon = new MySqlConnection(chuoi_KetNoi);
-            coon.Open();
-            string lay_danh_sach_bai_dang_da_luu = @"select b.ma_bai_dang, b.ma_nguoi_dang, b.ten_nguoi_dang, 
-                                                    b.tieu_de, b.noi_dung, b.ngay_tao, b.ngay_cap_nhat
-                                                    from bai_dang_da_luu l inner join bai_dang b on l.ma_bai_dang = b.ma_bai_dang 
-                                                    where l.ma_nguoi_luu = @ma_Nguoi_Luu";
-            using var cmd = new MySqlCommand(lay_danh_sach_bai_dang_da_luu, coon);
-            cmd.Parameters.AddWithValue("@ma_Nguoi_Luu", ma_Nguoi_Luu);
-            using var reader = cmd.ExecuteReader();
-            var danh_sach_da_luu = new List<bai_dang>();
-            while (reader.Read())
+            public static List<bai_dang> layDanhSachBaiDangDaLuu(int ma_Nguoi_Luu)
             {
-                var bai_Dang = new bai_dang
+                using var coon = new MySqlConnection(chuoi_KetNoi);
+                coon.Open();
+                string lay_danh_sach_bai_dang_da_luu = @"select b.ma_bai_dang, b.ma_nguoi_dang, b.ten_nguoi_dang, c.logo,
+                                                        b.tieu_de, b.noi_dung, b.ngay_tao, b.ngay_cap_nhat
+                                                        from bai_dang_da_luu l 
+                                                        inner join bai_dang b on l.ma_bai_dang = b.ma_bai_dang 
+                                                        INNER JOIN cong_ty c ON b.ma_nguoi_dang = c.ma_cong_ty
+                                                        where l.ma_nguoi_luu = @ma_Nguoi_Luu";
+                using var cmd = new MySqlCommand(lay_danh_sach_bai_dang_da_luu, coon);
+                cmd.Parameters.AddWithValue("@ma_Nguoi_Luu", ma_Nguoi_Luu);
+                using var reader = cmd.ExecuteReader();
+                var danh_sach_da_luu = new List<bai_dang>();
+                while (reader.Read())
                 {
-                    ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+                    var bai_Dang = new bai_dang
+                    {
+                        ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
 
-                    ma_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_dang")) ? 0 : reader.GetInt32("ma_nguoi_dang"),
+                        ma_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_dang")) ? 0 : reader.GetInt32("ma_nguoi_dang"),
 
-                    ten_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ten_nguoi_dang")) ? null : reader.GetString("ten_nguoi_dang"),
+                        ten_nguoi_dang = reader.IsDBNull(reader.GetOrdinal("ten_nguoi_dang")) ? null : reader.GetString("ten_nguoi_dang"),
 
-                    tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
+                        cong_Ty = new cong_ty
+                        {
+                            logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo")
+                        },
 
-                    noi_dung = reader.IsDBNull(reader.GetOrdinal("noi_dung")) ? null : reader.GetString("noi_dung"),
+                        tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
 
-                    ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+                        noi_dung = reader.IsDBNull(reader.GetOrdinal("noi_dung")) ? null : reader.GetString("noi_dung"),
 
-                    ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
-                };
-                danh_sach_da_luu.Add(bai_Dang);
+                        ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+
+                        ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
+                    };
+                    danh_sach_da_luu.Add(bai_Dang);
+                }
+                return danh_sach_da_luu;
             }
-            return danh_sach_da_luu;
-        }
 
         public static bool luuBaiDangViPham(bai_dang_vi_pham bai_Dang_Vi_Pham)
         {

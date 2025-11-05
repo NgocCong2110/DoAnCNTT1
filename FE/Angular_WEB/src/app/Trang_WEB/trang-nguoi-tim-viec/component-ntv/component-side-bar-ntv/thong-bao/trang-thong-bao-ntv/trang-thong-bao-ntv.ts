@@ -21,10 +21,11 @@ export class TrangThongBaoNtv implements OnInit {
   danh_sach_thong_bao: any[] = [];
   pop_up_lay_thong_tin_that_bai = false;
   loading = true;
+  chiTietThuMoi: any = null;
 
   chiTietThongBao: any = null;
 
-  constructor(public auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) {}
+  constructor(public auth: Auth, public httpclient: HttpClient, public cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.danhSachThongBao();
@@ -36,7 +37,7 @@ export class TrangThongBaoNtv implements OnInit {
 
     const thong_tin = {
       kieu_nguoi_dung: this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung || '',
-      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec || 0
+      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec || 0,
     };
 
     this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao', thong_tin)
@@ -86,6 +87,7 @@ export class TrangThongBaoNtv implements OnInit {
 
   xemChiTiet(tb: any) {
     this.chiTietThongBao = tb;
+    console.log(tb);
   }
 
   hienToastLoi() {

@@ -4,12 +4,12 @@ body {
 }
 
 .job-card {
-  border: 1px solid #ccc;   /* viền xám */
-  border-radius: 8px;       /* bo góc */
-  padding: 16px;            /* khoảng cách bên trong */
-  margin-bottom: 16px;      /* cách ra giữa các card */
-  background-color: #fff;   /* nền trắng (nếu cần) */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* đổ bóng nhẹ */
+  border: 1px solid #ccc; 
+  border-radius: 8px;    
+  padding: 16px;          
+  margin-bottom: 16px;     
+  background-color: #fff;  
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .job-card:hover {

@@ -150,7 +150,8 @@ export class TrangDanhSachUngVien implements OnInit {
       thoi_gian: new Date(this.thoiGianPhongVan).toISOString(),
       dia_diem: this.diaDiemPhongVan,
       noi_dung: this.noiDungPhongVan,
-      trang_thai: "chap_Nhan"
+      trang_thai: "chap_Nhan",
+      trang_thai_duyet: "da_Duyet"
     };
 
     this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiThuMoiPhongVan',  thong_tin_phong_van )
@@ -205,6 +206,11 @@ export class TrangDanhSachUngVien implements OnInit {
     this.showXacNhanXoa = false;
     this.uvMuonXoa = null;
     this.indexMuonXoa = null;
+  }
+
+  moCV(url: string){
+    url = "http://localhost:65001/" + url;
+    window.open(url);
   }
 
   xoaUngVien() {

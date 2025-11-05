@@ -28,6 +28,10 @@ export class TrangThongBao implements OnInit{
 
   error = false;  
 
+  thongTin: any;
+
+  chiTietThongBao: any = null;
+
   ngOnInit(): void {
     this.danhSachThongBao();
   }
@@ -87,5 +91,16 @@ export class TrangThongBao implements OnInit{
           this.cd.detectChanges();
         }
       });
+  }
+
+  xemChiTiet(tb: any) {
+    this.chiTietThongBao = tb;
+  }
+
+  hienToastLoi() {
+    this.pop_up_lay_thong_tin_that_bai = true;
+    setTimeout(() => {
+      this.pop_up_lay_thong_tin_that_bai = false;
+    }, 1500);
   }
 }

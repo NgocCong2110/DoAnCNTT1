@@ -13,4 +13,7 @@ export class FooterWeb {
   trangChu(){
     this.router.navigate(['/trang-chu'])
   }
+  chuyenHuongToiNganhNghe(nganh_nghe: string){
+    this.router.navigate(['trang-tim-viec-theo-tu-khoa'], { queryParams: { nganh: nganh_nghe } })
+  }
 }

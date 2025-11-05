@@ -87,6 +87,15 @@ namespace DotNet_WEB.Class
         tu_Choi = 3
     }
 
+    public enum TrangThaiDuyetUngTuyen
+    {
+        None = 0,
+        [Display(Name = "Chưa duyệt")]
+        chua_Duyet = 1,
+        [Display(Name = "Đã duyệt")]
+        da_Duyet = 2
+    }
+
     public enum LoaiBai
     {
         None = 0,

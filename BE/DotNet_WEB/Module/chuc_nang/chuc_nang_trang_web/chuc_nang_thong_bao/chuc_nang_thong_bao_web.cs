@@ -64,12 +64,18 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_thong_bao
 
                     ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao")
                 };
+
                 if (danh_sach.loai_thong_bao == LoaiThongBao.thu_Moi_Phong_Van)
                 {
 
-                    int ma_nguoi_tim_viec = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_tim_viec")) ? 0 : reader.GetInt32("ma_nguoi_tim_viec");
-
-                    danh_sach.chi_tiet_thu_moi = layChiTietThuMoi(ma_nguoi_tim_viec);
+                    danh_sach.chi_tiet_thu_moi = new List<chi_tiet_thu_moi>
+                    {
+                        new chi_tiet_thu_moi
+                        {
+                            thoi_gian = reader.IsDBNull(reader.GetOrdinal("thoi_gian")) ? DateTime.MinValue : reader.GetDateTime("thoi_gian"),
+                            dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem")
+                        }
+                    };
 
                 }
 
@@ -141,8 +147,16 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_thong_bao
 
                 if (danh_sach.loai_thong_bao == LoaiThongBao.thu_Moi_Phong_Van)
                 {
-                    int ma_nguoi_tim_viec = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_tim_viec")) ? 0 : reader.GetInt32("ma_nguoi_tim_viec");
-                    danh_sach.chi_tiet_thu_moi = layChiTietThuMoi(ma_nguoi_tim_viec);
+
+                    danh_sach.chi_tiet_thu_moi = new List<chi_tiet_thu_moi>
+                    {
+                        new chi_tiet_thu_moi
+                        {
+                            thoi_gian = reader.IsDBNull(reader.GetOrdinal("thoi_gian")) ? DateTime.MinValue : reader.GetDateTime("thoi_gian"),
+                            dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem")
+                        }
+                    };
+
                 }
 
                 if (!reader.IsDBNull(reader.GetOrdinal("ma_quan_tri")))
@@ -167,8 +181,8 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_thong_bao
 
             return danh_sach_thong_bao_co_dinh;
         }
-        
-        private static List<chi_tiet_thu_moi> layChiTietThuMoi(int ma_Nguoi_Tim_Viec)
+
+        private static List<chi_tiet_thu_moi> layChiTietThuMoi(int? ma_Nguoi_Tim_Viec)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();

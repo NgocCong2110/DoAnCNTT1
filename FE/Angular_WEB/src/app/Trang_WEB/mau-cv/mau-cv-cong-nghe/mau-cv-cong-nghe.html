@@ -1,1 +1,122 @@
-<p>mau-cv-cong-nghe works!</p>
+<app-header-web></app-header-web>
+<div class="cv-wrapper">
+    <div class="cv-header">
+        <div class="header-content">
+            <div class="avatar-section">
+                <div class="avatar" id="avatarPreview" onclick="document.getElementById('fileInput').click()">
+                    Click để chọn ảnh
+                </div>
+                <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)">
+            </div>
+
+            <div class="basic-info">
+                <h1 contenteditable="true" id="hoTen" placeholder="Nhập họ tên">Nguyễn Văn A</h1>
+                <div class="position" contenteditable="true" id="viTriUngTuyen">Frontend Developer</div>
+
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <span contenteditable="true" id="dienThoai">0123 456 789</span>
+                    </div>
+                    <div class="contact-item">
+                        <span contenteditable="true" id="email">example@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <span contenteditable="true" id="ngaySinh">01/01/1995</span>
+                    </div>
+                    <div class="contact-item">
+                        <span contenteditable="true" id="gioiTinh">Nam</span>
+                    </div>
+                    <div class="contact-item" style="grid-column: 1 / -1;">
+                        <span contenteditable="true" id="diaChi">Quận Ninh Kiều, Cần Thơ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-body">
+        <div class="section">
+            <h2 class="section-title">Chuyên Ngành</h2>
+            <div class="text-content" contenteditable="true" id="chuyenNganh">Công nghệ thông tin - Lập trình Web</div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Mục Tiêu Nghề Nghiệp</h2>
+            <div class="text-content" contenteditable="true" id="mucTieu">Trở thành một Frontend Developer chuyên
+                nghiệp, có khả năng xây dựng các ứng dụng web hiện đại với trải nghiệm người dùng tốt nhất. Mong muốn
+                được làm việc trong môi trường năng động, học hỏi và phát triển kỹ năng để đóng góp vào sự thành công
+                của công ty.</div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Kỹ Năng</h2>
+            <div class="skills-grid" id="kyNangContainer">
+                <span class="skill-tag">Angular</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">HTML/CSS</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">Responsive Design</span>
+                <span class="skill-tag">Git</span>
+            </div>
+            <textarea class="textarea-field" id="kyNang" placeholder="Nhập kỹ năng (mỗi kỹ năng một dòng)"
+                style="margin-top: 20px;" onchange="updateSkills()">Angular
+TypeScript
+HTML/CSS
+JavaScript
+Responsive Design
+Git</textarea>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Học Vấn</h2>
+            <div class="timeline-item">
+                <div class="timeline-period" contenteditable="true">2019 - 2023</div>
+                <div class="timeline-title" contenteditable="true">Đại học Kỹ thuật Công nghệ Cần Thơ</div>
+                <div class="timeline-subtitle" contenteditable="true">Công nghệ thông tin</div>
+                <div class="timeline-desc" contenteditable="true">Tốt nghiệp loại Giỏi, chuyên ngành Công nghệ thông
+                    tin. Tham gia nhiều dự án thực tế trong quá trình học tập.</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Kinh Nghiệm Làm Việc</h2>
+            <div class="timeline-item">
+                <div class="timeline-period" contenteditable="true">2023 - Hiện tại</div>
+                <div class="timeline-title" contenteditable="true">Công ty TNHH ABC</div>
+                <div class="timeline-subtitle" contenteditable="true">Lập trình viên Frontend</div>
+                <div class="timeline-desc" contenteditable="true">Phát triển giao diện người dùng với Angular và
+                    TypeScript. Tối ưu hóa hiệu suất ứng dụng và đảm bảo trải nghiệm người dùng tốt nhất trên nhiều
+                    thiết bị.</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Dự Án Tiêu Biểu</h2>
+            <div class="text-content" contenteditable="true" id="duAn">• Website Tuyển Dụng: Xây dựng hệ thống tuyển
+                dụng trực tuyến với Angular, bao gồm chức năng đăng tin, tìm kiếm việc làm và quản lý CV.
+
+                • Ứng dụng E-commerce: Phát triển giao diện website bán hàng với tích hợp giỏ hàng, thanh toán và quản
+                lý đơn hàng.
+
+                • Dashboard Analytics: Tạo bảng điều khiển phân tích dữ liệu với biểu đồ tương tác sử dụng Chart.js và
+                D3.js.</div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-primary" (click)="moPopupNhapTen()">Lưu CV</button>
+            <button class="btn btn-primary" (click)="taiCV()">Tải CV PDF</button>
+        </div>
+
+        <div class="popup-overlay" *ngIf="pop_up_nhap_ten_file">
+            <div class="popup-box">
+                <h3>Nhập tên CV</h3>
+                <input type="text" [(ngModel)]="formCv.ten_cv" placeholder="VD: CV_FE_NguyenCong"
+                    class="w-100 popup-input" />
+
+                <div class="popup-actions">
+                    <button class="btn btn-success" (click)="xacNhanLuu()">Xác nhận</button>
+                    <button class="btn btn-danger" (click)="dongPopup()">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>

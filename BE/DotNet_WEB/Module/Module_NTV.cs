@@ -8,7 +8,9 @@ using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
-
+using DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_cv_nguoi_tim_viec;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_tai_khoan;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_chung_chi;
 
 namespace DotNet_WEB.Module
 {
@@ -138,6 +140,41 @@ namespace DotNet_WEB.Module
 
             int rows = cmd.ExecuteNonQuery();
             return rows > 0;
+        }
+
+        public static List<cv_online_nguoi_tim_viec> layDanhSachCVOnlineNguoiTimViec(int ma_nguoi_tim_viec)
+        {
+            return chuc_nang_cv_nguoi_tim_viec_web.layDanhSachCVOnlineNguoiTimViec(ma_nguoi_tim_viec);
+        }
+
+        public static bool xoaCVNguoiTimViec(cv_online_nguoi_tim_viec cv_Online_Nguoi_Tim_Viec)
+        {
+            return chuc_nang_cv_nguoi_tim_viec_web.xoaCVNguoiTimViec(cv_Online_Nguoi_Tim_Viec);
+        }
+
+        public static bool capNhatThongTinNguoiTimViec(thong_tin_truong_du_lieu_cap_nhat_ntv req)
+        {
+            return chuc_nang_tai_khoan_ntv_web.capNhatThongTinNguoiTimViec(req);
+        }
+
+        public static async Task<string> capNhatAnhDaiDienNguoiTimViec(IFormFile anh_dai_dien, int ma_nguoi_tim_viec)
+        {
+            return await chuc_nang_tai_khoan_ntv_web.capNhatAnhDaiDienNguoiTimViec(anh_dai_dien, ma_nguoi_tim_viec);
+        }
+
+        public static List<chung_chi> layDanhSachChungChi(int ma_nguoi_tim_viec)
+        {
+            return chuc_nang_chung_chi_web.layDanhSachChungChi(ma_nguoi_tim_viec);
+        }
+
+        public static async Task<bool> dangTaiChungChi(int ma_nguoi_tim_viec, string ten_chung_chi, string don_vi_cap, DateTime ngay_cap, DateTime ngay_het_han, IFormFile ten_tep)
+        {
+            return await chuc_nang_chung_chi_web.dangTaiChungChi(ma_nguoi_tim_viec, ten_chung_chi, don_vi_cap, ngay_cap, ngay_het_han, ten_tep);
+        }
+
+        public static async Task<bool> xoaChungChi(chung_chi chung_Chi)
+        {
+            return await chuc_nang_chung_chi_web.xoaChungChi(chung_Chi);
         }
     }
 }

@@ -19,7 +19,7 @@ export class DanhSachBaiDang implements OnInit, OnDestroy {
   baiDangDangChon: BaiDangComponent | null = null;
 
   trangHienTai = 1;
-  soLuongMoiTrang = 4;
+  soLuongMoiTrang = 6;
   tongTrang = 1;
 
   private sub1?: Subscription;

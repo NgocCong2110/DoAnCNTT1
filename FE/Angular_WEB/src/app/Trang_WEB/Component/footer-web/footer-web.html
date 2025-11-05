@@ -14,23 +14,11 @@
     </div>
 
     <div class="col">
-      <h4>Về chúng tôi</h4>
-      <div class="links">
-        <a routerLink="/gioi-thieu">Giới thiệu</a>
-        <a routerLink="/lien-he">Liên hệ</a>
-        <a routerLink="/dieu-khoan">Điều khoản & Chính sách</a>
-        <a routerLink="/tin-tuc">Tin tức</a>
-      </div>
-    </div>
-
-    <div class="col">
       <h4>Ngành nghề phổ biến</h4>
       <div class="job-tags">
-        <a routerLink="/viec-lam/it">Công nghệ thông tin</a>
-        <a routerLink="/viec-lam/kinh-doanh">Kinh doanh</a>
-        <a routerLink="/viec-lam/thiet-ke">Thiết kế</a>
-        <a routerLink="/viec-lam/marketing">Marketing</a>
-        <a routerLink="/viec-lam/nhan-su">Nhân sự</a>
+        <a (click) = "chuyenHuongToiNganhNghe('cong_nghe_thong_tin')" style="cursor: pointer;">Công nghệ thông tin</a>
+        <a (click) = "chuyenHuongToiNganhNghe('cham_soc_khach_hang')" style="cursor: pointer;">Chăm sóc khách hàng</a>
+        <a (click) = "chuyenHuongToiNganhNghe('marketing')" style="cursor: pointer;">Marketing</a>
       </div>
     </div>
 
@@ -39,6 +27,7 @@
       <ul class="contact-list" style="list-style-type: none;">
         <li>
            <a href="mailto:cong20365@gmail.com">cong20365@gmail.com</a>
+           <a href="mailto:cong20365@gmail.com">ltttracntt2311079@student.ctuet.edu.vn</a>
         </li>
         <li>
           

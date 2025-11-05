@@ -1,85 +1,202 @@
 <app-header-web></app-header-web>
-<div *ngIf="loading" class="cw-loading">Đang tải...</div>
+<div *ngIf="dang_tai" class="tai_loading text-center py-5">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Đang tải...</span>
+  </div>
+</div>
 
-<div *ngIf="!loading && company" class="company-page container">
-  <div class="company-hero d-flex align-items-center gap-3">
-    <img class="logo" [src]="company.logoUrl || '/assets/default-logo.png'" alt="logo" />
-    <div class="meta">
-      <h1 class="name">{{ company.name }}</h1>
-      <div class="sub">
-        <span class="industry">{{ company.industry }}</span>
-        <span class="dot">•</span>
-        <span class="location">{{ company.location }}</span>
-      </div>
-    </div>
+<div *ngIf="!dang_tai && cong_ty" class="trang_cong_ty">
+
+  <div class="anh_bia_cong_ty position-relative"
+       [style.background-image]="'url(' + layDiaChiHinhAnhBia(cong_ty?.anh_bia) + ')'">
+    <div class="lop_phu_anh_bia"></div>
   </div>
 
-  <nav class="company-tabs mt-3">
-    <ul class="nav nav-tabs">
-      <li class="nav-item"><a (click)="activeTab='overview'" [class.active]="activeTab==='overview'">Tổng quan</a></li>
-      <li class="nav-item"><a (click)="activeTab='jobs'" [class.active]="activeTab==='jobs'">Việc làm <span *ngIf="company.totalJobs">({{company.totalJobs}})</span></a></li>
-      <li class="nav-item"><a (click)="activeTab='reviews'" [class.active]="activeTab==='reviews'">Đánh giá</a></li>
-    </ul>
-  </nav>
-
-  <div class="tab-content mt-4">
-    <div *ngIf="activeTab==='overview'">
-      <div class="row">
-        <div class="col-lg-8">
-          <h4>Giới thiệu</h4>
-          <p [innerHTML]="company.description"></p>
-
-          <h5 class="mt-4">Việc làm nổi bật</h5>
-          <div *ngIf="company.featuredJobs?.length; else noFeatured">
-            <div *ngFor="let job of company.featuredJobs" class="job-card" (click)="openJob(job)">
-              <h6>{{ job.title }}</h6>
-              <div class="small text-muted">{{ job.location || 'Remote' }}</div>
-            </div>
-          </div>
-          <ng-template #noFeatured><div class="text-muted">Không có việc làm nổi bật.</div></ng-template>
-        </div>
-
-        <aside class="col-lg-4">
-          <div class="info-card p-3">
-            <p><strong>Địa chỉ:</strong> {{ company.location }}</p>
-            <p><strong>Quy mô:</strong> {{ company.size }}</p>
-            <p><strong>Thành lập:</strong> {{ company.foundedYear }}</p>
-            <p><strong>Email:</strong> <a href="mailto:{{company.contactEmail}}">{{company.contactEmail}}</a></p>
-          </div>
-          <div class="benefits mt-3 p-3">
-            <h6>Phúc lợi</h6>
-            <ul>
-              <li *ngFor="let b of company.benefits">{{b}}</li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </div>
-
-    <div *ngIf="activeTab==='jobs'">
-      <div *ngIf="company.jobs?.length; else noJobs">
-        <div *ngFor="let j of company.jobs" class="job-list-item p-3 mb-2" (click)="openJob(j)">
-          <div class="d-flex justify-content-between">
+  <div class="container mt-4">
+    <div class="tieu_de_cong_ty mb-3">
+      <div class="anh_dai_dien_cong_ty d-flex align-items-end gap-4">
+        <img class="logo_cong_ty rounded border" style="width: 100px; height: 100px; object-fit: cover;"
+             [src]="layDiaChiHinhAnh(cong_ty.logo)" alt="logo" />
+        <div class="thong_tin_cong_ty flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start">
             <div>
-              <h6>{{j.title}}</h6>
-              <div class="small text-muted">{{j.location}} • {{j.salary || '—'}}</div>
+              <h1 class="ten_cong_ty mb-2">{{ cong_ty.ten_cong_ty || 'Tên công ty' }}</h1>
+              <div class="thong_tin_ngan_gon d-flex flex-wrap gap-3 mb-2 text-muted">
+                <span><i class="bi bi-briefcase"></i> {{ layLoaiHinhCongTy(cong_ty?.loai_hinh_cong_ty) || 'Công ty cổ phần' }}</span>
+                <span><i class="bi bi-geo-alt"></i> {{ cong_ty.dia_chi || 'Địa điểm' }}</span>
+                <span *ngIf="cong_ty.website">
+                  <i class="bi bi-globe"></i>
+                  <a [href]="cong_ty.website" target="_blank">Website</a>
+                </span>
+              </div>
             </div>
-            <div class="text-end"><small>{{ j.postedAt | date:'shortDate'}}</small></div>
           </div>
         </div>
       </div>
-      <ng-template #noJobs><div class="text-muted">Hiện không có vị trí tuyển dụng.</div></ng-template>
     </div>
 
-    <div *ngIf="activeTab==='reviews'">
-      <div *ngIf="company.reviews?.length; else noReviews">
-        <div *ngFor="let r of company.reviews" class="review p-3 mb-2">
-          <strong>{{r.author}}</strong>
-          <div class="small text-muted">{{r.date | date}}</div>
-          <p>{{r.content}}</p>
+    <nav class="thanh_tab_cong_ty mt-4">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" (click)="tab_dang_hoat_dong='overview'" [class.active]="tab_dang_hoat_dong==='overview'">
+            <i class="bi bi-info-circle"></i> Tổng quan
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="tab_dang_hoat_dong='jobs'" [class.active]="tab_dang_hoat_dong==='jobs'">
+            <i class="bi bi-briefcase"></i> Việc làm
+            <span class="badge bg-primary ms-1">{{ cong_ty.jobs?.length || 0 }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="noi_dung_tab mt-4 mb-5">
+
+      <div *ngIf="tab_dang_hoat_dong==='overview'" class="hieu_ung_fade">
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="the_noi_dung mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="tieu_de_muc"><i class="bi bi-info-circle-fill text-primary"></i> Giới thiệu công ty</h4>
+              </div>
+
+              <p [innerHTML]="cong_ty.mo_ta || 'Chưa có thông tin giới thiệu.'"></p>
+            </div>
+
+            <div class="the_noi_dung">
+              <h4 class="tieu_de_muc"><i class="bi bi-star-fill text-warning"></i> Việc làm nổi bật</h4>
+              <div *ngIf="cong_ty.jobs?.length; else khong_noi_bat">
+                <div *ngFor="let viec of cong_ty.jobs" class="the_viec_lam mb-3" (click)="moViecLam(viec)">
+                  <div class="d-flex justify-content-between align-items-start">
+
+                      <div class="flex-grow-1">
+                        <h5 class="tieu_de_viec mb-2 text-primary">
+                          {{ viec.tieu_de || viec.nganh_nghe }}
+                        </h5>
+
+                        <div class="meta_viec text-muted small mb-2 d-flex flex-wrap gap-2">
+                          <span class="me-2"><i class="bi bi-geo-alt"></i> {{ viec.vi_tri || 'Không xác định' }}</span>
+                          <span class="me-2 text-danger" *ngIf="viec.muc_luong"><i class="bi bi-currency-dollar"></i> {{
+                            viec.muc_luong }}</span>
+                          <span class="me-2" *ngIf="viec.loai_hinh"><i class="bi bi-clock"></i> {{
+                            layLoaiHinhViecLam(viec.loai_hinh) }}</span>
+                        </div>
+
+                        <p class="mo_ta_viec mb-1 text-secondary">{{ viec.mo_ta || 'Chưa có mô tả' }}</p>
+                      </div>
+
+                      <div class="text-end ms-3">
+                        <small class="ngay_dang text-muted">{{ viec.ngay_tao | date:'dd/MM/yyyy' }}</small>
+                      </div>
+
+                    </div>
+                </div>
+              </div>
+              <ng-template #khong_noi_bat>
+                <div class="trang_thai_rong text-center py-4"><i class="bi bi-inbox"></i>
+                  <p>Không có việc làm nổi bật</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <aside class="col-lg-4">
+            <div class="the_thong_tin mb-4">
+              <h5 class="tieu_de_the mb-3">Thông tin công ty</h5>
+              <div class="danh_sach_thong_tin">
+                <div class="dong_thong_tin" *ngIf="cong_ty.quy_mo">
+                  <i class="bi bi-building"></i>
+                  <div><small class="text-muted">Quy mô</small>
+                    <p class="mb-0">{{ cong_ty.quy_mo }}</p>
+                  </div>
+                </div>
+                <div class="dong_thong_tin" *ngIf="cong_ty.nam_thanh_lap">
+                  <i class="bi bi-calendar-event"></i>
+                  <div><small class="text-muted">Năm thành lập</small>
+                    <p class="mb-0">{{ cong_ty.nam_thanh_lap }}</p>
+                  </div>
+                </div>
+                <div class="dong_thong_tin" *ngIf="cong_ty.ma_so_thue">
+                  <i class="bi bi-hash"></i>
+                  <div><small class="text-muted">Mã số thuế</small>
+                    <p class="mb-0">{{ cong_ty.ma_so_thue }}</p>
+                  </div>
+                </div>
+                <div class="dong_thong_tin" *ngIf="cong_ty.dia_chi">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <div><small class="text-muted">Địa chỉ</small>
+                    <p class="mb-0">{{ cong_ty.dia_chi }}</p>
+                  </div>
+                </div>
+                <div class="dong_thong_tin" *ngIf="cong_ty.email">
+                  <i class="bi bi-envelope"></i>
+                  <div><small class="text-muted">Email</small>
+                    <p class="mb-0"><a [href]="'mailto:' + cong_ty.email">{{ cong_ty.email }}</a></p>
+                  </div>
+                </div>
+                <div class="dong_thong_tin" *ngIf="cong_ty.dien_thoai">
+                  <i class="bi bi-telephone"></i>
+                  <div><small class="text-muted">Điện thoại</small>
+                    <p class="mb-0"><a [href]="'tel:' + cong_ty.dien_thoai">{{ cong_ty.dien_thoai }}</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="the_phuc_loi mb-4" *ngIf="cong_ty?.phuc_loi_cong_ty?.length">
+              <h5 class="tieu_de_the mb-3">
+                <i class="bi bi-gift-fill text-success"></i> Phúc lợi
+              </h5>
+              <ul>
+                <li *ngFor="let b of cong_ty?.phuc_loi_cong_ty">{{ b.ten_phuc_loi || 'Chưa có tên phúc lợi' }}</li>
+              </ul>
+            </div>
+
+            <div class="the_mang_xa_hoi" *ngIf="danh_sach_mang_xa_hoi?.length">
+              <h5 class="tieu_de_the mb-3">Mạng xã hội & Liên hệ</h5>
+              <div class="d-flex gap-2 flex-wrap">
+                <ng-container *ngFor="let s of danh_sach_mang_xa_hoi">
+                  <a *ngIf="s.lien_ket" [href]="s.ten !== 'phone' ? s.lien_ket : 'tel:' + s.lien_ket" target="_blank" class="mxh">
+                    <i class="bi fs-4" [ngClass]="s.bieu_tuong"></i>
+                  </a>
+                </ng-container>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
-      <ng-template #noReviews><div class="text-muted">Chưa có đánh giá.</div></ng-template>
+
+      <!-- Tab Jobs -->
+      <div *ngIf="tab_dang_hoat_dong==='jobs'" class="hieu_ung_fade">
+        <div class="the_noi_dung">
+          <div *ngIf="cong_ty?.jobs?.length; else khong_co_viec">
+            <div *ngFor="let viec of cong_ty.jobs" class="the_viec_lam p-3 border rounded mb-3 shadow-sm"
+              (click)="moViecLam(viec)">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                  <h5 class="tieu_de_viec mb-2 text-primary">{{ viec.tieu_de || viec.nganh_nghe }}</h5>
+                  <div class="meta_viec text-muted small mb-2">
+                    <span class="me-3"><i class="bi bi-geo-alt"></i> {{ viec.vi_tri || 'Không xác định' }}</span>
+                    <span class="me-3" *ngIf="viec.muc_luong"><i class="bi bi-currency-dollar"></i> {{ viec.muc_luong }}</span>
+                    <span class="me-3" *ngIf="viec.loai_hinh"><i class="bi bi-clock"></i> {{ layLoaiHinhViecLam(viec.loai_hinh) }}</span>
+                  </div>
+                  <p class="mo_ta_viec mb-1 text-secondary">{{ viec.mo_ta || 'Chưa có mô tả' }}</p>
+                </div>
+                <span class="ngay_dang small text-muted">{{ viec.ngay_tao | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #khong_co_viec>
+            <div class="text-center py-5 text-muted">
+              <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+              <p>Hiện tại công ty chưa đăng việc làm nào.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
