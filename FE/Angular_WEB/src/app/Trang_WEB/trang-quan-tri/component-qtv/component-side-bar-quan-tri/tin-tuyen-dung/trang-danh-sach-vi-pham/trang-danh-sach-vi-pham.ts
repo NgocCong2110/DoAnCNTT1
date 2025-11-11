@@ -16,7 +16,7 @@ export class TrangDanhSachViPham implements OnInit {
     return this.layDanhSachViPham();
   }
   layDanhSachViPham() {
-    this.http.post('http://localhost:65001/api/API_WEB/layDanhSachViPham', {}).subscribe({
+    this.http.post('http://localhost:7000/api/API_WEB/layDanhSachViPham', {}).subscribe({
       next: (data: any) => {
         this.danh_sach_vi_pham = data.danh_sach;
         this.cd.detectChanges();
@@ -25,5 +25,15 @@ export class TrangDanhSachViPham implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  layTrangThaiXuLy(num: number) : string {
+    if(num == 1){
+      return 'Chưa xử lý';
+    }
+    if(num == 2){
+      return 'Đã xử lý';
+    }
+    return 'Lỗi'
   }
 }

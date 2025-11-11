@@ -54,13 +54,60 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
             return cmd.ExecuteNonQuery() > 0;
         }
 
+        public static bool kiemTraMatKhauNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
+        {
+            using var coon = new MySqlConnection(chuoi_ket_noi);
+            coon.Open();
+            string mat_khau = maHoaMatKhau(nguoi_Tim_Viec.mat_khau);
+            string sql = "select count(*) from nguoi_tim_viec where mat_khau = @mat_khau and ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@mat_khau", mat_khau);
+            cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", nguoi_Tim_Viec.ma_nguoi_tim_viec);
+            int rows = Convert.ToInt32(cmd.ExecuteScalar());
+            return rows > 0;
+        }
+
+        public static bool capNhatMatKhauNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
+        {
+            using var coon = new MySqlConnection(chuoi_ket_noi);
+            coon.Open();
+
+            string mat_khau_ma_hoa = maHoaMatKhau(nguoi_Tim_Viec.mat_khau);
+
+            using var trans = coon.BeginTransaction();
+            try
+            {
+                string sql_cap_nhat_nguoi_tim_viec = "UPDATE nguoi_tim_viec SET mat_khau = @mat_khau WHERE ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+                using var cmd_cap_nhat_nguoi_tim_viec = new MySqlCommand(sql_cap_nhat_nguoi_tim_viec, coon, trans);
+                cmd_cap_nhat_nguoi_tim_viec.Parameters.AddWithValue("@mat_khau", mat_khau_ma_hoa);
+                cmd_cap_nhat_nguoi_tim_viec.Parameters.AddWithValue("@ma_nguoi_tim_viec", nguoi_Tim_Viec.ma_nguoi_tim_viec);
+                int so_dong_cap_nhat_nguoi_tim_viec = cmd_cap_nhat_nguoi_tim_viec.ExecuteNonQuery();
+
+                string sql_cap_nhat_nguoi_dung = "UPDATE nguoi_dung SET mat_khau = @mat_khau WHERE ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+                using var cmd_cap_nhat_nguoi_dung = new MySqlCommand(sql_cap_nhat_nguoi_dung, coon, trans);
+                cmd_cap_nhat_nguoi_dung.Parameters.AddWithValue("@mat_khau", mat_khau_ma_hoa);
+                cmd_cap_nhat_nguoi_dung.Parameters.AddWithValue("@ma_nguoi_tim_viec", nguoi_Tim_Viec.ma_nguoi_tim_viec);
+                int so_dong_cap_nhat_nguoi_dung = cmd_cap_nhat_nguoi_dung.ExecuteNonQuery();
+
+                trans.Commit();
+
+                return so_dong_cap_nhat_nguoi_tim_viec > 0 || so_dong_cap_nhat_nguoi_dung > 0;
+            }
+            catch (Exception loi_cap_nhat)
+            {
+                trans.Rollback();
+                Console.WriteLine("Lỗi khi cập nhật mật khẩu: " + loi_cap_nhat.Message);
+                return false;
+            }
+        }
+
         public static async Task<string> capNhatAnhDaiDienNguoiTimViec(IFormFile file, int ma_nguoi_tim_viec)
         {
             if (file == null || file.Length == 0)
             {
                 throw new Exception("File avatar rỗng");
             }
-            if(ma_nguoi_tim_viec == 0)
+            if (ma_nguoi_tim_viec == 0)
             {
                 throw new Exception("Không tìm thấy người dùng");
             }
@@ -93,13 +140,13 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
 
             var duong_dan = $"LuuTruAnhDaiDienNguoiTimViec/{ten_file}";
 
-            string sql = "update nguoi_tim_viec set anh_dai_dien = @duong_dan where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+            string sql = "update nguoi_tim_viec set anh_dai_dien = @duong_dan, ngay_cap_nhat = now() where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
             using (var cmd = new MySqlCommand(sql, coon))
             {
                 cmd.Parameters.AddWithValue("@duong_dan", duong_dan);
                 cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", ma_nguoi_tim_viec);
                 int rows = await cmd.ExecuteNonQueryAsync();
-                if(rows == 0)
+                if (rows == 0)
                 {
                     throw new Exception("Không tìm thấy người dùng để cập nhật");
                 }
@@ -113,6 +160,21 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
                 }
             }
             return duong_dan;
+        }
+        public static string maHoaMatKhau(string mat_khau)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(mat_khau);
+                byte[] hash = sha256.ComputeHash(bytes);
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
     }
 

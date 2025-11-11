@@ -22,6 +22,10 @@
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-cong-ty', 'trang-thong-tin-tai-khoan-cong-ty']">Thông tin tài khoản</a>
     </div>
+    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+        [routerLink]="['/trang-cong-ty', 'trang-doi-mat-khau-cong-ty']">Đổi mật khẩu</a>
+    </div>
   </div>
 
   <!-- trang gioi thieu cong ty -->
@@ -46,8 +50,6 @@
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_UngVien">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-cong-ty', 'trang-danh-sach-ung-vien']">Danh sách ứng viên</a>
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-cong-ty', 'trang-thong-ke-bao-cao-ung-vien']">Thống kê & Báo cáo</a>
     </div>
   </div>
 

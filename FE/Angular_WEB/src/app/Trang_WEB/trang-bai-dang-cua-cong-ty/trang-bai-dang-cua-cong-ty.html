@@ -1,172 +1,172 @@
 <app-header-web></app-header-web>
 <div class="container-fluid py-4" style="background-color: #f8f9fa;">
-    <div class="row gx-4">
-        <div class="col-lg-8">
-            <div class="mb-4">
-                <button class="btn btn-primary w-100 py-3 fw-semibold" style="background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%); 
+  <div class="row gx-4">
+    <div class="col-lg-8">
+      <div class="mb-4">
+        <button class="btn btn-primary w-100 py-3 fw-semibold" style="background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%); 
                                border: none; 
                                box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
                                transition: all 0.3s ease;" (click)="moPopup()">
-                    <i class="bi bi-plus-circle me-2"></i>Đăng bài mới
-                </button>
+          <i class="bi bi-plus-circle me-2"></i>Đăng bài mới
+        </button>
+      </div>
+
+      <div *ngIf="bai_dang_duoc_chon as bai" class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h2 class="mb-0 fw-bold" style="color: #2c3e50;">{{ bai.tieu_de }}</h2>
+            <div class="dropdown">
+              <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false" style="font-size: 1.5rem; text-decoration: none;">
+                ⋮
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                <li>
+                  <a class="dropdown-item text-danger" (click)="moPopUpXoa()">
+                    <i class="bi bi-trash me-2"></i>Xóa bài đăng
+                  </a>
+                </li>
+              </ul>
             </div>
+          </div>
 
-            <div *ngIf="bai_dang_duoc_chon as bai" class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h2 class="mb-0 fw-bold" style="color: #2c3e50;">{{ bai.tieu_de }}</h2>
-                        <div class="dropdown">
-                            <button class="btn btn-link text-secondary p-0" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false" style="font-size: 1.5rem; text-decoration: none;">
-                                ⋮
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                <li>
-                                    <a class="dropdown-item text-danger" (click)="moPopUpXoa()">
-                                        <i class="bi bi-trash me-2"></i>Xóa bài đăng
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+          <div class="mb-3 pb-3" style="border-bottom: 2px solid #e9ecef;">
+            <p class="mb-2 text-secondary">
+              <i class="bi bi-building me-2" style="color: #007BFF;"></i>
+              <strong>Công ty:</strong> {{ bai.cong_Ty.ten_cong_ty }}
+            </p>
+            <p class="mb-0 text-secondary">
+              <i class="bi bi-calendar me-2" style="color: #007BFF;"></i>
+              <strong>Ngày đăng:</strong> {{ bai.ngay_tao | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+          </div>
 
-                    <div class="mb-3 pb-3" style="border-bottom: 2px solid #e9ecef;">
-                        <p class="mb-2 text-secondary">
-                            <i class="bi bi-building me-2" style="color: #007BFF;"></i>
-                            <strong>Công ty:</strong> {{ bai.cong_Ty.ten_cong_ty }}
-                        </p>
-                        <p class="mb-0 text-secondary">
-                            <i class="bi bi-calendar me-2" style="color: #007BFF;"></i>
-                            <strong>Ngày đăng:</strong> {{ bai.ngay_tao | date:'dd/MM/yyyy HH:mm' }}
-                        </p>
-                    </div>
+          <div class="p-4 rounded" style="background-color: #f8f9fa;">
+            <h4 class="mb-4 fw-bold" style="color: #2c3e50;">
+              <i class="bi bi-info-circle me-2" style="color: #007BFF;"></i>
+              Thông tin công việc
+            </h4>
 
-                    <div class="p-4 rounded" style="background-color: #f8f9fa;">
-                        <h4 class="mb-4 fw-bold" style="color: #2c3e50;">
-                            <i class="bi bi-info-circle me-2" style="color: #007BFF;"></i>
-                            Thông tin công việc
-                        </h4>
-
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Ngành nghề</label>
-                                    <p class="mb-0">{{ laynganhnghe(bai.nganh_nghe) }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Vị trí</label>
-                                    <p class="mb-0">{{ bai.vi_tri }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Kinh nghiệm</label>
-                                    <p class="mb-0">{{ bai.kinh_nghiem }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Mức lương</label>
-                                    <p class="mb-0 fw-semibold">{{ bai.muc_luong }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Địa điểm</label>
-                                    <p class="mb-0">{{ bai.dia_diem }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Loại hình</label>
-                                    <p class="mb-0">{{ layLoaiHinh(bai.loai_hinh) }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Mô tả</label>
-                                    <p class="mb-0">{{ bai.mo_ta }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Yêu cầu</label>
-                                    <p class="mb-0">{{ bai.yeu_cau }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Quyền lợi</label>
-                                    <p class="mb-0">{{ bai.quyen_loi_cong_viec }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Trình độ</label>
-                                    <p class="mb-0">{{ layTrinhDoHocVan(bai.trinh_do_hoc_van_yeu_cau) }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Thời gian làm việc</label>
-                                    <p class="mb-0">{{ bai.thoi_gian_lam_viec }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="info-item">
-                                    <label class="fw-semibold text-secondary d-block mb-1">Hạn nộp CV</label>
-                                    <p class="mb-0">{{ bai.thoi_han_nop_cv |
-                                        date:'dd/MM/yyyy' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Ngành nghề</label>
+                  <p class="mb-0">{{ laynganhnghe(bai.nganh_nghe) }}</p>
                 </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Vị trí</label>
+                  <p class="mb-0">{{ bai.vi_tri }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Kinh nghiệm</label>
+                    <p class="mb-0 fw-semibold">{{ bai.kinh_nghiem }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Mức lương</label>
+                  <p class="mb-0 fw-semibold">{{ bai.muc_luong }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Địa điểm</label>
+                  <p class="mb-0">{{ bai.dia_diem }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Loại hình</label>
+                  <p class="mb-0">{{ layLoaiHinh(bai.loai_hinh) }}</p>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Mô tả</label>
+                  <p class="mb-0">{{ bai.mo_ta }}</p>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Yêu cầu</label>
+                  <p class="mb-0">{{ bai.yeu_cau }}</p>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Quyền lợi</label>
+                  <p class="mb-0">{{ bai.quyen_loi_cong_viec }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Trình độ</label>
+                  <p class="mb-0">{{ layTrinhDoHocVan(bai.trinh_do_hoc_van_yeu_cau) }}</p>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Thời gian làm việc</label>
+                  <p class="mb-0">{{ bai.thoi_gian_lam_viec }}</p>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="info-item">
+                  <label class="fw-semibold text-secondary d-block mb-1">Hạn nộp CV</label>
+                  <p class="mb-0">{{ bai.thoi_han_nop_cv |
+                    date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
-                <div class="card-header border-0 bg-white pt-4 px-4">
-                    <h5 class="mb-0 fw-bold text-center" style="color: #2c3e50;">
-                        <i class="bi bi-file-text me-2" style="color: #007BFF;"></i>
-                        Bài đăng khác của tôi
-                    </h5>
-                </div>
-                <div class="card-body p-2">
-                    <div class="list-group list-group-flush">
-                        <a class="list-group-item list-group-item-action border-0 rounded mb-3"
-                            *ngFor="let b of danh_sach_bai_lien_quan" (click)="bai_dang_duoc_chon = b"
-                            [class.active]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang"
-                            [style.background-color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? '#c4c4c6' : '#f8f9fa'"
-                            [style.color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? 'black' : '#2c3e50'"
-                            style="cursor: pointer; transition: all 0.3s ease; padding: 12px 16px;">
-
-                            {{ b.tieu_de }}
-
-                            <div class="mt-2">
-                                <span>{{ b.muc_luong }}</span> |
-                                <span>{{ b.kinh_nghiem }}</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+        <div class="card-header border-0 bg-white pt-4 px-4">
+          <h5 class="mb-0 fw-bold text-center" style="color: #2c3e50;">
+            <i class="bi bi-file-text me-2" style="color: #007BFF;"></i>
+            Bài đăng khác của tôi
+          </h5>
+        </div>
+        <div class="card-body p-2">
+          <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action border-0 rounded mb-3"
+              *ngFor="let b of danh_sach_bai_lien_quan" (click)="bai_dang_duoc_chon = b"
+              [class.active]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang"
+              [style.background-color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? '#c4c4c6' : '#f8f9fa'"
+              [style.color]="bai_dang_duoc_chon?.ma_bai_dang === b.ma_bai_dang ? 'black' : '#2c3e50'"
+              style="cursor: pointer; transition: all 0.3s ease; padding: 12px 16px;">
+
+              {{ b.tieu_de }}
+
+              <div class="mt-2">
+                <span>{{ b.muc_luong }}</span> |
+                <span>{{ b.kinh_nghiem }}</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -374,8 +374,6 @@
 
 
 
-
-<!-- pop-up -->
 <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_thanh_cong">
   <div class="toast show text-bg-success border-0">
     <div class="d-flex">
@@ -401,8 +399,9 @@
 </div>
 
 
-<div *ngIf="pop_up_xoa_bai" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-     style="background: rgba(0,0,0,0.5); z-index: 2000;">
+<div *ngIf="pop_up_xoa_bai"
+  class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+  style="background: rgba(0,0,0,0.5); z-index: 2000;">
   <div class="modal-dialog">
     <div class="modal-content p-3">
       <h5 class="modal-title text-danger">Xác nhận xoá</h5>

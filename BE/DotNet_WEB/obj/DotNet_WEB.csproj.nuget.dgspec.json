@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\DotNet_WEB.csproj": {}
+    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\DotNet_WEB.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\DotNet_WEB.csproj": {
+    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\DotNet_WEB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\DotNet_WEB.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\DotNet_WEB.csproj",
         "projectName": "DotNet_WEB",
-        "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\DotNet_WEB.csproj",
+        "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\DotNet_WEB.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\obj\\",
+        "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

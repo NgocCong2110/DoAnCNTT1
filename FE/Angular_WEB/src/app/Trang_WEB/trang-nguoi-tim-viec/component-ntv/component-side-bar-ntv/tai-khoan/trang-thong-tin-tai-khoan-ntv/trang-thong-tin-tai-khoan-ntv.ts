@@ -28,7 +28,6 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
   ngOnInit(): void {
     const duLieu = this.auth.layThongTinNguoiDung();
     this.thong_tin = duLieu?.thong_tin_chi_tiet || {};
-    console.log(this.thong_tin);
   }
 
   enableEdit(section: string) {
@@ -57,7 +56,7 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
       gia_tri: this.editingValues[this.editingSection]
     };
 
-    this.http.patch<any>('http://localhost:65001/api/API_WEB/capNhatThongTinNguoiTimViec', payload)
+    this.http.patch<any>('http://localhost:7000/api/API_WEB/capNhatThongTinNguoiTimViec', payload)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -106,7 +105,7 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
     formData.append('ma_nguoi_tim_viec', this.thong_tin.nguoi_tim_viec.ma_nguoi_tim_viec);
     formData.append('anh_dai_dien', this.fileAvatar!);
     console.log(this.thong_tin.nguoi_tim_viec.ma_nguoi_tim_viec)
-    this.http.post<any>('http://localhost:65001/api/API_WEB/capNhatAnhDaiDienNguoiTimViec', formData)
+    this.http.post<any>('http://localhost:7000/api/API_WEB/capNhatAnhDaiDienNguoiTimViec', formData)
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -133,6 +132,6 @@ export class TrangThongTinTaiKhoanNtv implements OnInit {
 
   taoDuongDanAnh(duongDan: string): string {
     if (!duongDan) return '';
-    return duongDan.startsWith('http') ? duongDan : `http://localhost:65001/${duongDan}`;
+    return duongDan.startsWith('http') ? duongDan : `http://localhost:7000/${duongDan}`;
   }
 }

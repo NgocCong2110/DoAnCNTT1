@@ -1,28 +1,38 @@
-
 <div class="container ds-congty-container">
-	<h2 class="ds-congty-title">Danh sách bài đăng vi phạm</h2>
-	<table class="table table-bordered table-striped ds-congty-table">
-		<thead class="ds-congty-thead">
-			<tr>
-				<th>Mã bài vi phạm</th>
-				<th>Tên người đăng</th>
-				<th>Tiêu đề</th>
-				<th>Nội dung</th>
-				<th>Mã người báo cáo</th>
-				<th>Nội dung báo cáo</th>
-				<th>Ngày báo cáo</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let vi_pham of danh_sach_vi_pham">
-				<td>{{ vi_pham.ma_bai_vi_pham }}</td>
-				<td>{{ vi_pham.ten_nguoi_dang }}</td>
-				<td>{{ vi_pham.tieu_de }}</td>
-				<td>{{ vi_pham.noi_dung }}</td>
-				<td>{{ vi_pham.ma_nguoi_bao_cao }}</td>
-				<td>{{ vi_pham.noi_dung_bao_cao }}</td>
-				<td>{{ vi_pham.ngay_bao_cao | date:'dd/MM/yyyy' }}</td>
-			</tr>
-		</tbody>
-	</table>
+  <h2 class="ds-congty-title">Danh sách bài đăng vi phạm</h2>
+  <table class="table table-bordered table-striped ds-congty-table">
+    <thead class="ds-congty-thead">
+      <tr>
+        <th>Mã bài vi phạm</th>
+        <th>Mã bài đăng</th>
+        <th>Tên người đăng</th>
+        <th>Tiêu đề</th>
+        <th>Nội dung</th>
+        <th>Mã người báo cáo</th>
+        <th>Loại vi phạm</th>
+        <th>Nội dung báo cáo</th>
+        <th>Trạng thái xử lý</th>
+        <th>Ngày báo cáo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vi_pham of danh_sach_vi_pham">
+        <td>{{ vi_pham.ma_bai_vi_pham }}</td>
+        <td>{{ vi_pham.ma_bai_dang }}</td>
+        <td>{{ vi_pham.ten_nguoi_dang }}</td>
+        <td>{{ vi_pham.tieu_de }}</td>
+        <td>{{ vi_pham.noi_dung }}</td>
+        <td>{{ vi_pham.ma_nguoi_bao_cao }}</td>
+        <td>{{ vi_pham.loai_vi_pham }}</td>
+        <td>{{ vi_pham.noi_dung_bao_cao }}</td>
+        <td [ngClass]="{
+              'text-warning': vi_pham.trang_thai_xu_ly == 1,
+              'text-success': vi_pham.trang_thai_xu_ly == 2
+            }">
+          {{ layTrangThaiXuLy(vi_pham.trang_thai_xu_ly) }}
+        </td>
+        <td>{{ vi_pham.ngay_bao_cao | date:'dd/MM/yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

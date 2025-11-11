@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Route, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 
 interface API_RESPONSE {
   success: boolean,
@@ -18,15 +17,17 @@ interface API_RESPONSE {
 })
 export class TheNganhNgheNoiBat {
   constructor(private httpclient: HttpClient, private cdr: ChangeDetectorRef, private router: Router) { }
-
+   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   danh_sach_viec_lam_noi_bat: any[] = [];
+  showLeftBtn = false;
+  showRightBtn = true;
 
   ngOnInit() {
     this.layDanhSachViecLamNoiBat();
   }
 
   layDanhSachViecLamNoiBat() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layNganhNgheNoiBat', {}).
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layNganhNgheNoiBat', {}).
       subscribe({
         next: (data) => {
           if (data.success) {
@@ -73,5 +74,35 @@ export class TheNganhNgheNoiBat {
     this.router.navigate(['trang-tim-viec-theo-tu-khoa'], {
       queryParams: { nganh: nganh_nghe.nganh_nghe }
     });
+  }
+  scrollLeft() {
+    const container = this.scrollContainer.nativeElement;
+    container.scrollBy({ left: -300, behavior: 'smooth' });
+    setTimeout(() => this.checkScrollButtons(), 300);
+  }
+
+  scrollRight() {
+    const container = this.scrollContainer.nativeElement;
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+    setTimeout(() => this.checkScrollButtons(), 300);
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScrollButtons();
+  }
+
+  checkScrollButtons() {
+    if (!this.scrollContainer) return;
+    
+    const container = this.scrollContainer.nativeElement;
+    this.showLeftBtn = container.scrollLeft > 10;
+    this.showRightBtn = container.scrollLeft < (container.scrollWidth - container.clientWidth - 10);
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('scroll', ['$event.target'])
+  onScroll(element: any) {
+    this.checkScrollButtons();
   }
 }

@@ -15,6 +15,7 @@ interface thongTinDangNhap {
   kieu_nguoi_dung?: string;
   ho_ten?: string;
   thong_tin_chi_tiet?: any;
+  duong_dan_anh_dai_dien?: string;
 }
 
 @Component({
@@ -28,7 +29,7 @@ export class TrangDangNhap {
   mat_khau: string = '';
   thong_bao: string = '';
 
-  constructor(public router: Router, public auth: Auth,public http: HttpClient) { }
+  constructor(public router: Router, public auth: Auth, public http: HttpClient) { }
 
   dangNhap(event: Event) {
     event.preventDefault();
@@ -38,7 +39,7 @@ export class TrangDangNhap {
       mat_khau: this.mat_khau
     };
 
-    this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucNguoiDung', thongTin_DangNhap)
+    this.http.post<any>('http://localhost:7000/api/API_WEB/xacThucNguoiDung', thongTin_DangNhap)
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -64,18 +65,23 @@ export class TrangDangNhap {
             return;
           }
 
-          this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucQuanTriVien', thongTin_DangNhap)
+          this.http.post<any>('http://localhost:7000/api/API_WEB/xacThucQuanTriVien', thongTin_DangNhap)
             .subscribe({
               next: (data_qtri) => {
                 if (data_qtri.success) {
 
-                  thongTin_DangNhap.ma_quan_tri = data_qtri.ma_quan_tri;
+                  const thong_tin = {
+                    ma_quan_tri: data_qtri.ma_quan_tri,
+                    ten_dang_nhap: data_qtri.ten_dang_nhap,
+                    email: data_qtri.email,
+                    kieu_nguoi_dung: 'quan_Tri_Vien',
+                    duong_dan_anh_dai_dien: data_qtri.duong_dan_anh_dai_dien,
+                    ho_ten: data_qtri.ho_ten
+                  }
 
-                  thongTin_DangNhap.ten_dang_nhap = data_qtri.ten_dang_nhap;
 
-                  thongTin_DangNhap.kieu_nguoi_dung = "quan_Tri_Vien";
 
-                  this.auth.dangNhap(thongTin_DangNhap);
+                  this.auth.dangNhap(thong_tin);
                   setTimeout(() => this.router.navigate(['/trang-chu']), 1500);
                   return;
                 }

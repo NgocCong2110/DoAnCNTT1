@@ -35,7 +35,7 @@ export class HeaderWEB implements OnInit {
   constructor(public auth: Auth, public router: Router, private httpclient: HttpClient, public cdr: ChangeDetectorRef) {
     this.tu_khoa_sub.pipe(debounceTime(300)).subscribe(tu_khoa => {
       if(tu_khoa.trim()){
-        this.httpclient.post<any>('http://localhost:65001/api/API_WEB/goiYTuKhoa', `"${this.tu_khoa}"`, { headers: { 'Content-Type': 'application/json' } })
+        this.httpclient.post<any>('http://localhost:7000/api/API_WEB/goiYTuKhoa', `"${this.tu_khoa}"`, { headers: { 'Content-Type': 'application/json' } })
           .subscribe({
             next: (data) => {
               this.goiY = data.danh_sach;

@@ -19,6 +19,8 @@ namespace DotNet_WEB.Class
         public string? mo_ta { get; set; }
         public string? yeu_cau { get; set; }
         public string? muc_luong { get; set; }
+        public decimal muc_luong_thap_nhat { get; set; }
+        public decimal muc_luong_cao_nhat { get; set; }
         public string? dia_diem { get; set; }
         public LoaiHinhViecLam loai_hinh { get; set; } = LoaiHinhViecLam.toan_Thoi_Gian;
         public int diem_phu_hop { get; set; }

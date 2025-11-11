@@ -67,7 +67,7 @@ export class TrangDanhSachUngVien implements OnInit {
       return;
     }
 
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachUngVien', { ma_cong_ty: ma_Cong_Ty })
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachUngVien', { ma_cong_ty: ma_Cong_Ty })
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -154,7 +154,7 @@ export class TrangDanhSachUngVien implements OnInit {
       trang_thai_duyet: "da_Duyet"
     };
 
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiThuMoiPhongVan',  thong_tin_phong_van )
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/guiThuMoiPhongVan',  thong_tin_phong_van )
       .subscribe(data => {
         if (data.success) {
           this.pop_up_moi_phong_van_thanh_cong = true;
@@ -177,7 +177,7 @@ export class TrangDanhSachUngVien implements OnInit {
       ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
       ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec
     }
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/tuChoiUngVien', thong_tin)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/tuChoiUngVien', thong_tin)
       .subscribe(data => {
         console.log(data.message);
         if (data.success) {
@@ -209,7 +209,7 @@ export class TrangDanhSachUngVien implements OnInit {
   }
 
   moCV(url: string){
-    url = "http://localhost:65001/" + url;
+    url = "http://localhost:7000/" + url;
     window.open(url);
   }
 
@@ -222,7 +222,7 @@ export class TrangDanhSachUngVien implements OnInit {
     }
 
     this.httpclient.post<API_RESPONSE>(
-      'http://localhost:65001/api/API_WEB/xoaUngVien',
+      'http://localhost:7000/api/API_WEB/xoaUngVien',
        thong_tin_xoa 
     ).subscribe({
       next: (data) => {

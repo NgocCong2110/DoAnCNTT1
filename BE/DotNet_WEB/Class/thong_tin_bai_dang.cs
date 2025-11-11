@@ -11,6 +11,6 @@ namespace DotNet_WEB.Class
     {
         public bai_dang? bai_Dang {get; set;}
         public viec_lam? viec_Lam { get; set; }
-        public List<int> phuc_Loi { get; set; }
+        public List<int>? phuc_Loi { get; set; }
     }
 }

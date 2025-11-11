@@ -35,6 +35,20 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   danh_sach_bai_dang: any;
   danh_sach_bai_dang_full: any;
 
+  loai_vi_pham = '';
+
+  danh_sach_loai = [
+    'Thông tin sai sự thật',
+    'Tuyển dụng lừa đảo / thu phí',
+    'Sai ngành nghề',
+    'Vi phạm bản quyền / hình ảnh',
+    'Liên kết độc hại / mã độc',
+    'Phân biệt đối xử',
+    'Yêu cầu không hợp pháp',
+    'Thông tin thiếu minh bạch',
+    'Khác'
+  ];
+
   error = '';
   loading = false;
 
@@ -56,7 +70,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
 
   layDanhSachBaiDang() {
     this.loading = true;
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachBaiDang', {})
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachBaiDang', {})
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -113,7 +127,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   }
 
   baoCaoBaiDang() {
-    const ma_Nguoi_Bao_Cao = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
+    const ma_Nguoi_Bao_Cao = this.thongTin?.thong_tin_chi_tiet?.nguoi_tim_viec.ma_nguoi_tim_viec;
 
     if (ma_Nguoi_Bao_Cao == null) {
       alert("Vui lòng đăng nhập để báo cáo bài đăng.");
@@ -121,16 +135,18 @@ export class TinTuyenDung implements OnInit, OnDestroy {
     }
 
     const thong_tin = {
-      ma_bai_vi_pham: this.bai_dang_duoc_chon?.ma_bai_dang,
+      ma_bai_dang: this.bai_dang_duoc_chon?.ma_bai_dang,
       ten_nguoi_dang: this.bai_dang_duoc_chon?.ten_nguoi_dang,
       tieu_de: this.bai_dang_duoc_chon?.tieu_de,
       noi_dung: this.bai_dang_duoc_chon?.noi_dung,
+      loai_vi_pham: this.loai_vi_pham,
       ma_nguoi_bao_cao: ma_Nguoi_Bao_Cao,
       noi_dung_bao_cao: this.noi_dung_bao_cao,
+      trang_thai_xu_ly: 1,
       ngay_bao_cao: new Date()
     }
-
-    this.httpclient.post<any>("http://localhost:65001/api/API_WEB/baoCaoBaiDang", thong_tin).subscribe({
+    
+    this.httpclient.post<any>("http://localhost:7000/api/API_WEB/baoCaoBaiDang", thong_tin).subscribe({
       next: (data) => {
         if (data.success) {
           alert("Báo cáo bài đăng thành công.");
@@ -160,7 +176,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
       ma_nguoi_luu: ma_Nguoi_Luu
     }
 
-    this.httpclient.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/luuBaiDang", thong_tin).subscribe({
+    this.httpclient.post<API_RESPONSE>("http://localhost:7000/api/API_WEB/luuBaiDang", thong_tin).subscribe({
       next: (data) => {
         if (data.success) {
           alert("Đã lưu bài đăng.");
@@ -206,7 +222,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
       ma_nguoi_tim_viec: maNguoiTimViec
     };
 
-    this.httpclient.post<any>("http://localhost:65001/api/API_WEB/kiemTraUngTuyen", ktra)
+    this.httpclient.post<any>("http://localhost:7000/api/API_WEB/kiemTraUngTuyen", ktra)
       .subscribe({
         next: (data) => {
           if (!data.success) {
@@ -222,7 +238,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
           };
 
           if (this.loai_cv === 'he_thong' && this.cv_duoc_chon) {
-            this.httpclient.post<any>("http://localhost:65001/api/API_WEB/ungTuyenCongViec", thong_tin).subscribe({
+            this.httpclient.post<any>("http://localhost:7000/api/API_WEB/ungTuyenCongViec", thong_tin).subscribe({
               next: (res) => {
                 if (res.success) {
                   alert("Ứng tuyển thành công bằng CV hệ thống!");
@@ -245,7 +261,7 @@ export class TinTuyenDung implements OnInit, OnDestroy {
             console.log('FormData chuẩn bị gửi:', formData);
 
             this.httpclient.post<any>(
-              'http://localhost:65001/api/API_WEB/ungTuyenCongViecUploadCV',
+              'http://localhost:7000/api/API_WEB/ungTuyenCongViecUploadCV',
               formData
             ).subscribe({
               next: (res) => {
@@ -283,13 +299,13 @@ export class TinTuyenDung implements OnInit, OnDestroy {
 
   xemFileTamThoi() {
     if (!this.file_cv_upload) return;
-    const url = "http://localhost:65001/" + this.file_cv_upload;
+    const url = "http://localhost:7000/" + this.file_cv_upload;
     window.open(url);
   }
 
   layDanhSachCVOnlineNguoiTimViec() {
     const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachCVOnlineNguoiTimViec', ma_nguoi_tim_viec,
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachCVOnlineNguoiTimViec', ma_nguoi_tim_viec,
       { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
@@ -359,6 +375,4 @@ export class TinTuyenDung implements OnInit, OnDestroy {
   layTrinhDoHocVan(ma: number): string {
     return this.trinhDoHocVanMap[ma] || '';
   }
-
-
 }

@@ -1,0 +1,46 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="title fw-bold text-center mb-4 border-bottom pb-2 text-dark">
+        Danh Sách Tin Tuyển Dụng Mới
+      </h1>
+      <p class="subtitle" style="color: #3b82f6;">
+        Thống kê và quản lý tin tuyển dụng
+      </p>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="chart-card">
+      <div class="chart-container">
+        <canvas
+          #lineChart
+          baseChart
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [type]="'line'">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <h3 class="mb-3">Danh sách tin tuyển dụng mới</h3>
+      <div *ngIf="danh_sach_tin_moi?.length > 0; else khongCoDuLieu">
+        <ul class="job-list">
+          <li *ngFor="let tin_moi of danh_sach_tin_moi" (click)="xemTinTuyenDung(tin_moi)" class="job-item">
+            <div class="job-info">
+              <h5 class="job-title text-primary">{{ tin_moi.tieu_de }}</h5>
+              <p class="company"><i class="bi bi-building"></i> {{ tin_moi.ten_cong_ty }}</p>
+              <p class="salary"><i class="bi bi-cash-stack"></i> {{ tin_moi.muc_luong }}</p>
+              <p class="date"><i class="bi bi-calendar3"></i> {{ tin_moi.ngay_dang }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <ng-template #khongCoDuLieu>
+        <p class="no-data text-muted text-center mt-4">Không có tin tuyển dụng mới.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

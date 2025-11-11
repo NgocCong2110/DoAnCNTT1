@@ -13,7 +13,7 @@
       </p>
     </div>
 
-    <div class="col">
+    <div class="col" *ngIf="!auth?.layThongTinNguoiDung() || auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">
       <h4>Ngành nghề phổ biến</h4>
       <div class="job-tags">
         <a (click) = "chuyenHuongToiNganhNghe('cong_nghe_thong_tin')" style="cursor: pointer;">Công nghệ thông tin</a>

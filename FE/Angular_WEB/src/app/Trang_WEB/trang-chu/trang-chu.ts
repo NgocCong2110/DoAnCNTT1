@@ -12,10 +12,16 @@ import { TheDanhGiaTuNguoiDung } from './component-trang-chu/the-danh-gia-tu-ngu
 import { TheViecLamDuocQuanTam } from './component-trang-chu/the-viec-lam-duoc-quan-tam/the-viec-lam-duoc-quan-tam';
 import { TheNganhNgheNoiBat } from './component-trang-chu/the-nganh-nghe-noi-bat/the-nganh-nghe-noi-bat';
 import { TheChuyenTrangTaoCv } from './component-trang-chu/the-chuyen-trang-tao-cv/the-chuyen-trang-tao-cv';
+import { ComponentThongKeNguoiDung } from '../Component_trang_chu_quan_tri/thong-ke/thong-ke-nguoi-dung/component-thong-ke-nguoi-dung/component-thong-ke-nguoi-dung';
+import { ComponentThongKeTuyenDungCuaCongTy } from '../Component_trang_chu_cong_ty/tuyen-dung/thong-ke-tuyen-dung/component-thong-ke-tuyen-dung-cua-cong-ty/component-thong-ke-tuyen-dung-cua-cong-ty';
+import { ComponentThongKePhanLoaiNguoiDung } from '../Component_trang_chu_quan_tri/thong-ke/thong-ke-nguoi-dung/component-thong-ke-phan-loai-nguoi-dung/component-thong-ke-phan-loai-nguoi-dung';
+import { ComponentThongKeTinTuyenDung } from '../Component_trang_chu_quan_tri/thong-ke/thong-ke-tin-tuyen-dung/component-thong-ke-tin-tuyen-dung/component-thong-ke-tin-tuyen-dung';
 
 @Component({
   selector: 'app-trang-chu',
-  imports: [RouterModule, CommonModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv],
+  imports: [RouterModule, CommonModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, 
+    TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv, 
+    ComponentThongKeNguoiDung, ComponentThongKeTuyenDungCuaCongTy, ComponentThongKePhanLoaiNguoiDung, ComponentThongKeTinTuyenDung],
   templateUrl: './trang-chu.html',
   styleUrls: ['./trang-chu.css']
 })

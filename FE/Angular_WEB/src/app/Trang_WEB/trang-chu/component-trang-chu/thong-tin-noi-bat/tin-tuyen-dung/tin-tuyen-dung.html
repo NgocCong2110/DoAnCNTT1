@@ -121,15 +121,31 @@
 </div>
 
 
-<div *ngIf="pop_up_bao_cao" class="popup-backdrop">
-  <div class="popup-content p-3 border rounded shadow-sm">
-    <h5>Báo cáo bài đăng: {{ bai_dang_duoc_chon?.tieu_de }}</h5>
-    <textarea [(ngModel)]="noi_dung_bao_cao" rows="4" class="form-control mb-2"
-      placeholder="Nhập lý do báo cáo"></textarea>
+<div *ngIf="pop_up_bao_cao" class="popup-backdrop"
+     style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); display:flex; justify-content:center; align-items:center; z-index:1000;">
+  <div class="popup-content p-3 border rounded shadow-sm bg-white" 
+       style="width:400px; max-width:90%; position: relative;">
+
+    <h5 class="mb-3">Báo cáo bài đăng: {{ bai_dang_duoc_chon?.tieu_de }}</h5>
+
+    <label class="form-label">Loại vi phạm:</label>
+    <select [(ngModel)]="loai_vi_pham" class="form-select mb-2">
+      <option value="">Chọn lý do báo cáo</option>
+      <option *ngFor="let loai of danh_sach_loai" [value]="loai">{{ loai }}</option>
+    </select>
+
+    <label class="form-label">Mô tả thêm (tùy chọn):</label>
+    <textarea [(ngModel)]="noi_dung_bao_cao" rows="4" class="form-control mb-3"
+              placeholder="Nhập mô tả chi tiết..."></textarea>
+
     <div class="text-end">
-      <button class="btn btn-secondary mx-1" (click)="huyBaoCao()">Hủy</button>
-      <button class="btn btn-primary mx-1" (click)="baoCaoBaiDang()">Gửi báo cáo</button>
+      <button class="btn btn-secondary mx-1" (click)="huyBaoCao()" [disabled]="loading">Hủy</button>
+      <button class="btn btn-primary mx-1" (click)="baoCaoBaiDang()" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+        Gửi báo cáo
+      </button>
     </div>
+
   </div>
 </div>
 

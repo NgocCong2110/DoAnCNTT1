@@ -28,7 +28,7 @@ export class ThanhTimKiem {
 
   tu_khoa_tim_kiem = "";
   thongTinTim(){
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/duaRaDeXuat', JSON.stringify(this.tu_khoa_tim_kiem),
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/duaRaDeXuat', JSON.stringify(this.tu_khoa_tim_kiem),
       {headers: {"Content-Type" : "application/json"}})
       .subscribe({
         next: (data) => {

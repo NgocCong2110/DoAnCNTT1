@@ -32,7 +32,7 @@ export class TrangLichSuGiaoDich {
   }
 
   layDanhSachNguoiTimViec() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layLichSuThanhToan', {})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layLichSuThanhToan', {})
       .subscribe({
         next: (data) => {
           if (data.success) {

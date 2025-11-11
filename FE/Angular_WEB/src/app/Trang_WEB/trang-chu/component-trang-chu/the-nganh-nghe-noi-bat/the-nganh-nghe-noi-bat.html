@@ -1,21 +1,31 @@
-<div class="d-flex justify-content-center align-items-center py-5 bg-light">
-    <div class="container" style="max-width: 1200px;">
-        <div class="row g-4">
-
-            <h1 class="text-center fw-bold mb-5 display-5" style="color: #333; letter-spacing: 0.5px;">
-                Ngành nghề nổi bật
-            </h1>
-
-            <div class="col-6 col-md-3" *ngFor="let job of danh_sach_viec_lam_noi_bat">
-                <div class="card h-100 text-center p-3 job-card" (click)="xemDanhSachViecLam(job)" role="button">
-                    <div class="icon-wrapper mx-auto mb-3">
-                        <img [src]="icon_viec_lam[job.nganh_nghe]" [alt]="job.nganh_nghe" class="img-fluid">
+<div class="career-section">
+    <div class="container">
+        <h1 class="section-title">Ngành nghề nổi bật</h1>
+        
+        <div class="carousel-wrapper">
+            <button class="scroll-btn left" (click)="scrollLeft()" *ngIf="showLeftBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            
+            <div class="scroll-container" #scrollContainer>
+                <div class="job-item" *ngFor="let job of danh_sach_viec_lam_noi_bat">
+                    <div class="job-card" (click)="xemDanhSachViecLam(job)" role="button">
+                        <div class="icon-wrapper">
+                            <img [src]="icon_viec_lam[job.nganh_nghe]" [alt]="job.nganh_nghe">
+                        </div>
+                        <h5 class="job-title">{{ layTenNganhNghe(job.nganh_nghe) }}</h5>
+                        <p class="job-count">{{ job.so_luong }} việc làm</p>
                     </div>
-                    <h5 class="fw-semibold mb-0">{{ layTenNganhNghe(job.nganh_nghe) }}</h5>
-                    <p> Số lượng việc làm: {{ job.so_luong }} </p>
                 </div>
             </div>
-
+            
+            <button class="scroll-btn right" (click)="scrollRight()" *ngIf="showRightBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
         </div>
     </div>
 </div>

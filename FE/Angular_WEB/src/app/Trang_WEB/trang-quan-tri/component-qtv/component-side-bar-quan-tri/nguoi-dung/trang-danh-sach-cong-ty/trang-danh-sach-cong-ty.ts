@@ -39,7 +39,7 @@ export class TrangDanhSachCongTy implements OnInit {
   }
 
   layDanhSachCongTy() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachCongTy', {})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachCongTy', {})
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -73,7 +73,7 @@ export class TrangDanhSachCongTy implements OnInit {
     this.loadTrang(this.trangHienTai);
     this.showXacNhanXoa = false;
     this.cd.detectChanges();
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/xoaCongTy', ma_cong_ty)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/xoaCongTy', ma_cong_ty)
       .subscribe({
         next: (data) => {
           if (!data.success) {

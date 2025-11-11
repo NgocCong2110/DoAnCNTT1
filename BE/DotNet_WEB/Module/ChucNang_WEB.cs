@@ -57,6 +57,12 @@ namespace DotNet_WEB.Module
             return chuc_nang_viec_lam_web.layNganhNgheNoiBat();
         }
 
+        public static List<nganh_nghe> layDanhSachNganhNghe()
+        {
+            return chuc_nang_viec_lam_web.layDanhSachNganhNghe();
+        }
+        
+
         public static viec_lam? layViecLamTheoBaiDang(int ma_bai_dang)
         {
 
@@ -66,7 +72,7 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_viec_lam_web.layDanhSachViecLamDuocQuanTam();
         }
-        public static List<viec_lam> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
+        public static List<viec_lam_ket_qua> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
         {
             return chuc_nang_viec_lam_web.duaRaDanhSachDeXuat(chuoi_yeu_cau);
         }

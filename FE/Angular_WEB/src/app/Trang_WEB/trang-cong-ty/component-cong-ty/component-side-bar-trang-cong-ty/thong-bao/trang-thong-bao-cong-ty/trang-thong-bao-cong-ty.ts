@@ -42,7 +42,7 @@ export class TrangThongBaoCongTy {
   
     guiThongBao() {
       this.http.post<API_RESPONSE>(
-        'http://localhost:65001/api/API_WEB/guiThongBaoMoi',
+        'http://localhost:7000/api/API_WEB/guiThongBaoMoi',
         { du_lieu_thong_bao_server: this.du_lieu_thong_bao_server }
       ).subscribe({
         next: (data) => {

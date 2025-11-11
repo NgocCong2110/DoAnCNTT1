@@ -134,7 +134,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
 
   layDanhSachViecLamCuaCongTy() {
     const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_cong_ty;
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachViecLamCuaCongTy', `"${ma_cong_ty}"`, { headers: { "Content-Type": "application/json" } })
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachViecLamCuaCongTy', `"${ma_cong_ty}"`, { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -154,14 +154,14 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
   }
 
   themGioiThieuCongTY() {
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/themGioiThieuVeCongTy', {})
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/themGioiThieuVeCongTy', {})
   }
 
   taiDuLieuCongTy(): void {
     this.dang_tai = true;
     const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_cong_ty;
     this.httpclient.post<any>(
-      'http://localhost:65001/api/API_WEB/layThongTinCongTy',
+      'http://localhost:7000/api/API_WEB/layThongTinCongTy',
       `"${ma_cong_ty}"`,
       { headers: { "Content-Type": "application/json" } }
     ).subscribe({
@@ -188,7 +188,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
 
   layDiaChiHinhAnhBia(url?: string): string {
     if (!url) return 'https://toomva.com/images/posts/2024/11/cac-loai-hinh-cong-ty-trong-tieng-anh.png';
-    if (!url.startsWith('http')) return "http://localhost:65001/" + url;
+    if (!url.startsWith('http')) return "http://localhost:7000/" + url;
     return "";
   }
 
@@ -230,7 +230,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       ma_cong_ty: ma_cong_ty,
       ma_ta: this.cong_ty.mo_ta
     }
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/capNhatMoTaCongTy', du_lieu)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatMoTaCongTy', du_lieu)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -257,7 +257,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       ma_cong_ty: ma_cong_ty,
       phuc_Loi_Cong_Ty: this.cong_ty.phuc_loi_cong_ty
     }
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/capNhatPhucLoiCongTy', du_lieu)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatPhucLoiCongTy', du_lieu)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -284,7 +284,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
         { ma_phuc_loi_cty: ma_phuc_loi_cty }
       ]
     };
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/xoaPhucLoiCongTy', du_lieu)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/xoaPhucLoiCongTy', du_lieu)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -377,7 +377,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       ma_cong_ty: this.cong_ty.ma_cong_ty,
       lien_Ket_Mang_Xa_Hoi: this.cong_ty.lien_ket_mang_xa_hoi
     }
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/capNhatLienKetMangXaHoi', du_lieu)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatLienKetMangXaHoi', du_lieu)
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -424,7 +424,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       formData.append('file', file);
       formData.append('ma_cong_ty', this.auth.layThongTinNguoiDung().thong_tin_chi_tiet.ma_cong_ty);
 
-      this.httpclient.post<any>('http://localhost:65001/api/API_WEB/capNhatAnhBiaCongTy', formData)
+      this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatAnhBiaCongTy', formData)
         .subscribe({
           next: (data) => {
             if (data.success) {
@@ -445,7 +445,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
 
   layDiaChiHinhAnh(url?: string): string {
     if (!url) return '/assets/default-logo.png';
-    if (!url.startsWith('http')) return "http://localhost:65001/" + url;
+    if (!url.startsWith('http')) return "http://localhost:7000/" + url;
     return url;
   }
 }

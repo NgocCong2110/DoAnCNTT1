@@ -39,17 +39,19 @@ export class TrangDuyetDanhGiaWeb implements OnInit {
   }
 
   layDanhSachDanhGia() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layToanBoDanhSachDanhGia', {})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layToanBoDanhSachDanhGia', {})
       .subscribe({
         next: (res) => {
           if (res.success) {
             this.danh_sach_danh_gia_goc = [...res.danh_sach];
             this.danh_sach_danh_gia = [...res.danh_sach];
             this.loading = false;
+            this.cd.detectChanges();
           } else {
             this.error = res.message || 'Lỗi khi tải dữ liệu';
             this.loading = false;
           }
+          this.cd.markForCheck();
         },
         error: (err) => {
           this.error = 'Lỗi server';
@@ -80,7 +82,7 @@ export class TrangDuyetDanhGiaWeb implements OnInit {
       trang_thai_danh_gia: trang_thai
     }
     console.log(thong_tin)
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/capNhatTrangThaiDanhGia', thong_tin)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/capNhatTrangThaiDanhGia', thong_tin)
       .subscribe({
         next: (data) =>{
           if(data.success){

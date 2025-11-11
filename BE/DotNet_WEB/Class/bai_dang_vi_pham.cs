@@ -10,9 +10,9 @@ namespace DotNet_WEB.Class
     public class bai_dang_vi_pham
     {
         public int ma_bai_vi_pham {get; set;}
-        [ForeignKey(nameof(ma_bai_vi_pham))]
-        public bai_dang? bai_Dang {get; set;}
-
+        public int? ma_bai_dang { get; set; }
+        [ForeignKey(nameof(ma_bai_dang))]
+        public bai_dang? bai_Dang { get; set; }
         public string? ten_nguoi_dang {get; set;}
 
         public string? tieu_de {get; set;}
@@ -21,9 +21,11 @@ namespace DotNet_WEB.Class
 
         public int ma_nguoi_bao_cao {get; set;}
         [ForeignKey(nameof(ma_nguoi_bao_cao))]
-        public nguoi_dung? nguoi_Dung {get; set;}
+        public nguoi_tim_viec? nguoi_Tim_Viec { get; set; }
+        public string? loai_vi_pham { get; set; }
 
-        public string? noi_dung_bao_cao {get; set;}
+        public string? noi_dung_bao_cao { get; set; }
+        public TrangThaiXuLy trang_thai_xu_ly { get; set; } = TrangThaiXuLy.chua_Xu_Ly;
 
         public DateTime ngay_bao_cao {get; set;} = DateTime.Now;
     }

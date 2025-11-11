@@ -62,6 +62,14 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienQuanTriVien")),
+    RequestPath = "/LuuTruAnhDaiDienQuanTriVien"
+});
+
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienNguoiTimViec")),
     RequestPath = "/LuuTruAnhDaiDienNguoiTimViec"
 });

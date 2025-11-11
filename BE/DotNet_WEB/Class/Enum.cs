@@ -149,6 +149,15 @@ namespace DotNet_WEB.Class
         thu_Moi_Phong_Van = 3
     }
 
+    public enum TrangThaiXuLy
+    {
+        None = 0,
+        [Display(Name = "Chưa xử lý")]
+        chua_Xu_Ly = 1,
+        [Display(Name = "Đã xử lý")]
+        da_Xu_Ly = 2
+    }
+
     public enum TrangThaiDoc
     {
         None = 0,

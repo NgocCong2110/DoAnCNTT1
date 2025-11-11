@@ -1,0 +1,42 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="title fw-bold text-center mb-4 border-bottom pb-2 text-dark">
+        Danh Sách Người Dùng Mới
+      </h1>
+      <p class="subtitle" style="color: #3b82f6;">
+        Thống kê và quản lý người dùng mới trong hệ thống
+      </p>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="chart-card">
+      <div class="chart-container">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'"></canvas>
+      </div>
+    </div>
+
+    <div class="list-card">
+      <h3>Danh sách người dùng mới</h3>
+      <div *ngIf="danh_sach_nguoi_dung_moi?.length > 0; else khongCoDuLieu">
+        <ul class="user-list">
+          <li *ngFor="let nguoi_dung of danh_sach_nguoi_dung_moi" (click)="xemTrangCongTy(nguoi_dung)">
+            <div class="user-item">
+              <i class="bi bi-person-circle user-icon"></i>
+              <div class="user-info">
+                <span class="user-email">{{ nguoi_dung.email }}</span>
+                <span class="user-type">{{ nguoi_dung.kieu_nguoi_dung }}</span>
+                <span class="user-date">{{ nguoi_dung.ngay_tao }}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <ng-template #khongCoDuLieu>
+        <p class="no-data">Không có người dùng mới.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>

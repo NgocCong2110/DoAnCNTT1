@@ -72,21 +72,21 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
                 {
                     ma_cong_ty = reader.IsDBNull(reader.GetOrdinal("ma_cong_ty")) ? 0 : reader.GetInt32("ma_cong_ty"),
 
-                    ten_dn_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_dn_cong_ty")) ? string.Empty : reader.GetString("ten_dn_cong_ty"),
+                    ten_dn_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_dn_cong_ty")) ? null : reader.GetString("ten_dn_cong_ty"),
 
-                    ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? string.Empty : reader.GetString("ten_cong_ty"),
+                    ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty"),
 
-                    nguoi_dai_dien = reader.IsDBNull(reader.GetOrdinal("nguoi_dai_dien")) ? string.Empty : reader.GetString("nguoi_dai_dien"),
+                    nguoi_dai_dien = reader.IsDBNull(reader.GetOrdinal("nguoi_dai_dien")) ? null : reader.GetString("nguoi_dai_dien"),
 
-                    ma_so_thue = reader.IsDBNull(reader.GetOrdinal("ma_so_thue")) ? string.Empty : reader.GetString("ma_so_thue"),
+                    ma_so_thue = reader.IsDBNull(reader.GetOrdinal("ma_so_thue")) ? null : reader.GetString("ma_so_thue"),
 
-                    dia_chi = reader.IsDBNull(reader.GetOrdinal("dia_chi")) ? string.Empty : reader.GetString("dia_chi"),
+                    dia_chi = reader.IsDBNull(reader.GetOrdinal("dia_chi")) ? null : reader.GetString("dia_chi"),
 
-                    dien_thoai = reader.IsDBNull(reader.GetOrdinal("dien_thoai")) ? string.Empty : reader.GetString("dien_thoai"),
+                    dien_thoai = reader.IsDBNull(reader.GetOrdinal("dien_thoai")) ? null : reader.GetString("dien_thoai"),
 
-                    email = reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),
+                    email = reader.IsDBNull(reader.GetOrdinal("email")) ? null : reader.GetString("email"),
 
-                    website = reader.IsDBNull(reader.GetOrdinal("website")) ? string.Empty : reader.GetString("website"),
+                    website = reader.IsDBNull(reader.GetOrdinal("website")) ? null : reader.GetString("website"),
 
                     logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
 
@@ -96,7 +96,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
                     ? LoaiHinhCongTy.None
                     : (LoaiHinhCongTy)Enum.Parse(typeof(LoaiHinhCongTy), reader.GetString("loai_hinh_cong_ty")),
 
-                    quy_mo = reader.GetString("quy_mo"),
+                    quy_mo = reader.IsDBNull(reader.GetOrdinal("quy_mo")) ? null : reader.GetString("quy_mo"),
                     nam_thanh_lap = reader.IsDBNull(reader.GetOrdinal("nam_thanh_lap"))
                     ? null
                     : (int?)reader.GetInt16("nam_thanh_lap"),
@@ -134,8 +134,6 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
                     email = reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),
 
                     dien_thoai = reader.IsDBNull(reader.GetOrdinal("dien_thoai")) ? string.Empty : reader.GetString("dien_thoai"),
-
-                    mat_khau = reader.IsDBNull(reader.GetOrdinal("mat_khau")) ? string.Empty : reader.GetString("mat_khau"),
 
                     ngay_sinh = reader.IsDBNull(reader.GetOrdinal("ngay_sinh")) ? DateTime.MinValue : reader.GetDateTime("ngay_sinh"),
 
@@ -201,10 +199,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
             {
                 var quan_Tri = new quan_tri
                 {
-                    ma_quan_tri = reader.GetInt32("ma_quan_tri"),
-                    ten_dang_nhap = reader.GetString("ten_dang_nhap"),
-                    ho_ten = reader.GetString("ho_ten"),
-                    email = reader.GetString("email")
+                    ma_quan_tri = reader.IsDBNull(reader.GetOrdinal("ma_quan_tri")) ? 0 : reader.GetInt32("ma_quan_tri"),
+                    ten_dang_nhap = reader.IsDBNull(reader.GetOrdinal("ten_dang_nhap")) ? string.Empty : reader.GetString("ten_dang_nhap"),
+                    ho_ten = reader.IsDBNull(reader.GetOrdinal("ho_ten")) ? string.Empty : reader.GetString("ho_ten"),
+                    email = reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),
+                    duong_dan_anh_dai_dien = reader.IsDBNull(reader.GetOrdinal("duong_dan_anh_dai_dien")) ? string.Empty : reader.GetString("duong_dan_anh_dai_dien"),
                 };
                 thong_tin.Add(quan_Tri);
             }

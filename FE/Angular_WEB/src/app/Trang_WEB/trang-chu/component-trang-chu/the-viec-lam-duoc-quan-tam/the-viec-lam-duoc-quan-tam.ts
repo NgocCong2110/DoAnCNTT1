@@ -28,7 +28,7 @@ export class TheViecLamDuocQuanTam implements OnInit{
   }
 
   layDanhSachViecLamDuocQuanTam(){
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachViecLamDuocQuanTam',{})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachViecLamDuocQuanTam',{})
       .subscribe({
         next: (data) => {
           if(data.success){
@@ -52,7 +52,7 @@ export class TheViecLamDuocQuanTam implements OnInit{
     if(!url) return "";
     
     if(!url.startsWith('http')){
-      return `http://localhost:65001/${url}`;
+      return `http://localhost:7000/${url}`;
     }
     return url;
   }

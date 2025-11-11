@@ -1,3 +1,16 @@
+.navbar {
+  position: sticky; 
+  top: 0;
+  z-index: 1050; 
+  width: 100%;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid rgba(108, 117, 125, 0.5); 
+}
+
+.navbar.scrolled {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .navbar-nav .dropdown-item,
 .offcanvas-body .nav-link {
   transition: background-color 0.3s, color 0.3s;

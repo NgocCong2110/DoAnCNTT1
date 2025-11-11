@@ -70,38 +70,55 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_d
 
         public static bool themCongTy(cong_ty cong_Ty)
         {
-            if (cong_Ty.mat_khau_dn_cong_ty == null || cong_Ty.email == null)
-            {
+            if (string.IsNullOrEmpty(cong_Ty.mat_khau_dn_cong_ty) || string.IsNullOrEmpty(cong_Ty.email))
                 return false;
-            }
+
             using var conn = new MySqlConnection(chuoi_KetNoi);
             conn.Open();
 
             using var transaction = conn.BeginTransaction();
-            string matKhauMaHoa = XacThuc_ND.maHoaMatKhau(cong_Ty.mat_khau_dn_cong_ty);
             try
             {
+                string matKhauMaHoa = XacThuc_ND.maHoaMatKhau(cong_Ty.mat_khau_dn_cong_ty);
+
                 string them_CongTy = @"
-            INSERT INTO cong_ty (ten_dn_cong_ty, email, mat_khau_dn_cong_ty) 
-            VALUES (@ten_dn_cong_ty, @email, @mat_khau_dn_cong_ty);
+            INSERT INTO cong_ty 
+            (ten_cong_ty, ten_dn_cong_ty, mat_khau_dn_cong_ty, nguoi_dai_dien, ma_so_thue, nam_thanh_lap,
+             dia_chi, dien_thoai, email, loai_hinh_cong_ty, trang_thai, ngay_tao)
+            VALUES
+            (@ten_cong_ty, @ten_dn_cong_ty, @mat_khau_dn_cong_ty, @nguoi_dai_dien, @ma_so_thue, @nam_thanh_lap,
+             @dia_chi, @dien_thoai, @email, @loai_hinh_cong_ty, @trang_thai, @ngay_tao);
             SELECT LAST_INSERT_ID();";
 
                 using var cmd = new MySqlCommand(them_CongTy, conn, transaction);
+                cmd.Parameters.AddWithValue("@ten_cong_ty", cong_Ty.ten_cong_ty);
                 cmd.Parameters.AddWithValue("@ten_dn_cong_ty", cong_Ty.ten_dn_cong_ty);
-                cmd.Parameters.AddWithValue("@email", cong_Ty.email);
                 cmd.Parameters.AddWithValue("@mat_khau_dn_cong_ty", matKhauMaHoa);
+                cmd.Parameters.AddWithValue("@nguoi_dai_dien", cong_Ty.nguoi_dai_dien);
+                cmd.Parameters.AddWithValue("@ma_so_thue", cong_Ty.ma_so_thue);
+                cmd.Parameters.AddWithValue("@nam_thanh_lap", cong_Ty.nam_thanh_lap);
+                cmd.Parameters.AddWithValue("@dia_chi", cong_Ty.dia_chi);
+                cmd.Parameters.AddWithValue("@dien_thoai", cong_Ty.dien_thoai);
+                cmd.Parameters.AddWithValue("@email", cong_Ty.email);
+                cmd.Parameters.AddWithValue("@loai_hinh_cong_ty", cong_Ty.loai_hinh_cong_ty.ToString());
+                cmd.Parameters.AddWithValue("@trang_thai", cong_Ty.trang_thai.ToString());
+                cmd.Parameters.AddWithValue("@ngay_tao", cong_Ty.ngay_tao);
 
                 long ma_CongTy = Convert.ToInt64(cmd.ExecuteScalar());
 
+                // Thêm người dùng quản lý công ty
                 string them_NguoiDung = @"
-            INSERT INTO nguoi_dung (loai_nguoi_dung, ma_cong_ty, ten_dang_nhap, mat_khau, email) 
-            VALUES ('cong_Ty', @ma_cong_ty, @ten_dang_nhap, @mat_khau, @email);";
+            INSERT INTO nguoi_dung 
+            (loai_nguoi_dung, ma_cong_ty, ten_dang_nhap, mat_khau, email, ngay_tao)
+            VALUES
+            ('cong_Ty', @ma_cong_ty, @ten_dang_nhap, @mat_khau, @email, @ngay_tao);";
 
                 using var cmd2 = new MySqlCommand(them_NguoiDung, conn, transaction);
                 cmd2.Parameters.AddWithValue("@ma_cong_ty", ma_CongTy);
                 cmd2.Parameters.AddWithValue("@ten_dang_nhap", cong_Ty.ten_dn_cong_ty);
                 cmd2.Parameters.AddWithValue("@mat_khau", matKhauMaHoa);
                 cmd2.Parameters.AddWithValue("@email", cong_Ty.email);
+                cmd2.Parameters.AddWithValue("@ngay_tao", cong_Ty.ngay_tao);
 
                 cmd2.ExecuteNonQuery();
 
@@ -114,5 +131,6 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_d
                 return false;
             }
         }
+
     }
 }

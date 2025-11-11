@@ -14,5 +14,6 @@ namespace DotNet_WEB.Class
         public string? ten_dich_vu {get; set;}
         public string? mo_ta {get; set;}
         public decimal gia { get; set; }
+        public DateTime ngay_tao { get; set;    }
     }
 }

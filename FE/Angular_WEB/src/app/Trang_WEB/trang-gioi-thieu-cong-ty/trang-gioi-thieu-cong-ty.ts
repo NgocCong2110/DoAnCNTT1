@@ -104,7 +104,7 @@ export class TrangGioiThieuCongTy implements OnInit {
   taiDuLieuCongTy(): void {
     this.dang_tai = true;
     this.httpclient.post<any>(
-      'http://localhost:65001/api/API_WEB/layThongTinCongTy',
+      'http://localhost:7000/api/API_WEB/layThongTinCongTy',
       `"${this.ma_cong_ty}"`,
       { headers: { "Content-Type": "application/json" } }
     ).subscribe({
@@ -154,13 +154,13 @@ export class TrangGioiThieuCongTy implements OnInit {
 
   layDiaChiHinhAnhBia(url?: string): string {
     if (!url) return 'https://toomva.com/images/posts/2024/11/cac-loai-hinh-cong-ty-trong-tieng-anh.png';
-    if (!url.startsWith('http')) return "http://localhost:65001/" + url;
+    if (!url.startsWith('http')) return "http://localhost:7000/" + url;
     return url;
   }
 
   layDiaChiHinhAnh(url?: string): string {
     if (!url) return '/assets/default-logo.png';
-    if (!url.startsWith('http')) return "http://localhost:65001/" + url;
+    if (!url.startsWith('http')) return "http://localhost:7000/" + url;
     return url;
   }
 
@@ -194,7 +194,7 @@ export class TrangGioiThieuCongTy implements OnInit {
     this.router.navigate(['trang-chi-tiet-viec-lam'], { queryParams: { ma_bai_dang } });
   }
   layDanhSachViecLamCuaCongTy() {
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachViecLamCuaCongTy', `"${this.ma_cong_ty}"`, { headers: { "Content-Type": "application/json" } })
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachViecLamCuaCongTy', `"${this.ma_cong_ty}"`, { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
           if (data.success) {

@@ -92,7 +92,7 @@ export class TrangTimViecXungQuanh implements AfterViewInit {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layToaDoCongTy', JSON.stringify(dia_chi),
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layToaDoCongTy', JSON.stringify(dia_chi),
       { headers }
     )
       .subscribe({

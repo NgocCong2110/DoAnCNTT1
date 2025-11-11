@@ -294,14 +294,16 @@ ORDER BY bd.ngay_tao DESC;
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string luu_bai_vi_pham = "insert into bai_dang_vi_pham values(@ma_bai_vi_pham, @ten_nguoi_dang, @tieu_de, @noi_dung, @ma_nguoi_bao_cao, @noi_dung_bao_cao, @ngay_bao_cao)";
+            string luu_bai_vi_pham = "insert into bai_dang_vi_pham (ma_bai_dang, ten_nguoi_dang, tieu_de, noi_dung, ma_nguoi_bao_cao, loai_vi_pham, noi_dung_bao_cao, trang_thai_xu_ly, ngay_bao_cao) values(@ma_bai_dang, @ten_nguoi_dang, @tieu_de, @noi_dung, @ma_nguoi_bao_cao, @loai_vi_pham, @noi_dung_bao_cao, @trang_thai_xu_ly, @ngay_bao_cao)";
             using var cmd = new MySqlCommand(luu_bai_vi_pham, coon);
-            cmd.Parameters.AddWithValue("@ma_bai_vi_pham", bai_Dang_Vi_Pham.ma_bai_vi_pham);
+            cmd.Parameters.AddWithValue("@ma_bai_dang", bai_Dang_Vi_Pham.ma_bai_dang);
             cmd.Parameters.AddWithValue("@ten_nguoi_dang", bai_Dang_Vi_Pham.ten_nguoi_dang);
             cmd.Parameters.AddWithValue("@tieu_de", bai_Dang_Vi_Pham.tieu_de);
             cmd.Parameters.AddWithValue("@noi_dung", bai_Dang_Vi_Pham.noi_dung);
             cmd.Parameters.AddWithValue("@ma_nguoi_bao_cao", bai_Dang_Vi_Pham.ma_nguoi_bao_cao);
+            cmd.Parameters.AddWithValue("@loai_vi_pham", bai_Dang_Vi_Pham.loai_vi_pham);
             cmd.Parameters.AddWithValue("@noi_dung_bao_cao", bai_Dang_Vi_Pham.noi_dung_bao_cao);
+            cmd.Parameters.AddWithValue("@trang_thai_xu_ly", bai_Dang_Vi_Pham.trang_thai_xu_ly.ToString());
             cmd.Parameters.AddWithValue("@ngay_bao_cao", bai_Dang_Vi_Pham.ngay_bao_cao);
             if (cmd.ExecuteNonQuery() > 0)
             {

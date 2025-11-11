@@ -22,7 +22,7 @@ export class TrangThemGoiDichVuMoiQuanTri {
       mo_ta: this.mo_ta,
       gia: this.gia
     }
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/taoDichVuMoi', thong_tin)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/taoDichVuMoi', thong_tin)
       .subscribe({
         next: (data) => {
           if(data.success){

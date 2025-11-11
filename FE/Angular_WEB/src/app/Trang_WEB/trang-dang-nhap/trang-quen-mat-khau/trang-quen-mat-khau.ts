@@ -4,6 +4,7 @@ import { Component, QueryList, ViewChildren, ElementRef, ChangeDetectorRef } fro
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
+import { HeaderWEB } from '../../Component/header-web/header-web';
 import e from 'express';
 
 interface API_RESPONSE {
@@ -14,7 +15,7 @@ interface API_RESPONSE {
 @Component({
   selector: 'app-trang-quen-mat-khau',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterLink, HeaderWEB],
   templateUrl: './trang-quen-mat-khau.html',
   styleUrl: './trang-quen-mat-khau.css'
 })
@@ -52,7 +53,7 @@ export class TrangQuenMatKhau {
 
     const email = this.emailForm.value.email;
     console.log(email);
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/guiYeuCauOTP', `"${email}"`, { headers: headers })
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/guiYeuCauOTP', `"${email}"`, { headers: headers })
     .subscribe({
       next: (data) => {
         if (data.success) {
@@ -102,7 +103,7 @@ export class TrangQuenMatKhau {
       ma_otp_gui_di: otp
     };
 
-    this.httpclient.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/xacNhanOTP", thong_tin)
+    this.httpclient.post<API_RESPONSE>("http://localhost:7000/api/API_WEB/xacNhanOTP", thong_tin)
       .subscribe({
         next: (data) => {
           if (data.success) {

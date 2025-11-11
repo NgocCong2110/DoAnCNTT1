@@ -15,6 +15,8 @@ namespace DotNet_WEB.Class
         public string? mat_khau { get; set; }
         public string? ho_ten { get; set; }
         public string? email { get; set; }
+        public string? dien_thoai { get; set; }
+        public string? duong_dan_anh_dai_dien { get; set; }
         public DateTime ngay_tao { get; set; } = DateTime.Now;
         public DateTime ngay_cap_nhat { get; set; } = DateTime.Now;
     }

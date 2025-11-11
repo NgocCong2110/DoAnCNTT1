@@ -11,6 +11,7 @@ declare var bootstrap: any;
 
 interface API_RESPONSE {
   success: boolean;
+  danh_sach: any[];
 }
 
 @Component({
@@ -29,6 +30,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   thongTin: any;
 
   ngOnInit(): void {
+    this.layDanhSachNganhNghe();
     this.layDanhSachBaiDang();
   }
 
@@ -71,7 +73,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
 
   layDanhSachBaiDang() {
     const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty;
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/layDanhSachViecLamCuaCongTy', ma_cong_ty, { headers: { "Content-Type": "application/json" } })
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachViecLamCuaCongTy', ma_cong_ty, { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
           if (data.success) {
@@ -111,6 +113,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     nghe_thuat: 'Nghệ thuật',
     van_tai: 'Vận tải'
   };
+
   laynganhnghe(ma: string): string {
     return this.nganhNgheMapping[ma] || '';
   }
@@ -206,21 +209,21 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   chonMucLuong(muc: any) {
     this.muc_luong_label = muc.label;
 
-    if (muc.label === 'Khác') {
-      this.showCustomLuong = true;
-      this.muc_luong_min = null;
-      this.muc_luong_max = null;
-    } else {
-      this.showCustomLuong = false;
-
-      if (muc.label === 'Thỏa thuận') {
-        this.muc_luong_min = null;
-        this.muc_luong_max = null;
-      } else {
-        this.muc_luong_min = muc.min;
-        this.muc_luong_max = muc.max;
-      }
-    }
+  if (muc.label === 'Khác') {
+    this.showCustomLuong = true;
+    this.muc_luong_min = null;
+    this.muc_luong_max = null;
+  } 
+  else if (muc.label === 'Thỏa thuận') {
+    this.showCustomLuong = false;
+    this.muc_luong_min = null;
+    this.muc_luong_max = null;
+  } 
+  else {
+    this.showCustomLuong = false;
+    this.muc_luong_min = muc.min;
+    this.muc_luong_max = muc.max;
+  }
   }
 
 
@@ -241,28 +244,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
 
 
 
-  nganhNgheList = [
-    { value: 'cong_nghe_thong_tin', label: 'Công nghệ thông tin' },
-    { value: 'tai_chinh', label: 'Tài chính - Ngân hàng - Kế toán' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'ban_hang', label: 'Bán hàng' },
-    { value: 'san_xuat', label: 'Sản xuất - Công nghiệp' },
-    { value: 'xay_dung', label: 'Xây dựng - Kiến trúc' },
-    { value: 'giao_duc', label: 'Giáo dục - Đào tạo' },
-    { value: 'y_te', label: 'Y tế - Dược' },
-    { value: 'hanh_chinh', label: 'Hành chính - Văn phòng' },
-    { value: 'nhan_su', label: 'Nhân sự' },
-    { value: 'luat', label: 'Pháp lý - Luật' },
-    { value: 'du_lich', label: 'Du lịch - Nhà hàng - Khách sạn' },
-    { value: 'bat_dong_san', label: 'Bất động sản' },
-    { value: 'van_tai', label: 'Vận tải - Kho vận - Logistics' },
-    { value: 'truyen_thong', label: 'Truyền thông - Quảng cáo' },
-    { value: 'thiet_ke', label: 'Thiết kế - Mỹ thuật - Sáng tạo' },
-    { value: 'nong_lam_ngu_nghiep', label: 'Nông - Lâm - Ngư nghiệp' },
-    { value: 'co_khi_dien_dien_tu', label: 'Cơ khí - Điện - Điện tử' },
-    { value: 'cong_tac_xa_hoi', label: 'Công tác xã hội - Phi lợi nhuận' },
-    { value: 'khac', label: 'Khác' }
-  ];
+  nganhNgheList: {value: string, label: string}[] = [];
 
   trinhDoHocVanList = [
     { value: 1, label: 'Trung Học' },
@@ -284,6 +266,20 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   kinh_nghiem: string | null = null;
   kinh_nghiem_label: string | null = null;
 
+  danh_sach_kinh_nghiem = [
+    { value: "Không yêu cầu", label: "Không yêu cầu" },
+    { value: "Dưới 1 năm", label: "Dưới 1 năm" },
+    { value: "Từ 1 - 2 năm", label: "Từ 1 - 2 năm" },
+    { value: "Từ 3 - 5 năm", label: "Từ 3 - 5 năm" },
+    { value: "Trên 5 năm", label: "Trên 5 năm" }
+  ];
+
+  chonKinhNghiem(event: any) {
+    const selected = this.danh_sach_kinh_nghiem.find(x => x.value === event.target.value);
+    this.kinh_nghiem = selected?.value ?? null;
+    this.kinh_nghiem_label = selected?.label ?? null;
+  }
+
   loaiHinhList = [
     { value: '1', label: 'Toàn thời gian' },
     { value: '2', label: 'Bán thời gian' },
@@ -297,6 +293,24 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     } else {
       this.phucLoiDaChon = this.phucLoiDaChon.filter(x => x !== phuc.ma_phuc_loi);
     }
+  }
+
+  layDanhSachNganhNghe(){
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachNganhNghe', {})
+    .subscribe({
+        next: (data) => {
+          if (data.success) {
+             this.nganhNgheList = data.danh_sach.map(n => ({ value: n.ma_nganh_nghe, label: n.ten_nganh_nghe }));
+          }
+          else {
+            console.log("loi");
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+
+        }
+      })
   }
 
   moPopup() {
@@ -346,7 +360,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
       },
       phuc_Loi: this.phucLoiDaChon,
     };
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/themBaiDangMoi', thong_Tin)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/themBaiDangMoi', thong_Tin)
       .subscribe({
         next: (data) => {
           if (data.success) {

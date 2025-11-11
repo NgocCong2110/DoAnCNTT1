@@ -162,6 +162,16 @@ namespace DotNet_WEB.Module
             return await chuc_nang_tai_khoan_ntv_web.capNhatAnhDaiDienNguoiTimViec(anh_dai_dien, ma_nguoi_tim_viec);
         }
 
+        public static bool kiemTraMatKhauNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
+        {
+            return chuc_nang_tai_khoan_ntv_web.kiemTraMatKhauNguoiTimViec(nguoi_Tim_Viec);
+        } 
+
+        public static bool capNhatMatKhauNguoiTimViec(nguoi_tim_viec nguoi_Tim_Viec)
+        {
+            return chuc_nang_tai_khoan_ntv_web.capNhatMatKhauNguoiTimViec(nguoi_Tim_Viec);
+        } 
+
         public static List<chung_chi> layDanhSachChungChi(int ma_nguoi_tim_viec)
         {
             return chuc_nang_chung_chi_web.layDanhSachChungChi(ma_nguoi_tim_viec);

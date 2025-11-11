@@ -131,7 +131,7 @@ export class MauCvCongNghe {
 
     console.log('Dữ liệu lưu CV:', thong_tin_cv);
 
-    this.http.post('http://localhost:65001/api/API_WEB/luuCV', thong_tin_cv)
+    this.http.post('http://localhost:7000/api/API_WEB/luuCV', thong_tin_cv)
       .subscribe({
         next: (res: any) => {
           alert(' Lưu CV thành công!');

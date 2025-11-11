@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Net.Mail;
+using System.Text;
+using System.Security.Cryptography;
 using DotNet_WEB.Module;
 using DotNet_WEB.Class;
-using Newtonsoft.Json.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
-using System.Text;
-
+using System.Net;
 
 namespace DotNet_WEB
 {
@@ -19,45 +15,74 @@ namespace DotNet_WEB
     [Route("api/[controller]")]
     public class API_Ngan_Hang : ControllerBase
     {
-       
-
-        [HttpPost("thanhToanVNPAY")]
-        public IActionResult thanhToanVNPAY([FromBody] tao_don_hang don_hang_thong_tin)
+        [HttpPost("thanhToanSepay")]
+        public IActionResult thanhToanSepay([FromBody] tao_don_hang don_hang_thong_tin)
         {
-            var urlThanhToan = Module_Ngan_Hang.taoDonHang(don_hang_thong_tin);
-            if (!string.IsNullOrEmpty(urlThanhToan))
+            try
             {
-                return Ok(new { success = true, urlThanhToan });
+                var urlThanhToan = Module_Ngan_Hang.taoDonHang(don_hang_thong_tin);
+                if (!string.IsNullOrEmpty(urlThanhToan))
+                {
+                    return Ok(new { success = true, urlThanhToan });
+                }
+                return Ok(new { success = false, message = "Không tạo được url Sepay" });
             }
-            return Ok(new { success = false, message = "Không tạo được url" });
+            catch (Exception ex)
+            {
+                return Ok(new { success = false, message = ex.Message });
+            }
         }
-        [HttpGet("VNPayReturn")]
-        public IActionResult VNPayReturn()
-        {
-            var query = Request.Query;
-            string? vnp_SecureHash = query["vnp_SecureHash"];
-            string? vnp_TxnRef = query["vnp_TxnRef"];
-            string? vnp_Amount = query["vnp_Amount"];
-            string? vnp_ResponseCode = query["vnp_ResponseCode"];
 
-            var fields = query.Where(kv => kv.Key.StartsWith("vnp_") && kv.Key != "vnp_SecureHash" && kv.Key != "vnp_SecureHashType")
-            .OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value.ToString());
-            var hashData = string.Join("&", fields.Select(kv => $"{kv.Key}={kv.Value}"));
-            var hmac = new HMACSHA512(Encoding.UTF8.GetBytes("I7LL3FX1ZJQZ6OCXQ9EGY9DVT0W0Q3EE"));
-            var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(hashData));
-            var calculatedHash = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
-            if (calculatedHash != vnp_SecureHash)
-                return BadRequest("Sai hash, không hợp lệ");
-            if (vnp_ResponseCode != "00")
-                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={vnp_TxnRef}");
-            int ma_don_hang = int.Parse(vnp_TxnRef);
-            decimal so_tien = Convert.ToDecimal(vnp_Amount) / 100m;
-            bool ket_qua = Module_Ngan_Hang.capNhatTrangThaiDonHang(ma_don_hang, so_tien, vnp_ResponseCode);
-            if (ket_qua)
+        [HttpGet("SepayCallback")]
+        public IActionResult SepayCallback([FromQuery] SepayCallbackModel callbackGet, [FromForm] SepayCallbackModel callbackPost)
+        {
+            SepayCallbackModel callback;
+
+            if (Request.Method == "POST")
+                callback = callbackPost;
+            else
+                callback = callbackGet;
+
+            Console.WriteLine("[Debug] Sepay callback received via " + Request.Method);
+            Console.WriteLine($"OrderId = {callback.OrderId}, Amount = {callback.Amount}, ResponseCode = {callback.ResponseCode}");
+
+            _ = Task.Run(() =>
             {
-                return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=true&ma_don_hang={ma_don_hang}");
-            }
-            return Redirect($"http://localhost:4200/trang-ket-qua-thanh-toan?success=false&ma_don_hang={ma_don_hang}");
+                try
+                {
+                    if (callback.ResponseCode == "00")
+                    {
+                        bool res = Module_Ngan_Hang.capNhatTrangThaiDonHang(
+                            callback.OrderId,
+                            callback.Amount,
+                            callback.ResponseCode,
+                            callback.TransactionNo,
+                            callback.BankCode
+                        );
+                        Console.WriteLine($"[Debug] DB update result: {res}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Debug] Exception khi update DB: {ex.Message}");
+                }
+            });
+
+            // Trả về ngay 200 OK
+            return Ok(new { success = true, message = "Callback received" });
         }
+
+
+
+
+    }
+
+    public class SepayCallbackModel
+    {
+        public string? TransactionNo { get; set; }
+        public string? ResponseCode { get; set; }
+        public int OrderId { get; set; }
+        public decimal Amount { get; set; }
+        public string? BankCode { get; set; }
     }
 }

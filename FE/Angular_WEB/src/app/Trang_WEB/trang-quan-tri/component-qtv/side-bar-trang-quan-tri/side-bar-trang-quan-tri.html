@@ -58,8 +58,6 @@
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_QLDanhMuc">
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-quan-tri','trang-danh-muc-nganh-nghe']">Danh mục ngành nghề</a>
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-quan-tri','trang-danh-muc-ky-nang']">Danh mục kỹ năng</a>
     </div>
   </div>
 
@@ -80,22 +78,6 @@
         [routerLink]="['/trang-quan-tri','trang-lich-su-giao-dich']">Lịch sử giao dịch</a>
     </div>
   </div> -->
-
-  <!-- thong ke -->
-  <div class="mb-3">
-    <button
-      class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-      type="button" (click)="chuyenDoi_TTThongKe()">
-      <span><i class="bi bi-bar-chart-fill me-2 text-danger"></i> Thống kê <span>{{ trangThai_ThongKe ? '▾' : '▸'
-          }}</span></span>
-    </button>
-    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_ThongKe">
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-quan-tri','trang-thong-ke-nguoi-dung']">Người dùng</a>
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-quan-tri','trang-thong-ke-doanh-thu']">Doanh thu</a>
-    </div>
-  </div>
 
   <div class="mb-4">
     <button

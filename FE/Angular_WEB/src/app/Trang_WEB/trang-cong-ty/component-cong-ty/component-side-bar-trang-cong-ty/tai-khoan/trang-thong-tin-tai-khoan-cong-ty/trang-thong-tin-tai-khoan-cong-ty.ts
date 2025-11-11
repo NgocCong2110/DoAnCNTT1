@@ -60,7 +60,7 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
       gia_tri: this.editingValues[key]
     };
 
-    this.http.patch<any>('http://localhost:65001/api/API_WEB/capNhatThongTinCongTy', payload)
+    this.http.patch<any>('http://localhost:7000/api/API_WEB/capNhatThongTinCongTy', payload)
       .subscribe({
         next: data => {
           if (data.success) {
@@ -100,11 +100,11 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
     formData.append('ma_cong_ty', this.thongTin.cong_ty.ma_cong_ty);
     formData.append('logo', this.fileLogo!);
 
-    this.http.post<any>('http://localhost:65001/api/API_WEB/capNhatLogoCongTy', formData)
+    this.http.post<any>('http://localhost:7000/api/API_WEB/capNhatLogoCongTy', formData)
       .subscribe({
         next: data => {
           if (data.success) {
-            this.thongTin.cong_ty.logo = data.url ? `http://localhost:65001/${data.url}` : this.previewLogo;
+            this.thongTin.cong_ty.logo = data.url ? `http://localhost:7000/${data.url}` : this.previewLogo;
 
             const duLieu = this.auth.layThongTinNguoiDung();
             duLieu.thong_tin_chi_tiet.cong_ty.logo = data.url;
@@ -128,7 +128,7 @@ export class TrangThongTinTaiKhoanCongTy implements OnInit {
   taoDuongDanLogo(duongDan: string): string {
     if (!duongDan) return '';
     if (duongDan.startsWith('http')) return duongDan;
-    return `http://localhost:65001/${duongDan}`;
+    return `http://localhost:7000/${duongDan}`;
   }
 
   layTenLoaiHinh(value: number): string {

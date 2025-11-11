@@ -34,7 +34,7 @@ export class TheDanhGiaTuNguoiDung implements OnInit {
   }
 
   layDanhSachDanhGia() {
-    this.http.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachDanhGia', {})
+    this.http.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachDanhGia', {})
       .subscribe({
         next: (res) => {
           if (res.success) {
@@ -68,9 +68,7 @@ export class TheDanhGiaTuNguoiDung implements OnInit {
       noi_dung_danh_gia: this.noi_dung_danh_gia
     };
 
-    console.log(thong_tin_danh_gia)
-
-    this.http.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/themDanhGia', thong_tin_danh_gia)
+    this.http.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/themDanhGia', thong_tin_danh_gia)
       .subscribe({
         next: (res) => {
           if (res.success) {

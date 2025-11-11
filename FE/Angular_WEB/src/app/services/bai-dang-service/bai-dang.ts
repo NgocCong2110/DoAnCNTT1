@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class BaiDang {
-  private apiUrl = 'http://localhost:65001/api/API_WEB/layDanhSachBaiDang';
+  private apiUrl = 'http://localhost:7000/api/API_WEB/layDanhSachBaiDang';
 
   private bai_dang_duoc_chon = new BehaviorSubject<BaiDangComponent | null>(null);
   bai_dang_duoc_chon$ = this.bai_dang_duoc_chon.asObservable();
@@ -43,7 +43,7 @@ export class BaiDang {
     try {
       const result: any = await firstValueFrom(
         this.http.post(
-          'http://localhost:65001/api/API_WEB/xoaBaiDang',
+          'http://localhost:7000/api/API_WEB/xoaBaiDang',
           { ma_bai_dang },
           { headers: { 'Content-Type': 'application/json' } }
         )

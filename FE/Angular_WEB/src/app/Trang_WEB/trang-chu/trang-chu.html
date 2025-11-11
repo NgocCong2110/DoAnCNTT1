@@ -1,21 +1,24 @@
 <div class="bg-light">
   <app-header-web></app-header-web>
 
-
-  <div *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'cong_Ty' && auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'quan_Tri_Vien'">
+  <div *ngIf="!auth.layThongTinNguoiDung() || auth.layThongTinNguoiDung()?.kieu_nguoi_dung === 'nguoi_Tim_Viec'">
     <app-the-banner></app-the-banner>
-
     <app-the-viec-lam-duoc-quan-tam></app-the-viec-lam-duoc-quan-tam>
-
     <app-the-nganh-nghe-noi-bat></app-the-nganh-nghe-noi-bat>
-
     <app-thong-tin-noi-bat></app-thong-tin-noi-bat>
-
     <app-the-chuyen-trang-tao-cv></app-the-chuyen-trang-tao-cv>
-
     <app-the-danh-gia-tu-nguoi-dung></app-the-danh-gia-tu-nguoi-dung>
   </div>
 
-  <app-footer-web></app-footer-web>
+  <div *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung === 'cong_Ty'">
+    <app-component-thong-ke-tuyen-dung-cua-cong-ty></app-component-thong-ke-tuyen-dung-cua-cong-ty>
+  </div>
 
+  <div *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung === 'quan_Tri_Vien'">
+    <app-component-thong-ke-nguoi-dung></app-component-thong-ke-nguoi-dung>
+    <app-component-thong-ke-phan-loai-nguoi-dung></app-component-thong-ke-phan-loai-nguoi-dung>
+    <app-component-thong-ke-tin-tuyen-dung></app-component-thong-ke-tin-tuyen-dung>
+  </div>
+
+  <app-footer-web></app-footer-web>
 </div>

@@ -25,11 +25,11 @@ export class TrangDangKyCongTy {
     xac_Nhan_MatKhau: '',
     nguoi_DaiDien: '',
     maSo_Thue: '',
-    ngay_ThanhLap: '',
+    nam_ThanhLap: '',
     dia_Chi: '',
     dien_Thoai: '',
     email: '',
-    loaiHinh: 'CongTyTNHH'
+    loaiHinh: 1
   };
 
   thong_bao: string = '';
@@ -37,32 +37,38 @@ export class TrangDangKyCongTy {
 
   getThongTinDangKy() {
     return {
-      ten_Cong_Ty: this.form.ten_CongTy,
-      ten_Dn: this.form.ten_Dang_Ky,
-      mat_Khau: this.form.mat_Khau,
-      vai_Tro: 'cong_Ty'
+      ten_cong_ty: this.form.ten_CongTy,
+      ten_dn_cong_ty: this.form.ten_Dang_Ky,
+      mat_khau_dn_cong_ty: this.form.mat_Khau,
+      nguoi_dai_dien: this.form.nguoi_DaiDien,
+      ma_so_thue: this.form.maSo_Thue,
+      dia_chi: this.form.dia_Chi,
+      email: this.form.email,
+      loai_hinh_cong_ty: this.form.loaiHinh,  
+      nam_thanh_lap: this.form.nam_ThanhLap,
+      trang_thai: 1
     };
   }
 
   dangKy(formRef: any) {
     if (formRef.valid && this.form.mat_Khau === this.form.xac_Nhan_MatKhau) {
-      console.log('Dữ liệu form:', this.getThongTinDangKy());
+      this.kiemTraEmail();
     }
   }
 
   kiemTraEmail() {
-    this.http.post<any>('http://localhost:65001/api/API_WEB/kiemTraTaiKhoanDangKy', {
+    this.http.post<any>('http://localhost:7000/api/API_WEB/kiemTraTaiKhoanDangKy', {
       email: this.form.email
     }).subscribe({
       next: (data) => {
         if (data.success) {
-          this.http.post<any>('http://localhost:65001/api/API_WEB/xacThucMaSoThue', {
+          this.http.post<any>('http://localhost:7000/api/API_WEB/xacThucMaSoThue', {
             ma_so_thue: this.form.maSo_Thue
           }).subscribe({
             next: (data2) => {
               if (data2.success) {
                 this.http.post<any>(
-                  'http://localhost:65001/api/API_WEB/themThongTinCongTy',
+                  'http://localhost:7000/api/API_WEB/themThongTinCongTy',
                   this.getThongTinDangKy()
                 ).subscribe({
                   next: (data3) => {
@@ -71,7 +77,7 @@ export class TrangDangKyCongTy {
                       this.hien_thong_bao = true;
                       setTimeout(() => {
                         this.hien_thong_bao = false;
-                        this.router.navigate(['/trang-chu']);
+                        this.router.navigate(['/dang-nhap']);
                       }, 2000);
                     } else {
                       this.thong_bao = 'Đăng ký thông tin công ty thất bại!';

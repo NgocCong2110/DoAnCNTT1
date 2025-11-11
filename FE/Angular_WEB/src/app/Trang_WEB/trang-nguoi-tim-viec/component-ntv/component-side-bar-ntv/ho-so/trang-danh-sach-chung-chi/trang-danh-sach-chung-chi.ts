@@ -103,7 +103,7 @@ export class TrangDanhSachChungChi implements OnInit{
     formData.append('ngay_het_han', this.chungChi.ngay_het_han);
     formData.append('ten_tep', this.tepPDF);
 
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/dangTaiChungChi', formData)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/dangTaiChungChi', formData)
       .subscribe({
         next: (data) => {
           if(data.success){
@@ -129,7 +129,7 @@ export class TrangDanhSachChungChi implements OnInit{
       alert("Khong tim thay ma nguoi tim viec");
       return;
     }
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachChungChi', ma_nguoi_tim_viec, {headers: {"Content-Type" : "application/json"}})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachChungChi', ma_nguoi_tim_viec, {headers: {"Content-Type" : "application/json"}})
       .subscribe({
         next: (data) => {
           if(data.success){
@@ -164,7 +164,7 @@ export class TrangDanhSachChungChi implements OnInit{
       ma_chung_chi: chung_chi.ma_chung_chi,
       ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet.nguoi_tim_viec.ma_nguoi_tim_viec
     }
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/xoaChungChi', thong_tin)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/xoaChungChi', thong_tin)
       .subscribe({
         next: (data) =>{
           if(data.success){
@@ -184,7 +184,7 @@ export class TrangDanhSachChungChi implements OnInit{
 
   xemFile(url: string){
     if(!url) return '';
-    if(!url.startsWith('http')) return 'http://localhost:65001/' + url;
+    if(!url.startsWith('http')) return 'http://localhost:7000/' + url;
     return url
   }
 }

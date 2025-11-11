@@ -66,29 +66,7 @@ export class CacSelector implements OnInit {
 
   nganh_nghe_params = '';
 
-  nganhNgheList = [
-    { value: 'cong_nghe_thong_tin', label: 'Công nghệ thông tin' },
-    { value: 'tai_chinh', label: 'Tài chính - Ngân hàng - Kế toán' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'sales', label: 'Sales' },
-    { value: 'cham_soc_khach_hang', label: 'Chăm sóc khách hàng' },
-    { value: 'san_xuat', label: 'Sản xuất - Công nghiệp' },
-    { value: 'xay_dung', label: 'Xây dựng - Kiến trúc' },
-    { value: 'giao_duc', label: 'Giáo dục - Đào tạo' },
-    { value: 'y_te', label: 'Y tế - Dược' },
-    { value: 'hanh_chinh', label: 'Hành chính - Văn phòng' },
-    { value: 'nhan_su', label: 'Nhân sự' },
-    { value: 'luat', label: 'Pháp lý - Luật' },
-    { value: 'du_lich', label: 'Du lịch - Nhà hàng - Khách sạn' },
-    { value: 'bat_dong_san', label: 'Bất động sản' },
-    { value: 'van_tai', label: 'Vận tải - Kho vận - Logistics' },
-    { value: 'truyen_thong', label: 'Truyền thông - Quảng cáo' },
-    { value: 'thiet_ke', label: 'Thiết kế - Mỹ thuật - Sáng tạo' },
-    { value: 'nong_lam_ngu_nghiep', label: 'Nông - Lâm - Ngư nghiệp' },
-    { value: 'co_khi_dien_dien_tu', label: 'Cơ khí - Điện - Điện tử' },
-    { value: 'cong_tac_xa_hoi', label: 'Công tác xã hội - Phi lợi nhuận' },
-    { value: 'khac', label: 'Khác' }
-  ];
+  nganhNgheList: {value: string, label: string}[] = [];
 
 
   diaDiemList = [
@@ -102,14 +80,16 @@ export class CacSelector implements OnInit {
     { value: "10", label: 'Dưới 10 triệu' },
     { value: "11", label: '10 - 20 triệu' },
     { value: "21", label: '20 - 30 triệu' },
-    { value: "30", label: 'Trên 30 triệu' }
+    { value: "30", label: 'Trên 30 triệu' },
+    { value: "thoathuan", label: 'Thỏa thuận'}
   ];
 
   kinhNghiemList = [
-    { value: 'chua_co_kn', label: 'Chưa có kinh nghiệm' },
-    { value: '1_2', label: '1 - 2 năm' },
-    { value: '3_5', label: '3 - 5 năm' },
-    { value: 'tren_5', label: 'Trên 5 năm' }
+    { value: "Không yêu cầu", label: "Không yêu cầu" },
+    { value: "Dưới 1 năm", label: "Dưới 1 năm" },
+    { value: "Từ 1 - 2 năm", label: "Từ 1 - 2 năm" },
+    { value: "Từ 3 - 5 năm", label: "Từ 3 - 5 năm" },
+    { value: "Trên 5 năm", label: "Trên 5 năm" }
   ];
 
   hinhThucList = [
@@ -125,21 +105,6 @@ export class CacSelector implements OnInit {
     { value: 'quan_ly', label: 'Quản lý' },
     { value: 'giam_doc', label: 'Giám đốc' },
     { value: 'chu_tich', label: 'Chủ tịch' }
-  ];
-
-  phucLoiList = [
-    { value: 'bao_hiem_day_du', label: 'Bảo hiểm đầy đủ' },
-    { value: 'luong_thang_13', label: 'Thưởng tháng 13' },
-    { value: 'du_lich_cong_ty', label: 'Du lịch công ty' },
-    { value: 'phu_cap_an_true', label: 'Phụ cấp ăn trưa' },
-    { value: 'remote', label: 'Hỗ trợ remote' }
-  ];
-
-  quyMoCongTyList = [
-    { value: 'duoi_50', label: 'Dưới 50 người' },
-    { value: '50_200', label: '50 - 200 người' },
-    { value: '200_1000', label: '200 - 1000 người' },
-    { value: 'tren_1000', label: 'Trên 1000 người' }
   ];
 
   xoaBoLoc(loai: string) {
@@ -206,18 +171,41 @@ export class CacSelector implements OnInit {
     this.danh_sach_de_xuat = ds;
   }
 
+  layDanhSachNganhNghe(){
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachNganhNghe', {})
+    .subscribe({
+        next: (data) => {
+          this.loading = false;
+          if (data.success) {
+             this.nganhNgheList = data.danh_sach.map(n => ({ value: n.ma_nganh_nghe, label: n.ten_nganh_nghe }));
+          }
+          else {
+            console.log("loi");
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = true;
+        }
+      })
+  }
+
   boLocLuong(luong: string) {
     let ds = [...this.danh_sach_de_xuat];
     if (luong == 'cao_Nhat') {
-      ds.sort((a, b) => b.viec_lam?.muc_luong_cao_nhat - a.viec_lam?.muc_luong_cao_nhat);
+      ds.sort((a, b) => b.viec_Lam?.muc_luong_cao_nhat - a.viec_Lam?.muc_luong_cao_nhat);
     }
     if (luong == 'thap_Nhat') {
-      ds.sort((a, b) => a.viec_lam?.muc_luong_cao_nhat - b.viec_lam?.muc_luong_cao_nhat);
+      ds.sort((a, b) => a.viec_Lam?.muc_luong_cao_nhat - b.viec_Lam?.muc_luong_cao_nhat);
     }
+    console.log(ds)
     this.danh_sach_de_xuat = ds;
   }
 
   ngOnInit(): void {
+
+    this.layDanhSachNganhNghe();
 
     this.route.queryParams.subscribe(params => {
       this.xuLyThayDoiParam(params);
@@ -250,10 +238,19 @@ export class CacSelector implements OnInit {
         this.nganh_nghe_label = '';
       }
 
+      const thong_tin = {
+        nganh_nghe: nganh,
+        vi_tri: this.vi_tri,
+        dia_diem: this.dia_diem,
+        kinh_nghiem: this.kinh_nghiem,
+        muc_luong: this.muc_luong,
+        loai_hinh: this.hinh_thuc,
+      }
+
       this.toan_bo = false;
       this.tung_phan = false;
       this.de_xuat_thanh_tim_kiem = true;
-      this.duaRaDeXuat({ nganh_nghe: nganh });
+      this.duaRaDeXuat(thong_tin);
     }
     else {
       this.de_xuat_thanh_tim_kiem = false;
@@ -268,7 +265,7 @@ export class CacSelector implements OnInit {
     this.tung_phan = false;
     this.de_xuat_thanh_tim_kiem = false;
     this.cd.markForCheck();
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachViecLam', {})
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachViecLam', {})
       .subscribe({
         next: (data) => {
           this.loading = false;
@@ -308,13 +305,12 @@ export class CacSelector implements OnInit {
     this.loading = true;
     this.cd.markForCheck();
     //van de ve warp object
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/deXuatViecLamSelector', viec_Lam)
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/deXuatViecLamSelector', viec_Lam)
       .subscribe({
         next: (data) => {
           this.loading = false;
           if (data.success) {
             this.danh_sach_de_xuat = data.danh_sach || [];
-            this.danh_sach_goc = [...this.danh_sach_de_xuat];
             this.so_luong_viec_lam = this.danh_sach_de_xuat.length;
             this.error = false;
           }
@@ -343,7 +339,7 @@ export class CacSelector implements OnInit {
 
   layDuongDanLogo(url: string): string {
     if (!url) return "";
-    if (!url.startsWith('http')) return `http://localhost:65001/${url}`;
+    if (!url.startsWith('http')) return `http://localhost:7000/${url}`;
     return url;
   }
 

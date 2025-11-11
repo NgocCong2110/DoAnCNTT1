@@ -32,7 +32,7 @@ export class TrangDanhSachGoiDichVuQuanTri implements OnInit{
   }
 
   layDanhSachDichVu(){
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachDichVu',  {}) // gui string, int,... khong boc
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachDichVu',  {}) // gui string, int,... khong boc
       .subscribe({
         next: (data) => {
           if(data.success){

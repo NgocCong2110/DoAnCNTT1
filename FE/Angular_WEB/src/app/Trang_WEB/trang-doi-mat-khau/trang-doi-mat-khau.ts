@@ -44,7 +44,7 @@ export class TrangDoiMatKhau {
 
     console.log(body);
 
-    this.http.post<API_RESPONSE>("http://localhost:65001/api/API_WEB/doiMatKhauMoi", body)
+    this.http.post<API_RESPONSE>("http://localhost:7000/api/API_WEB/doiMatKhauMoi", body)
       .subscribe({
         next: (data) => {
           this.isSubmitting = false;

@@ -36,11 +36,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
 
             using var reader = cmdViec.ExecuteReader();
 
-            viec_lam? viec = null;
+            viec_lam? viec_Lam = null;
 
             if (reader.Read())
             {
-                viec = new viec_lam
+                viec_Lam = new viec_lam
                 {
                     ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
                     ma_cong_ty = reader.IsDBNull(reader.GetOrdinal("ma_cong_ty")) ? 0 : reader.GetInt32("ma_cong_ty"),
@@ -76,14 +76,14 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
 
             reader.Close();
 
-            if (viec == null)
+            if (viec_Lam == null)
             {
                 return null;
             }
 
-            if (viec.ma_cong_ty > 0)
+            if (viec_Lam.ma_cong_ty > 0)
             {
-                viec.danh_sach_phuc_loi = new List<phuc_loi>();
+                viec_Lam.danh_sach_phuc_loi = new List<phuc_loi>();
 
                 string sqlPhucLoi = @"
             SELECT pl.ma_phuc_loi, pl.ten_phuc_loi
@@ -92,12 +92,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             WHERE plvl.ma_viec = @ma_viec";
 
                 using var cmdPhuc = new MySqlCommand(sqlPhucLoi, conn);
-                cmdPhuc.Parameters.AddWithValue("@ma_viec", viec.ma_viec);
+                cmdPhuc.Parameters.AddWithValue("@ma_viec", viec_Lam.ma_viec);
 
                 using var readerPL = cmdPhuc.ExecuteReader();
                 while (readerPL.Read())
                 {
-                    viec.danh_sach_phuc_loi.Add(new phuc_loi
+                    viec_Lam.danh_sach_phuc_loi.Add(new phuc_loi
                     {
                         ma_phuc_loi = readerPL.GetInt32("ma_phuc_loi"),
                         ten_phuc_loi = readerPL.GetString("ten_phuc_loi")
@@ -106,7 +106,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 readerPL.Close();
             }
 
-            return viec;
+            return viec_Lam;
         }
         public static List<so_luong_ung_vien_viec_lam> layDanhSachViecLamDuocQuanTam()
         {
@@ -119,7 +119,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                             join viec_lam vl on ut.ma_viec = vl.ma_viec
                             join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
 	                        join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
-                        group by vl.ma_viec, bd.ma_bai_dang, vl.nganh_nghe, ct.ten_cong_ty, vl.tieu_de, vl.mo_ta, vl.muc_luong, vl.dia_diem, ct.logo";
+                        group by vl.ma_viec, bd.ma_bai_dang, vl.nganh_nghe, ct.ten_cong_ty, vl.tieu_de, vl.mo_ta, vl.muc_luong, vl.dia_diem, ct.logo limit 12";
                 using var cmd = new MySqlCommand(sql, coon);
                 using var reader = cmd.ExecuteReader();
                 var danh_sach = new List<so_luong_ung_vien_viec_lam>();
@@ -163,7 +163,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 }
                 return danh_sach;
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 Console.WriteLine(err);
                 return new List<so_luong_ung_vien_viec_lam>();
@@ -175,7 +175,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
             string sql = @"select nganh_nghe, count(*) as so_luong from viec_lam 
-            group by nganh_nghe order by so_luong desc";
+            group by nganh_nghe order by so_luong desc limit 14";
             using var cmd = new MySqlCommand(sql, coon);
             using var reader = cmd.ExecuteReader();
             var danh_sach = new List<so_luong_nganh_nghe>();
@@ -191,7 +191,27 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             return danh_sach;
         }
 
-        public static List<viec_lam> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
+        public static List<nganh_nghe> layDanhSachNganhNghe()
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = @"select * from nganh_nghe order by thu_tu";
+            using var cmd = new MySqlCommand(sql, coon);
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<nganh_nghe>();
+            while (reader.Read())
+            {
+                var sl = new nganh_nghe
+                {
+                    ma_nganh_nghe = reader.IsDBNull(reader.GetOrdinal("ma_nganh_nghe")) ? null : reader.GetString("ma_nganh_nghe"),
+                    ten_nganh_nghe = reader.IsDBNull(reader.GetOrdinal("ten_nganh_nghe")) ? null : reader.GetString("ten_nganh_nghe")
+                };
+                danh_sach.Add(sl);
+            }
+            return danh_sach;
+        }
+
+        public static List<viec_lam_ket_qua> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
         {
             var chuoiYeuCau = Normalize(chuoi_yeu_cau);
 
@@ -237,7 +257,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 }
             }
 
-            var ketQua = new List<viec_lam>();
+            var ketQua = new List<viec_lam_ket_qua>();
             using (var coon = new MySqlConnection(chuoi_KetNoi))
             {
                 coon.Open();
@@ -249,50 +269,60 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    var vl = new viec_lam
+                    var vl = new viec_lam_ket_qua
                     {
-                        ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
-
-                        cong_Ty = new cong_ty
+                        ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
+                        viec_Lam = new viec_lam
                         {
-                            logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
+                            ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
 
-                            ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty")
+                            cong_Ty = new cong_ty
+                            {
+                                logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
+
+                                ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty")
+                            },
+
+                            nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
+
+                            vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
+
+                            kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
+
+                            tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
+
+                            mo_ta = reader.IsDBNull(reader.GetOrdinal("mo_ta")) ? null : reader.GetString("mo_ta"),
+
+                            yeu_cau = reader.IsDBNull(reader.GetOrdinal("yeu_cau")) ? null : reader.GetString("yeu_cau"),
+
+                            muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
+
+                            muc_luong_cao_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_cao_nhat")) ? null : reader.GetDecimal("muc_luong_cao_nhat"),
+
+                            muc_luong_thap_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_thap_nhat")) ? null : reader.GetDecimal("muc_luong_thap_nhat"),
+
+                            trinh_do_hoc_van_yeu_cau = reader.IsDBNull(reader.GetOrdinal("trinh_do_hoc_van_yeu_cau")) ? TrinhDoHocVan.khong_Yeu_Cau : (TrinhDoHocVan)Enum.Parse(typeof(TrinhDoHocVan), reader.GetString("trinh_do_hoc_van_yeu_cau")),
+
+                            thoi_gian_lam_viec = reader.IsDBNull(reader.GetOrdinal("thoi_gian_lam_viec")) ? null : reader.GetString("thoi_gian_lam_viec"),
+
+                            dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem"),
+
+                            thoi_han_nop_cv = reader.IsDBNull(reader.GetOrdinal("thoi_han_nop_cv")) ? DateTime.MinValue : reader.GetDateTime("thoi_han_nop_cv"),
+
+                            loai_hinh = reader.IsDBNull(reader.GetOrdinal("loai_hinh")) ? LoaiHinhViecLam.None : (LoaiHinhViecLam)Enum.Parse(typeof(LoaiHinhViecLam), reader.GetString("loai_hinh")),
+
+                            ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+
+                            ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
                         },
-
                         nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
-
                         vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
-
-                        kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
-
-                        tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
-
-                        mo_ta = reader.IsDBNull(reader.GetOrdinal("mo_ta")) ? null : reader.GetString("mo_ta"),
-
-                        yeu_cau = reader.IsDBNull(reader.GetOrdinal("yeu_cau")) ? null : reader.GetString("yeu_cau"),
-
-                        muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
-
-                        muc_luong_cao_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_cao_nhat")) ? null : reader.GetDecimal("muc_luong_cao_nhat"),
-
-                        muc_luong_thap_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_thap_nhat")) ? null : reader.GetDecimal("muc_luong_thap_nhat"),
-
-                        quyen_loi_cong_viec = reader.IsDBNull(reader.GetOrdinal("quyen_loi_cong_viec")) ? null : reader.GetString("quyen_loi_cong_viec"),
-
-                        trinh_do_hoc_van_yeu_cau = reader.IsDBNull(reader.GetOrdinal("trinh_do_hoc_van_yeu_cau")) ? TrinhDoHocVan.khong_Yeu_Cau : (TrinhDoHocVan)Enum.Parse(typeof(TrinhDoHocVan), reader.GetString("trinh_do_hoc_van_yeu_cau")),
-
-                        thoi_gian_lam_viec = reader.IsDBNull(reader.GetOrdinal("thoi_gian_lam_viec")) ? null : reader.GetString("thoi_gian_lam_viec"),
-
                         dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem"),
-
-                        thoi_han_nop_cv = reader.IsDBNull(reader.GetOrdinal("thoi_han_nop_cv")) ? DateTime.MinValue : reader.GetDateTime("thoi_han_nop_cv"),
-
+                        muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
+                        kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
                         loai_hinh = reader.IsDBNull(reader.GetOrdinal("loai_hinh")) ? LoaiHinhViecLam.None : (LoaiHinhViecLam)Enum.Parse(typeof(LoaiHinhViecLam), reader.GetString("loai_hinh")),
-
-                        ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
-
-                        ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
+                        ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+                        diem_phu_hop = 0
                     };
                     ketQua.Add(vl);
                 }
@@ -313,7 +343,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                var vl = new viec_lam
+                var viec_Lam = new viec_lam
                 {
                     tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
 
@@ -331,7 +361,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                         logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo")
                     }
                 };
-                danh_sach.Add(vl);
+                danh_sach.Add(viec_Lam);
             }
             return danh_sach;
         }
@@ -410,12 +440,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 var vl_kinh_nghiem = Normalize(vl.kinh_nghiem);
                 var vl_loai_hinh = Normalize(vl.loai_hinh.ToString());
 
-                var req_vi_tri = Normalize(viec_Lam.vi_tri);
-                var req_nganh_nghe = Normalize(viec_Lam.nganh_nghe);
-                var req_dia_diem = Normalize(viec_Lam.dia_diem);
-                var req_muc_luong = Normalize(viec_Lam.muc_luong);
-                var req_kinh_nghiem = Normalize(viec_Lam.kinh_nghiem);
-                var req_loai_hinh = Normalize(viec_Lam.loai_hinh.ToString());
+                var req_nganh_nghe = string.IsNullOrWhiteSpace(viec_Lam.nganh_nghe) ? null : Normalize(viec_Lam.nganh_nghe);
+                var req_vi_tri = string.IsNullOrWhiteSpace(viec_Lam.vi_tri) ? null : Normalize(viec_Lam.vi_tri);
+                var req_dia_diem = string.IsNullOrWhiteSpace(viec_Lam.dia_diem) ? null : Normalize(viec_Lam.dia_diem);
+                var req_muc_luong = string.IsNullOrWhiteSpace(viec_Lam.muc_luong) ? null : Normalize(viec_Lam.muc_luong);
+                var req_kinh_nghiem = string.IsNullOrWhiteSpace(viec_Lam.kinh_nghiem) ? null : Normalize(viec_Lam.kinh_nghiem);
+                var req_loai_hinh = string.IsNullOrWhiteSpace(viec_Lam.loai_hinh.ToString()) ? null : Normalize(viec_Lam.loai_hinh.ToString());
 
                 if (!string.IsNullOrEmpty(req_dia_diem) && !string.IsNullOrEmpty(vl_dia_diem) && vl_dia_diem.Contains(req_dia_diem))
                 {
@@ -432,9 +462,44 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                     vl.diem_phu_hop += 2;
                 }
 
-                if (!string.IsNullOrEmpty(req_muc_luong) && !string.IsNullOrEmpty(vl_muc_luong) && vl_muc_luong.Contains(req_muc_luong))
+                if (!string.IsNullOrEmpty(req_muc_luong))
                 {
-                    vl.diem_phu_hop += 3;
+                    decimal reqMin = 0;
+                    decimal reqMax = 0;
+                    bool thoa_thuan = false;
+
+                    switch (req_muc_luong)
+                    {
+                        case "10":
+                            reqMin = 0; reqMax = 10; break;
+                        case "11":
+                            reqMin = 10; reqMax = 20; break;
+                        case "21":
+                            reqMin = 20; reqMax = 30; break;
+                        case "30":
+                            reqMin = 30; reqMax = decimal.MaxValue; break;
+                        case "thoathuan":
+                            thoa_thuan = true; break;
+                    }
+
+                    bool coGiaoNhau = false;
+
+                    decimal? luongThap = vl.viec_Lam.muc_luong_thap_nhat;
+                    decimal? luongCao = vl.viec_Lam.muc_luong_cao_nhat;
+
+                    if (thoa_thuan)
+                    {
+                        if (!luongThap.HasValue && !luongCao.HasValue)
+                            coGiaoNhau = true;
+                    }
+
+                    else if (luongThap.HasValue && luongCao.HasValue)
+                    {
+                        coGiaoNhau = !(luongCao < reqMin || luongThap > reqMax);
+                    }
+
+                    if (coGiaoNhau)
+                        vl.diem_phu_hop += 3;
                 }
 
                 if (!string.IsNullOrEmpty(req_kinh_nghiem) && !string.IsNullOrEmpty(vl_kinh_nghiem) && vl_kinh_nghiem.Contains(req_kinh_nghiem))
@@ -444,7 +509,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
 
                 if (!string.IsNullOrEmpty(req_loai_hinh) && !string.IsNullOrEmpty(vl_loai_hinh) && vl_loai_hinh.Contains(req_loai_hinh))
                 {
-                    vl.diem_phu_hop += 1;
+                    vl.diem_phu_hop += 2;
                 }
 
                 if (vl.diem_phu_hop > 1)

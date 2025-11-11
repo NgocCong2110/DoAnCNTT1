@@ -9,9 +9,7 @@ namespace DotNet_WEB.Class
 {
     public class nganh_nghe
     {
-        [Key]
-        public int ma_nganh { get; set; }
-        public string? ten_nganh { get; set; }
-        public string? mo_ta { get; set; }
+        public string? ma_nganh_nghe { get; set; }
+        public string? ten_nganh_nghe { get; set; }
     }
 }

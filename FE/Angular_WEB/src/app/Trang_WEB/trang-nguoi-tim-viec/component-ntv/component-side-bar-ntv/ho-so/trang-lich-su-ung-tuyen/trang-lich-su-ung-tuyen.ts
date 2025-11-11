@@ -40,7 +40,7 @@ export class TrangLichSuUngTuyen implements OnInit{
   async layDanhSachLichSuUngTuyen(){
     this.danh_sach_lich_su_ung_tuyen = [];
     this.loading = true;
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachLichSuUngTuyen', { ma_nguoi_tim_viec: this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec })
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachLichSuUngTuyen', { ma_nguoi_tim_viec: this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec })
       .subscribe({
         next: (data) => {
           this.loading = false;

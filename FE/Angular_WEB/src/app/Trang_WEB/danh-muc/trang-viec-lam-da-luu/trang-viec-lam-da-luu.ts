@@ -36,7 +36,7 @@ export class TrangViecLamDaLuu implements OnInit {
   }
 
   layDanhSachBaiDangDaLuu() {
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachBaiDangDaLuu', { ma_nguoi_luu: this.thongTin?.thong_tin_chi_tiet?.nguoi_tim_viec.ma_nguoi_tim_viec })
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachBaiDangDaLuu', { ma_nguoi_luu: this.thongTin?.thong_tin_chi_tiet?.nguoi_tim_viec.ma_nguoi_tim_viec })
       .subscribe({
         next: (data) => {
           this.loading = false;
@@ -64,7 +64,7 @@ export class TrangViecLamDaLuu implements OnInit {
       ma_bai_dang: bai.ma_bai_dang
     }
     console.log(thong_tin)
-    this.httpclient.post<any>('http://localhost:65001/api/API_WEB/huyLuuBaiDang', thong_tin)
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/huyLuuBaiDang', thong_tin)
       .subscribe({
         next: (data) => {
           if(data.success){

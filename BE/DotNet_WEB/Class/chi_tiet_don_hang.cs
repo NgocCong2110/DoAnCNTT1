@@ -19,6 +19,5 @@ namespace DotNet_WEB.Class
         public dich_vu? dich_Vu { get; set; }
         public int so_luong { get; set; }
         public decimal don_gia { get; set; }
-        public TrangThaiDonHang trang_thai_don_hang { get; set; } = TrangThaiDonHang.cho_Thanh_Toan;
     }
 }

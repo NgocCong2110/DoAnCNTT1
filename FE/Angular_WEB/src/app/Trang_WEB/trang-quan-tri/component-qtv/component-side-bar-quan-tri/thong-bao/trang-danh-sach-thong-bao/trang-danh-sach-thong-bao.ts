@@ -46,7 +46,7 @@ export class TrangDanhSachThongBao implements OnInit{
       ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec || null
     }
     
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/layDanhSachThongBao', thong_tin )
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachThongBao', thong_tin )
     .subscribe({
       next: (data) =>{
         this.loading = false;
@@ -94,7 +94,7 @@ export class TrangDanhSachThongBao implements OnInit{
     }
     
     const value_num = Number(value);
-    this.httpclient.post<API_RESPONSE>('http://localhost:65001/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num, ma_nguoi_tim_viec, ma_cong_ty, ma_quan_tri })
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao : value_num, ma_nguoi_tim_viec, ma_cong_ty, ma_quan_tri })
       .subscribe({
         next: (data) => {
           this.loading = false;

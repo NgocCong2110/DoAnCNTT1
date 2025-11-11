@@ -49,12 +49,12 @@ export class TrangDangKyNTV {
       email: this.email_dang_ky,
       mat_khau: this.password_dang_ky
     }
-    this.http.post<any>('http://localhost:65001/api/API_WEB/kiemTraTaiKhoanDangKy', {
+    this.http.post<any>('http://localhost:7000/api/API_WEB/kiemTraTaiKhoanDangKy', {
       email: this.email_dang_ky})
       .subscribe({
       next: (data) => {
         if (data.success) {
-          this.http.post<any>('http://localhost:65001/api/API_WEB/themThongTinNguoiTimViec',
+          this.http.post<any>('http://localhost:7000/api/API_WEB/themThongTinNguoiTimViec',
             thong_tin
           ).subscribe({
             next: (data2) => {
