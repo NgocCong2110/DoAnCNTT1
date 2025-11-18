@@ -17,63 +17,48 @@ namespace DotNet_WEB.Module
     public class XacThuc_ND
     {
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
-        public static async Task<bool> xacThucGmail(MailAddress email_NguoiDung)
-        {
-            try
-            {
-                var smtp = new SmtpClient("smtp.gmail.com", 587)
-                {
-                    Credentials = new NetworkCredential("cong20365@gmail.com", "toffiwhnrerezjuu"),
-                    EnableSsl = true
-                };
-
-                //url có thể thay đổi 
-                string token = "31bGWzmNtgNjF6FNOFY8wbFkmyz_3odjeY5iYDDNFZDsC7Raq";
-                string ngrokUrl = "https://cd77a077d2db.ngrok-free.app";
-                string link_XacThuc = $"{ngrokUrl}/api/API_WEB/verify?token={token}";
-
-                var mail = new MailMessage
-                {
-                    From = new MailAddress("cong20365@gmail.com", "Cong"),
-                    Subject = "Xác thực tài khoản",
-                    Body = $"<a href='{link_XacThuc}'>Xác thực tài khoản</a>",
-                    IsBodyHtml = true
-                };
-                mail.To.Add(email_NguoiDung);
-
-                await smtp.SendMailAsync(mail);
-            }
-            catch
-            {
-
-            }
-
-            return true;
-        }
 
         public static async Task<bool> guiMaOTP(int otp, string email_yeu_cau)
         {
             try
             {
-                using var smtp = new SmtpClient("smtp.gmail.com", 587)
+                ServicePointManager.SecurityProtocol =
+                    SecurityProtocolType.Tls12 |
+                    SecurityProtocolType.Tls13;
+
+                using var smtp = new SmtpClient("smtp-relay.brevo.com", 587)
                 {
-                    Credentials = new NetworkCredential("cong20365@gmail.com", "toffiwhnrerezjuu"),
-                    EnableSsl = true
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("9bd2ea001@smtp-brevo.com", "rWNkpnUTRz5xyZQ9"),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Timeout = 15000
                 };
+
+                smtp.SendCompleted += (s, e) =>
+                {
+                    Console.WriteLine("SendCompleted: " + e.Error?.Message);
+                };
+
                 using var mail = new MailMessage
                 {
-                    From = new MailAddress("cong20365@gmail.com", "Cong"),
-                    Subject = "Mã otp kích hoạt tài khoản",
-                    Body = $"Đây là mã otp kích hoạt tài khoản {otp}. Mã này tồn tại trong vòng 5 phút"
+                    From = new MailAddress("cong20365@gmail.com", "JobFinder"),
+                    Subject = "Mã OTP kích hoạt tài khoản",
+                    Body = $"Xin chào,\n\nMã OTP của bạn là: {otp}. Mã này tồn tại trong 5 phút.\n\nCảm ơn bạn đã sử dụng JobFinder!",
+                    IsBodyHtml = false
                 };
+
                 mail.To.Add(email_yeu_cau);
 
                 await smtp.SendMailAsync(mail);
+
+                Console.WriteLine("Gửi OTP thành công!");
                 return true;
             }
-
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine("LỖI EMAIL: " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
                 return false;
             }
         }

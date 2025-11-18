@@ -31,7 +31,7 @@ export class TrangDanhSachCongTy implements OnInit {
   formXoa = false;
 
   trangHienTai = 1;
-  soLuongMoiTrang = 10;
+  soLuongMoiTrang = 15;
   tongTrang = 1;
 
   ngOnInit() {

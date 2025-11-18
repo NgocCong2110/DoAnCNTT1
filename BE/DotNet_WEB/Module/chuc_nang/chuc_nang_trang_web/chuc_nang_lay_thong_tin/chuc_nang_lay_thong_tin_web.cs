@@ -90,8 +90,6 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
 
                     logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
 
-                    mo_ta = reader.IsDBNull(reader.GetOrdinal("mo_ta")) ? null : reader.GetString("mo_ta"),
-
                     loai_hinh_cong_ty = reader.IsDBNull(reader.GetOrdinal("loai_hinh_cong_ty"))
                     ? LoaiHinhCongTy.None
                     : (LoaiHinhCongTy)Enum.Parse(typeof(LoaiHinhCongTy), reader.GetString("loai_hinh_cong_ty")),

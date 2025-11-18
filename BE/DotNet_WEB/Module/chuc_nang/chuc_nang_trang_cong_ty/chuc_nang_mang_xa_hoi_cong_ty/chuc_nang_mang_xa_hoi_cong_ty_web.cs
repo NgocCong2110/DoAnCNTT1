@@ -21,6 +21,9 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_mang_xa_
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
         public static bool capNhatLienKetMangXaHoi(mang_xa_hoi_cong_ty_cap_nhat mxh)
         {
+            if (mxh == null || mxh.lien_Ket_Mang_Xa_Hoi == null || mxh.lien_Ket_Mang_Xa_Hoi.Count == 0)
+                return false;
+                
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
             string sql = @"INSERT INTO lien_ket_mang_xa_hoi (ma_cong_ty, ten_mang_xa_hoi, duong_dan)
@@ -38,14 +41,17 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_mang_xa_
             }
             return r > 0;
         }
-        
+
         public static bool xoaLienKetMangXaHoiCongTy(mang_xa_hoi_cong_ty_cap_nhat mxh)
         {
+            if (mxh == null || mxh.lien_Ket_Mang_Xa_Hoi == null || mxh.lien_Ket_Mang_Xa_Hoi.Count == 0)
+                return false;
+
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
             string sql = @"delete from lien_ket_mang_xa_hoi where ma_cong_ty = @ma_cong_ty and ma_lien_ket = @ma_lien_ket";
             int r = 0;
-            foreach(var mxhct in mxh.lien_Ket_Mang_Xa_Hoi)
+            foreach (var mxhct in mxh.lien_Ket_Mang_Xa_Hoi)
             {
                 using (var cmd = new MySqlCommand(sql, coon))
                 {
@@ -62,5 +68,5 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_mang_xa_
     {
         public int ma_cong_ty { get; set; }
         public List<lien_ket_mang_xa_hoi>? lien_Ket_Mang_Xa_Hoi { get; set; }
-    } 
+    }
 }

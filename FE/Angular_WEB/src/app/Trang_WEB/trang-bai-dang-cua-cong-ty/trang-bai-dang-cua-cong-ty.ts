@@ -209,21 +209,21 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   chonMucLuong(muc: any) {
     this.muc_luong_label = muc.label;
 
-  if (muc.label === 'Khác') {
-    this.showCustomLuong = true;
-    this.muc_luong_min = null;
-    this.muc_luong_max = null;
-  } 
-  else if (muc.label === 'Thỏa thuận') {
-    this.showCustomLuong = false;
-    this.muc_luong_min = null;
-    this.muc_luong_max = null;
-  } 
-  else {
-    this.showCustomLuong = false;
-    this.muc_luong_min = muc.min;
-    this.muc_luong_max = muc.max;
-  }
+    if (muc.label === 'Khác') {
+      this.showCustomLuong = true;
+      this.muc_luong_min = null;
+      this.muc_luong_max = null;
+    }
+    else if (muc.label === 'Thỏa thuận') {
+      this.showCustomLuong = false;
+      this.muc_luong_min = null;
+      this.muc_luong_max = null;
+    }
+    else {
+      this.showCustomLuong = false;
+      this.muc_luong_min = muc.min;
+      this.muc_luong_max = muc.max;
+    }
   }
 
 
@@ -244,7 +244,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
 
 
 
-  nganhNgheList: {value: string, label: string}[] = [];
+  nganhNgheList: { value: string, label: string }[] = [];
 
   trinhDoHocVanList = [
     { value: 1, label: 'Trung Học' },
@@ -295,12 +295,12 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     }
   }
 
-  layDanhSachNganhNghe(){
+  layDanhSachNganhNghe() {
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachNganhNghe', {})
-    .subscribe({
+      .subscribe({
         next: (data) => {
           if (data.success) {
-             this.nganhNgheList = data.danh_sach.map(n => ({ value: n.ma_nganh_nghe, label: n.ten_nganh_nghe }));
+            this.nganhNgheList = data.danh_sach.map(n => ({ value: n.ma_nganh_nghe, label: n.ten_nganh_nghe }));
           }
           else {
             console.log("loi");
@@ -397,5 +397,10 @@ export class TrangBaiDangCuaCongTy implements OnInit {
           }, 1500);
         }
       });
+  }
+  isLuongTooLong(): boolean {
+    const minStr = this.muc_luong_min?.toString() || '';
+    const maxStr = this.muc_luong_max?.toString() || '';
+    return minStr.length > 5 || maxStr.length > 5;
   }
 }

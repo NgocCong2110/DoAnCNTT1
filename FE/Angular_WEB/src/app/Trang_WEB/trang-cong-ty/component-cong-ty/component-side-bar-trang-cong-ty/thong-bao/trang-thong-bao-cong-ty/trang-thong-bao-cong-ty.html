@@ -1,9 +1,9 @@
-<div class = "d-flex flex-column justify-content-center align-items-center h-100">
-    <h3 style="text-align: center; font-weight: bold;">Gửi thông báo tới trang web</h3>
-    <button class = "btn btn-primary" (click)="moPopUpThemThongBao()">Thêm thông báo</button>
+<div class="d-flex flex-column justify-content-center align-items-center h-100">
+  <h3 style="text-align: center; font-weight: bold;">Gửi thông báo tới trang web</h3>
+  <button class="btn btn-primary" (click)="moPopUpThemThongBao()">Thêm thông báo</button>
 </div>
 
-<div class="modal fade" [class.show]="pop_up_them" [style.display]="pop_up_them ? 'block' : 'none'">
+<div class="modal" [class.show]="pop_up_them" [style.display]="pop_up_them ? 'block' : 'none'">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -26,16 +26,20 @@
           <div class="mb-3">
             <label class="form-label">Loại thông báo</label>
             <select class="form-select" [(ngModel)]="du_lieu_thong_bao_server.loai_thong_bao" name="loai_thong_bao" required>
-              <option value="toan_Server" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">Toàn Server</option>
-              <option value="viec_Lam_Moi" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Việc làm mới</option>
-              <option value="thu_Moi_Phong_Van" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn</option>
+              <option value = 2 *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Việc làm mới</option>
             </select>
           </div>
 
-          <!-- <div class="mb-3">
-            <label class="form-label">Người nhận (ID)</label>
-            <input type="number" class="form-control" [(ngModel)]="du_lieu_thong_bao_server.ma_nguoi_nhan" name="ma_nguoi_nhan" />
-          </div> -->
+          <div class="mb-3" *ngIf="du_lieu_thong_bao_server.loai_thong_bao === 2">
+            <label class="form-label">Chọn việc làm</label>
+            <select class="form-select" [(ngModel)]="du_lieu_thong_bao_server.ma_bai_dang" name="ma_bai_dang" required>
+              <option value="" disabled selected>-- Vui lòng chọn --</option>
+              <option *ngFor="let viec of danh_sach_viec_lam_cong_ty" [value]="viec.ma_bai_dang">
+                {{ viec.tieu_de }} - {{ layNganhNghe(viec.nganh_nghe) }}
+              </option>
+            </select>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
@@ -49,9 +53,7 @@
 <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_them_thanh_cong">
   <div class="toast show text-bg-success border-0">
     <div class="d-flex">
-      <div class="toast-body">
-        ✅ Thêm thông báo thành công!
-      </div>
+      <div class="toast-body">✅ Thêm thông báo thành công!</div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_them_thanh_cong=false"></button>
     </div>
   </div>
@@ -60,11 +62,8 @@
 <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_them_that_bai">
   <div class="toast show text-bg-danger border-0">
     <div class="d-flex">
-      <div class="toast-body">
-        ❌ Thêm thông báo thất bại!
-      </div>
+      <div class="toast-body">❌ Thêm thông báo thất bại!</div>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="pop_up_them_that_bai=false"></button>
     </div>
   </div>
 </div>
-

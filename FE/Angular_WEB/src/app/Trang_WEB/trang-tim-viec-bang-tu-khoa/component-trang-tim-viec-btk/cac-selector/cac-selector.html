@@ -17,20 +17,6 @@
 
     <div class="dropdown">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        {{ dia_diem_label || 'Địa điểm' }}
-      </button>
-      <ul class="dropdown-menu">
-        <li *ngFor="let gia_tri of diaDiemList">
-          <button class="dropdown-item" type="button"
-            (click)="dia_diem = gia_tri.value; dia_diem_label = gia_tri.label">
-            {{ gia_tri.label }}
-          </button>
-        </li>
-      </ul>
-    </div>
-
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
         {{ muc_luong_label || 'Mức lương' }}
       </button>
       <ul class="dropdown-menu">
@@ -86,6 +72,13 @@
 
     <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()"
       style="background-color: #0d6efd; color: white; font-weight: bold;">Lọc</button>
+      
+      <button class="btn btn-secondary px-4 flex-shrink-0 flex-start"
+          *ngIf="nganh_nghe_label || muc_luong_label || kinh_nghiem_label || hinh_thuc_label || vi_tri_label"
+          style="background-color: red; color: white; font-weight: bold;"
+          (click)="xoaBoLoc()">
+    Xóa 
+  </button>
   </div>
 </div>
 
@@ -168,7 +161,7 @@
           </div>
 
           <div class="text-muted small mt-3">
-            Cập nhật: {{ job.ngay_cap_nhat | date:'dd/MM/yyyy' }}
+            Cập nhật: {{ job.viec_Lam?.ngay_cap_nhat | date:'dd/MM/yyyy' }}
           </div>
         </div>
 

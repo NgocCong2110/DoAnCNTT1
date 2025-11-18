@@ -66,28 +66,28 @@
 
             <div class="the_noi_dung">
               <h4 class="tieu_de_muc"><i class="bi bi-star-fill text-warning"></i> Việc làm nổi bật</h4>
-              <div *ngIf="cong_ty.jobs?.length; else khong_noi_bat">
-                <div *ngFor="let viec of cong_ty.jobs" class="the_viec_lam mb-3" (click)="moViecLam(viec)">
+              <div *ngIf="danh_sach_viec_lam_noi_bat_cua_cong_ty?.length; else khong_noi_bat">
+                <div *ngFor="let viec of danh_sach_viec_lam_noi_bat_cua_cong_ty" class="the_viec_lam mb-3" (click)="moViecLam(viec.viec_Lam)">
                   <div class="d-flex justify-content-between align-items-start">
 
                       <div class="flex-grow-1">
                         <h5 class="tieu_de_viec mb-2 text-primary">
-                          {{ viec.tieu_de || viec.nganh_nghe }}
+                          {{ viec.viec_Lam.tieu_de || viec.viec_Lam.nganh_nghe }}
                         </h5>
 
                         <div class="meta_viec text-muted small mb-2 d-flex flex-wrap gap-2">
-                          <span class="me-2"><i class="bi bi-geo-alt"></i> {{ viec.vi_tri || 'Không xác định' }}</span>
-                          <span class="me-2 text-danger" *ngIf="viec.muc_luong"><i class="bi bi-currency-dollar"></i> {{
-                            viec.muc_luong }}</span>
-                          <span class="me-2" *ngIf="viec.loai_hinh"><i class="bi bi-clock"></i> {{
-                            layLoaiHinhViecLam(viec.loai_hinh) }}</span>
+                          <span class="me-2"><i class="bi bi-geo-alt"></i> {{ viec.viec_Lam.vi_tri || 'Không xác định' }}</span>
+                          <span class="me-2 text-danger" *ngIf="viec.viec_Lam.muc_luong"><i class="bi bi-currency-dollar"></i> {{
+                            viec.viec_Lam.muc_luong }}</span>
+                          <span class="me-2" *ngIf="viec.viec_Lam.loai_hinh"><i class="bi bi-clock"></i> {{
+                            layLoaiHinhViecLam(viec.viec_Lam.loai_hinh) }}</span>
                         </div>
 
-                        <p class="mo_ta_viec mb-1 text-secondary">{{ viec.mo_ta || 'Chưa có mô tả' }}</p>
+                        <p class="mo_ta_viec mb-1 text-secondary">{{ viec.viec_Lam.mo_ta || 'Chưa có mô tả' }}</p>
                       </div>
 
                       <div class="text-end ms-3">
-                        <small class="ngay_dang text-muted">{{ viec.ngay_tao | date:'dd/MM/yyyy' }}</small>
+                        <small class="ngay_dang text-muted">{{ viec.viec_Lam.ngay_tao | date:'dd/MM/yyyy' }}</small>
                       </div>
 
                     </div>
@@ -153,12 +153,12 @@
               </ul>
             </div>
 
-            <div class="the_mang_xa_hoi" *ngIf="danh_sach_mang_xa_hoi?.length">
+            <div class="the_mang_xa_hoi">
               <h5 class="tieu_de_the mb-3">Mạng xã hội & Liên hệ</h5>
               <div class="d-flex gap-2 flex-wrap">
-                <ng-container *ngFor="let s of danh_sach_mang_xa_hoi">
-                  <a *ngIf="s.lien_ket" [href]="s.ten !== 'phone' ? s.lien_ket : 'tel:' + s.lien_ket" target="_blank" class="mxh">
-                    <i class="bi fs-4" [ngClass]="s.bieu_tuong"></i>
+                <ng-container *ngFor="let s of cong_ty?.lien_ket_mang_xa_hoi">
+                  <a *ngIf="s.ten_mang_xa_hoi && s.duong_dan" [href]="s.duong_dan" target="_blank" class="icon-mxh"
+                    [title]="s.ten_mang_xa_hoi" [innerHTML]="layBieuTuong(s.ten_mang_xa_hoi)">
                   </a>
                 </ng-container>
               </div>

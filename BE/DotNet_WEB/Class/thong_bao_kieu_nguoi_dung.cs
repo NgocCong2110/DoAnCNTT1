@@ -11,5 +11,7 @@ namespace DotNet_WEB.Class
     {
         public string? kieu_nguoi_dung { get; set; }
         public int? ma_nguoi_tim_viec { get; set; }
+        public int? ma_cong_ty { get; set; }
+        public int? ma_quan_tri { get; set; }
     }
 }

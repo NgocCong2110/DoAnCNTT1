@@ -78,9 +78,7 @@ export class TrangDangNhap {
                     duong_dan_anh_dai_dien: data_qtri.duong_dan_anh_dai_dien,
                     ho_ten: data_qtri.ho_ten
                   }
-
-
-
+                  
                   this.auth.dangNhap(thong_tin);
                   setTimeout(() => this.router.navigate(['/trang-chu']), 1500);
                   return;

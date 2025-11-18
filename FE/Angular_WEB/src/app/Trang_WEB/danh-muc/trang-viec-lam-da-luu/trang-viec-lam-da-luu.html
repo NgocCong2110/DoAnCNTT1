@@ -4,7 +4,7 @@
 
   <div class="container py-3">
     <div class="card shadow-sm p-4 rounded-3">
-      <h3 class="mb-3 text-center">Danh sách bài đăng đã lưu</h3>
+      <h3 class="mb-3 text-center">Danh sách việc làm đã lưu</h3>
 
       <div *ngIf="loading" class="text-center mt-4">
         <div class="spinner-border text-primary" role="status">
@@ -49,7 +49,7 @@
       </div>
 
       <div *ngIf="danh_sach_bai_dang_da_luu.length === 0" class="text-center text-muted mt-4">
-        Không có bài đăng nào được lưu.
+        Không có việc làm nào được lưu.
       </div>
 
       <div *ngIf="error" class="text-center text-danger mt-3">

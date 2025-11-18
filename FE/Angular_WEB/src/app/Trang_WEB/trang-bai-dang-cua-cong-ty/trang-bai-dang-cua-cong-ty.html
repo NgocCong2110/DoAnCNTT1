@@ -65,7 +65,7 @@
               <div class="col-md-6">
                 <div class="info-item">
                   <label class="fw-semibold text-secondary d-block mb-1">Kinh nghiệm</label>
-                    <p class="mb-0 fw-semibold">{{ bai.kinh_nghiem }}</p>
+                  <p class="mb-0 fw-semibold">{{ bai.kinh_nghiem }}</p>
                 </div>
               </div>
 
@@ -253,6 +253,10 @@
                 placeholder="Min (triệu)">
               <input type="number" [(ngModel)]="muc_luong_max" name="muc_luong_max" class="form-control"
                 placeholder="Max (triệu)">
+            </div>
+
+            <div *ngIf="isLuongTooLong()" class="text-danger mt-2">
+              Mức lương không được vượt quá 5 chữ số!
             </div>
           </div>
 

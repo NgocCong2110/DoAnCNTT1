@@ -88,25 +88,4 @@
     </ng-container>
   </div>
 
-  <div class="field-card full-width">
-    <div class="field-header">
-      <span>Mô tả</span>
-      <button *ngIf="editingSection !== 'mo_ta'" class="btn-edit" (click)="enableEdit('mo_ta')">
-        <i class="bi bi-pencil-square"></i> Sửa
-      </button>
-    </div>
-    <div class="field-body">
-      <div *ngIf="editingSection==='mo_ta'; else viewMoTa">
-        <textarea [(ngModel)]="editingValues['mo_ta']" rows="5" class="field-input"></textarea>
-        <div class="button-group">
-          <button class="btn-save" (click)="saveEdit()">Lưu</button>
-          <button class="btn-cancel" (click)="cancelEdit()">Hủy</button>
-        </div>
-      </div>
-      <ng-template #viewMoTa>
-        <p>{{ thong_tin?.mo_ta || 'Chưa cập nhật' }}</p>
-      </ng-template>
-    </div>
-  </div>
-
 </div>

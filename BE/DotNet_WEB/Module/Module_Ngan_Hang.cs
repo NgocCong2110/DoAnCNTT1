@@ -86,7 +86,7 @@ namespace DotNet_WEB.Module
             return payment_Url;
         }
 
-        // Tạo URL thanh toán Sepay
+       
         private static string GenerateSepayUrl(int ma_don_hang, decimal tongTien)
         {
             string merchantId = "SP-TEST-NNB9A3A5";
@@ -97,11 +97,11 @@ namespace DotNet_WEB.Module
             {
                 { "merchant_id", merchantId },
                 { "order_id", ma_don_hang.ToString() },
-                { "amount", ((long)(tongTien * 100)).ToString() }, // nhân 100 đơn vị nhỏ nhất
+                { "amount", ((long)(tongTien * 100)).ToString() }, 
                 { "currency", "VND" },
                 { "order_info", $"Thanh toán đơn hàng {ma_don_hang}" },
                 { "return_url", returnUrl },
-                { "created_at", DateTime.UtcNow.ToString("yyyyMMddHHmmss") } // dùng UTC
+                { "created_at", DateTime.UtcNow.ToString("yyyyMMddHHmmss") }
             };
 
             Console.WriteLine("---- Sepay Params ----");
@@ -137,7 +137,7 @@ namespace DotNet_WEB.Module
             return finalUrl;
         }
         
-        public static bool capNhatTrangThaiDonHang(int ma_don_hang, decimal so_tien, string sepay_res, string transactionNo, string bankCode)
+        public static bool capNhatTrangThaiDonHang(int ma_don_hang, decimal so_tien, string sepay_res, string? transactionNo, string? bankCode)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();

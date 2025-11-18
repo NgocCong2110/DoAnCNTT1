@@ -107,32 +107,19 @@ export class CacSelector implements OnInit {
     { value: 'chu_tich', label: 'Chủ tịch' }
   ];
 
-  xoaBoLoc(loai: string) {
-    if (loai === 'nganh_nghe') {
-      this.nganh_nghe = '';
+  xoaBoLoc() {
+    this.nganh_nghe = '';
       this.nganh_nghe_label = '';
-    }
-    if (loai === 'dia_diem') {
       this.dia_diem = '';
       this.dia_diem_label = '';
-    }
-    if (loai === 'muc_luong') {
       this.muc_luong = "";
       this.muc_luong_label = '';
-    }
-    if (loai === 'kinh_nghiem') {
       this.kinh_nghiem = '';
       this.kinh_nghiem_label = '';
-    }
-    if (loai === 'hinh_thuc') {
       this.hinh_thuc = 0;
       this.hinh_thuc_label = '';
-    }
-    if (loai === 'vi_tri') {
       this.vi_tri = '';
       this.vi_tri_label = '';
-    }
-
     const conBoLocNao =
       this.nganh_nghe || this.dia_diem || this.muc_luong ||
       this.kinh_nghiem || this.hinh_thuc || this.vi_tri;
@@ -157,16 +144,15 @@ export class CacSelector implements OnInit {
     this.duaRaDeXuat(bo_loc);
   }
 
-  //tutu
   boLocNgay(ngay: string) {
     let ds = [...this.danh_sach_de_xuat];
     this.sap_xep_ngay = ngay;
     if (this.sap_xep_ngay == 'moi_nhat') {
       // a- b > 0 dua b truoc a con a - b < 0 giu nguyen 
-      ds.sort((a, b) => new Date(b.ngay_cap_nhat).getTime() - new Date(a.ngay_cap_nhat).getTime());
+      ds.sort((a, b) => new Date(b.viec_Lam.ngay_cap_nhat).getTime() - new Date(a.viec_Lam.ngay_cap_nhat).getTime());
     }
     if (this.sap_xep_ngay == 'cu_nhat') {
-      ds.sort((a, b) => new Date(a.ngay_cap_nhat).getTime() - new Date(b.ngay_cap_nhat).getTime())
+      ds.sort((a, b) => new Date(a.viec_Lam.ngay_cap_nhat).getTime() - new Date(b.viec_Lam.ngay_cap_nhat).getTime())
     }
     this.danh_sach_de_xuat = ds;
   }
@@ -199,7 +185,6 @@ export class CacSelector implements OnInit {
     if (luong == 'thap_Nhat') {
       ds.sort((a, b) => a.viec_Lam?.muc_luong_cao_nhat - b.viec_Lam?.muc_luong_cao_nhat);
     }
-    console.log(ds)
     this.danh_sach_de_xuat = ds;
   }
 

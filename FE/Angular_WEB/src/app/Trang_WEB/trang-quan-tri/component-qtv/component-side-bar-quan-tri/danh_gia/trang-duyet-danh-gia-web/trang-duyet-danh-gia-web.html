@@ -5,6 +5,7 @@
   <div *ngIf="error" class="text-danger">{{ error }}</div>
 
   <div *ngIf="!loading && !error">
+
     <select class="form-select w-auto d-inline-block ms-2" [(ngModel)]="selectedSao" (ngModelChange)="locSoSao()">
       <option [ngValue]="0">Tất cả</option>
       <option [ngValue]="5">5 sao</option>
@@ -14,15 +15,15 @@
       <option [ngValue]="1">1 sao</option>
     </select>
 
-
     <table class="table table-bordered table-striped ds-danhgia-table">
-      <thead>
+      <thead class="ds-danhgia-thead">
         <tr>
           <th>Người đánh giá</th>
           <th>Điểm</th>
           <th>Nội dung</th>
           <th>Trạng thái</th>
           <th>Thao tác</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -30,17 +31,27 @@
           <td>{{ dg.ten_nguoi_danh_gia }}</td>
           <td>{{ dg.so_diem_danh_gia }}</td>
           <td>{{ dg.noi_dung_danh_gia }}</td>
-          <td>
-            <span *ngIf="dg.trang_thai_danh_gia === 1" class="text-success">Hiển thị</span>
-            <span *ngIf="dg.trang_thai_danh_gia === 2" class="text-wait">Chưa hiển thị</span>
+
+          <td [ngClass]="{
+                'text-success': dg.trang_thai_danh_gia === 1,
+                'text-warning': dg.trang_thai_danh_gia === 2
+              }">
+            {{ dg.trang_thai_danh_gia === 1 ? 'Hiển thị' : 'Chưa hiển thị' }}
           </td>
+
           <td>
             <button class="btn btn-sm btn-primary" (click)="capNhatTrangThaiDanhGia(dg)">
               {{ dg.trang_thai_danh_gia === 1 ? 'Ẩn' : 'Hiển thị' }}
             </button>
           </td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="xoaDanhGia(dg.ma_danh_gia)">
+              Xóa
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
+
   </div>
 </div>

@@ -610,3 +610,16 @@
   height: 40px;
   object-fit: contain;
 }
+
+.the_viec_lam {
+  background-color: white; 
+  border: 1px solid #d1d5db;
+  border-radius: 8px; 
+  padding: 16px; 
+  transition: box-shadow 0.3s; 
+  cursor: pointer; 
+}
+
+.the_viec_lam:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+}

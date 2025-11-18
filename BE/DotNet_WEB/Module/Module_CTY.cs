@@ -15,14 +15,13 @@ using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_thong_ke_con
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_ung_vien_cong_ty;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_dich_vu_cong_ty;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_bai_dang_cong_ty;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_thong_bao_cong_ty;
 using System.Threading.Tasks;
 
 namespace DotNet_WEB.Module
 {
     public class Module_CTY
     {
-        private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
-
         //ung vien
         public static List<ung_tuyen> layDanhSachUngVien(int ma_Cong_Ty)
         {
@@ -77,6 +76,11 @@ namespace DotNet_WEB.Module
             return chuc_nang_tai_khoan_cong_ty_web.capNhatMatKhauCongTy(cong_Ty);
         }
 
+        public static bool capNhatMoTaCongTy(cong_ty cong_Ty)
+        {
+            return chuc_nang_tai_khoan_cong_ty_web.capNhatMoTaCongTy(cong_Ty);
+        }
+
         public static async Task<string> capNhatLogoCongTy(IFormFile file, int ma_cong_ty)
         {
             return await chuc_nang_tai_khoan_cong_ty_web.capNhatLogoCongTy(file, ma_cong_ty);
@@ -95,6 +99,11 @@ namespace DotNet_WEB.Module
         public static List<viec_lam> layDanhSachViecLamCuaCongTy(int ma_cong_ty)
         {
             return chuc_nang_viec_lam_cong_ty_web.layDanhSachViecLamCuaCongTy(ma_cong_ty);
+        }
+
+        public static List<ung_tuyen> layDanhSachViecLamNoiBatCuaCongTy(int ma_cong_ty)
+        {
+            return chuc_nang_viec_lam_cong_ty_web.layDanhSachViecLamNoiBatCuaCongTy(ma_cong_ty);
         }
 
         public static async Task<string> capNhatAnhBiaCongTy(IFormFile file, int ma_cong_ty)
@@ -125,6 +134,23 @@ namespace DotNet_WEB.Module
             return chuc_nang_dich_vu_cong_ty_web.layDanhSachDichVu();
         }
         //dich vu
+
+        //thong bao
+        public static bool guiThongBaoViecLamMoi(thong_bao thong_Bao)
+        {
+            return chuc_nang_thong_bao_cong_ty_web.guiThongBaoViecLamMoi(thong_Bao);
+        }
+
+        public static bool xoaThongBaoCongTy(thong_bao thong_Bao)
+        {
+            return chuc_nang_thong_bao_cong_ty_web.xoaThongBaoCongTy(thong_Bao);
+        }
+
+        public static List<thong_bao> thongBaoCongTyRieng(int ma_cong_ty)
+        {
+            return chuc_nang_thong_bao_cong_ty_web.thongBaoCongTyRieng(ma_cong_ty);
+        }
+        //thong bao
     }
 }
 

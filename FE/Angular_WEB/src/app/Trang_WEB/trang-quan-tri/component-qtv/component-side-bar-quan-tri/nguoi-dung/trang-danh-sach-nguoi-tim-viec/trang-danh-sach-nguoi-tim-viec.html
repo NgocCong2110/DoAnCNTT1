@@ -1,12 +1,12 @@
-<div class="container">
-  <h2>Danh sách người tìm việc</h2>
+<div class="container ds-ntv-container">
+  <h2 class="ds-ntv-title">Danh sách người tìm việc</h2>
 
   <div *ngIf="loading">Đang tải dữ liệu...</div>
   <div *ngIf="error" class="text-danger">{{ error }}</div>
 
   <div *ngIf="!loading && !error">
-    <table class="table table-bordered table-striped">
-      <thead>
+    <table class="table table-bordered table-striped ds-ntv-table">
+      <thead class="ds-ntv-thead">
         <tr>
           <th>Mã người tìm việc</th>
           <th>Tên đăng nhập</th>
@@ -15,7 +15,7 @@
           <th>Điện thoại</th>
           <th>Ngày tạo</th>
           <th>Ngày cập nhật</th>
-          <th></th>
+          <th>Thao tác</th>
         </tr>
       </thead>
       <tbody>
@@ -28,8 +28,7 @@
           <td>{{ nguoi.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ nguoi.ngay_cap_nhat | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>
-            <button class="btn btn-primary btn-sm" style="background-color: red; border: none;"
-              (click)="moXacNhanXoa(nguoi, i)">
+            <button class="btn btn-danger btn-sm btn-xoa" (click)="moXacNhanXoa(nguoi, i)">
               Xóa người tìm việc
             </button>
           </td>
@@ -37,16 +36,17 @@
       </tbody>
     </table>
 
-    <nav *ngIf="tongTrang > 1">
-      <ul class="pagination">
+    <nav *ngIf="tongTrang > 1" class="d-flex justify-content-center mt-3">
+      <ul class="pagination pagination-lg">
         <li class="page-item" [class.disabled]="trangHienTai === 1">
           <a class="page-link" (click)="chuyenTrang(trangHienTai - 1)">Trước</a>
         </li>
-        <li class="page-item"
-            *ngFor="let t of [].constructor(tongTrang); let i = index"
-            [class.active]="trangHienTai === i + 1">
+
+        <li class="page-item" *ngFor="let t of [].constructor(tongTrang); let i = index"
+          [class.active]="trangHienTai === i + 1">
           <a class="page-link" (click)="chuyenTrang(i + 1)">{{ i + 1 }}</a>
         </li>
+
         <li class="page-item" [class.disabled]="trangHienTai === tongTrang">
           <a class="page-link" (click)="chuyenTrang(trangHienTai + 1)">Sau</a>
         </li>
@@ -54,6 +54,7 @@
     </nav>
   </div>
 </div>
+
 <div *ngIf="showXacNhanXoa" class="xac-nhan-xoa-overlay">
   <div class="xac-nhan-xoa-form">
     <h5>Bạn có chắc muốn xóa người tìm việc "<b>{{ nguoi_tim_viec_chon?.ho_ten }}</b>"?</h5>

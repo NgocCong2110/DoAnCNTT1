@@ -4,14 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
-using ZstdSharp.Unsafe;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Quic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
+using System.Net.Mail;
 using System.Net;
 
 namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_ung_vien_cong_ty
@@ -71,6 +64,7 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                     trang_thai_duyet = reader.IsDBNull(reader.GetOrdinal("trang_thai_duyet")) ? TrangThaiDuyetUngTuyen.None : (TrangThaiDuyetUngTuyen)Enum.Parse(typeof(TrangThaiDuyetUngTuyen), reader.GetString("trang_thai_duyet")),
 
                     ngay_ung_tuyen = reader.IsDBNull(reader.GetOrdinal("ngay_ung_tuyen")) ? DateTime.MinValue : reader.GetDateTime("ngay_ung_tuyen"),
+
                     viec_Lam = new viec_lam
                     {
                         ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
@@ -119,11 +113,13 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_thai where ma_cong_ty = @ma_cong_ty and ma_nguoi_tim_viec = @ma_ntv";
+            string cap_nhat_trang_thai = "update ung_tuyen set trang_thai = @trang_thai, trang_thai_duyet = @trang_thai_duyet where ma_cong_ty = @ma_cong_ty and ma_nguoi_tim_viec = @ma_ntv and ma_viec = @ma_viec";
             using var cmd = new MySqlCommand(cap_nhat_trang_thai, coon);
+            cmd.Parameters.AddWithValue("@ma_viec", ung_Tuyen.ma_viec);
             cmd.Parameters.AddWithValue("@ma_cong_ty", ung_Tuyen.ma_cong_ty);
             cmd.Parameters.AddWithValue("@ma_ntv", ung_Tuyen.ma_nguoi_tim_viec);
             cmd.Parameters.AddWithValue("@trang_thai", "tu_Choi");
+            cmd.Parameters.AddWithValue("@trang_thai_duyet", "da_Duyet");
             return cmd.ExecuteNonQuery() > 0;
         }
 
@@ -133,12 +129,57 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
             {
                 using var coon = new MySqlConnection(chuoi_KetNoi);
                 coon.Open();
-                string sql = "DELETE FROM ung_tuyen WHERE ma_cong_ty = @ma_Cong_Ty AND ma_nguoi_tim_viec = @ma_Nguoi_Tim_Viec";
+
+                string? cv_nop_len = null;
+                string sql_cv = @"
+            SELECT duong_dan_file_cv_upload 
+            FROM ung_tuyen 
+            WHERE ma_nguoi_tim_viec = @ma_nguoi_tim_viec 
+              AND ma_viec = @ma_viec 
+              AND ma_cong_ty = @ma_cong_ty";
+
+                using (var cmd1 = new MySqlCommand(sql_cv, coon))
+                {
+                    cmd1.Parameters.AddWithValue("@ma_cong_ty", ung_Tuyen.ma_cong_ty);
+                    cmd1.Parameters.AddWithValue("@ma_nguoi_tim_viec", ung_Tuyen.ma_nguoi_tim_viec);
+                    cmd1.Parameters.AddWithValue("@ma_viec", ung_Tuyen.ma_viec);
+
+                    var result = cmd1.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        cv_nop_len = result.ToString();
+                }
+
+                string sql = @"
+            DELETE FROM ung_tuyen 
+            WHERE ma_cong_ty = @ma_Cong_Ty 
+              AND ma_nguoi_tim_viec = @ma_Nguoi_Tim_Viec 
+              AND ma_viec = @ma_Viec";
+
                 using var cmd = new MySqlCommand(sql, coon);
                 cmd.Parameters.AddWithValue("@ma_Cong_Ty", ung_Tuyen.ma_cong_ty);
                 cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ung_Tuyen.ma_nguoi_tim_viec);
+                cmd.Parameters.AddWithValue("@ma_Viec", ung_Tuyen.ma_viec);
 
-                return cmd.ExecuteNonQuery() > 0;
+                bool kq = cmd.ExecuteNonQuery() > 0;
+
+                if (kq && !string.IsNullOrEmpty(cv_nop_len))
+                {
+                    var duong_dan_cu = Path.Combine(Directory.GetCurrentDirectory(),
+                        cv_nop_len.Replace("/", "\\"));
+
+                    try
+                    {
+                        if (File.Exists(duong_dan_cu))
+                            File.Delete(duong_dan_cu);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Lỗi khi xóa file CV: " + ex.Message);
+                    }
+                }
+
+                return kq;
             }
             catch (Exception ex)
             {
@@ -147,8 +188,10 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
             }
         }
 
+
         public static bool guiThuMoiPhongVan(thong_tin_phong_van ttpv)
         {
+            string email = "";
             try
             {
                 using var coon = new MySqlConnection(chuoi_KetNoi);
@@ -198,6 +241,8 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
 
 
                     trans.Commit();
+                    email = layEmailNguoiTimViec(ttpv.ma_nguoi_tim_viec);
+                    _ = capNhatTrangThaiUngTuyen(email);
                     return true;
                 }
                 catch
@@ -211,5 +256,70 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                 return false;
             }
         }
+        private static string layEmailNguoiTimViec(int ma_nguoi_tim_viec)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select email from nguoi_tim_viec where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", ma_nguoi_tim_viec);
+            using var reader = cmd.ExecuteReader();
+            string email = "";
+            if (reader.Read())
+            {
+                email = reader["email"]?.ToString() ?? "";
+            }
+            return email;
+        }
+
+        private static async Task<bool> capNhatTrangThaiUngTuyen(string email_yeu_cau)
+        {
+            try
+            {
+                ServicePointManager.SecurityProtocol =
+                    SecurityProtocolType.Tls12 |
+                    SecurityProtocolType.Tls13;
+
+                using var smtp = new SmtpClient("smtp-relay.brevo.com", 587)
+                {
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("9bd2ea001@smtp-brevo.com", "rWNkpnUTRz5xyZQ9"),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Timeout = 15000
+                };
+
+                smtp.SendCompleted += (s, e) =>
+                {
+                    Console.WriteLine("SendCompleted: " + e.Error?.Message);
+                };
+
+                using var mail = new MailMessage
+                {
+                    From = new MailAddress("cong20365@gmail.com", "JobFinder"),
+                    Subject = "Trạng thái mới về việc làm đã ứng tuyển của bạn",
+                    Body = @"Xin chào, Trạng thái ứng tuyển của bạn cho vị trí đã đăng ký vừa được cập nhật. 
+                                Hãy đăng nhập vào trang JobFinder để xem chi tiết và nhận những thông tin mới nhất về cơ hội nghề nghiệp. 
+                                Cảm ơn bạn đã sử dụng JobFinder!",
+                    IsBodyHtml = false
+                };
+
+                mail.To.Add(email_yeu_cau);
+
+                Console.WriteLine(email_yeu_cau);
+
+                await smtp.SendMailAsync(mail);
+
+                Console.WriteLine("Gửi email thành công!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("LỖI EMAIL: " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                return false;
+            }
+        }
+
     }
 }

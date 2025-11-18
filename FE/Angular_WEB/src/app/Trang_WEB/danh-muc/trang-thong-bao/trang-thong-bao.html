@@ -1,114 +1,167 @@
 <div class="bg-light">
   <app-header-web></app-header-web>
 
-  <div class="container py-4">
+  <div class="notification-container">
+    <div class="notification-layout">
 
-  <div class="card border-0 shadow-sm p-4 rounded-4 mb-4" style="background-color: #ffffff;">
-    <h3 class="mb-3 fw-semibold" style="color: #1e40af;">Chọn loại thông báo</h3>
-    <select class="form-select border-2 rounded-3 py-3" 
-            style="border-color: #e5e7eb; background-color: #f9fafb; color: #374151;"
-            (change)="chonThongBao($event)">
-      <option selected disabled>-- Vui lòng chọn --</option>
-      <option value="toan_Bo">Toàn bộ thông báo</option>
-      <option value="1">Thông báo từ server</option>
-      <option value="2">Việc làm mới</option>
-      <option value="3" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn</option>
-    </select>
-  </div>
-
-  <div *ngIf="loading" class="text-center my-5">
-    <div class="spinner-border" style="color: #2563eb; width: 3rem; height: 3rem;" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p class="mt-3 fw-medium" style="color: #6b7280;">Đang tải thông báo...</p>
-  </div>
-
-  <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="notification-list">
-    <div class="notification-item rounded-4 p-4 mb-3 shadow-sm" 
-         *ngFor="let tb of danh_sach_thong_bao"
-         (click)="xemChiTiet(tb)"
-         style="background-color: #f3f4f6; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #2563eb;">
-      <h5 class="mb-2 fw-semibold" style="color: #1f2937;">{{ tb.tieu_de }}</h5>
-      <p class="mb-2" style="color: #4b5563;">{{ tb.noi_dung }}</p>
-      <small class="d-flex align-items-center" style="color: #6b7280;">
-        <svg width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-          <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-        </svg>
-        {{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}
-      </small>
-    </div>
-  </div>
-
-  <div *ngIf="!loading && danh_sach_thong_bao.length === 0" 
-       class="text-center py-5 rounded-4"
-       style="background-color: #f9fafb;">
-    <svg width="64" height="64" fill="#9ca3af" class="mx-auto mb-3" viewBox="0 0 16 16">
-      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-    </svg>
-    <p class="fw-medium mb-0" style="color: #6b7280; font-size: 1.1rem;">Không có thông báo nào</p>
-  </div>
-</div>
-
-<div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': chiTietThongBao}" 
-     style="background-color: rgba(31, 41, 55, 0.7);" *ngIf="chiTietThongBao">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content border-0 rounded-4 shadow-lg" style="background-color: #ffffff;">
-      <div class="modal-header border-0 pb-0 pt-4 px-4">
-        <h5 class="modal-title fw-bold" style="color: #1e40af;">{{ chiTietThongBao.tieu_de }}</h5>
-        <button type="button" class="btn-close" (click)="chiTietThongBao = null" 
-                style="filter: brightness(0.5);"></button>
-      </div>
-      <div class="modal-body px-4 py-4">
-        <div class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
-          <p class="mb-0"><strong style="color: #374151;">Nội dung:</strong> 
-            <span style="color: #4b5563;">{{ chiTietThongBao.noi_dung }}</span>
-          </p>
-        </div>
-        
-        <div *ngIf="chiTietThongBao.cong_Ty" class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
-          <p class="mb-0"><strong style="color: #374151;">Công ty:</strong> 
-            <span style="color: #4b5563;">{{ chiTietThongBao.cong_Ty.ten_cong_ty }}</span>
-          </p>
-        </div>
-        
-        <div *ngIf="chiTietThongBao.quan_Tri" class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
-          <p class="mb-0"><strong style="color: #374151;">Người gửi:</strong> 
-            <span style="color: #4b5563;">{{ chiTietThongBao.quan_Tri.ho_ten }}</span>
-          </p>
-        </div>
-        
-        <div *ngIf="chiTietThongBao.chi_tiet_thu_moi?.length > 0" 
-             class="p-3 rounded-3" style="background-color: #eff6ff; border-left: 4px solid #2563eb;">
-          <h6 class="fw-semibold mb-3" style="color: #1e40af;">Chi tiết thư mời:</h6>
-          <ul class="mb-0 ps-3" style="color: #374151;">
-            <li *ngFor="let ct of chiTietThongBao.chi_tiet_thu_moi" class="mb-2">
-              <strong>Thời gian:</strong> {{ ct.thoi_gian | date:'dd/MM/yyyy HH:mm' }}<br>
-              <strong>Địa điểm:</strong> {{ ct.dia_diem }}
-            </li>
-          </ul>
+      <div class="sidebar-left">
+        <div class="select-card">
+          <h3 class="select-title">Chọn loại thông báo</h3>
+          <select class="notification-select" (change)="chonThongBao($event)">
+            <option selected disabled>-- Vui lòng chọn --</option>
+            <option value="toan_Bo">Toàn bộ thông báo</option>
+            <option value="1">Thông báo từ server</option>
+            <option value="2">Việc làm mới</option>
+            <option value="3" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn
+            </option>
+            <option value="thong_bao_cua_toi" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thông
+              báo của tôi</option>
+          </select>
         </div>
       </div>
-      <div class="modal-footer border-0 px-4 pb-4">
-        <button class="btn px-4 py-2 rounded-3 fw-medium" 
-                style="background-color: #e5e7eb; color: #374151; border: none;"
-                (click)="chiTietThongBao = null">
-          Đóng
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
-  <div class="toast show border-0 rounded-4 shadow-lg" style="background-color: #fee2e2;">
-    <div class="d-flex align-items-center p-3">
-      <div class="toast-body fw-medium" style="color: #991b1b;">
-        ❌ Lấy thông tin thông báo thất bại!
+      <div class="content-right">
+        <div class="notification-content">
+          <h2 class="content-title">Danh sách thông báo</h2>
+
+          <div *ngIf="loading" class="loading-container">
+            <div class="spinner-border"></div>
+            <p class="loading-text">Đang tải thông báo...</p>
+          </div>
+
+          <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="notification-list">
+            <div *ngFor="let tb of danh_sach_thong_bao" class="notification-item dropdown">
+
+              <div class="notification-actions">
+                <button class="btn btn-light btn-sm" type="button"
+                  id="dropdownMenuButton{{tb.ma_thong_bao}}" data-bs-toggle="dropdown" aria-expanded="false">
+                  ⋮
+                </button>
+
+                <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + tb.ma_thong_bao">
+                  <li>
+                    <a class="dropdown-item" href="#" (click)="anThongBao(tb.ma_thong_bao)">Ẩn thông báo</a>
+                  </li>
+                  <li *ngIf="auth.layThongTinNguoiDung() &&
+                (tb.ma_cong_ty === auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty ||
+                 tb.ma_quan_tri === auth.layThongTinNguoiDung()?.ma_quan_tri)">
+                    <a class="dropdown-item" href="#" (click)="moPopUpXoaThongBao(tb.ma_thong_bao)">Xóa bài đăng</a>
+                  </li>
+                </ul>
+              </div>
+
+              <h5>{{ tb.tieu_de }}</h5>
+              <p>{{ tb.noi_dung }}</p>
+              <small>{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
+            </div>
+          </div>
+
+
+
+
+          <div *ngIf="!loading && danh_sach_thong_bao.length === 0" class="empty-state">
+            <svg width="64" height="64" fill="#9ca3af" viewBox="0 0 16 16">
+              <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </svg>
+            <p class="empty-text">Không có thông báo nào</p>
+          </div>
+
+        </div>
       </div>
-      <button type="button" class="btn-close ms-2" 
-              style="filter: brightness(0.5);"
-              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+
     </div>
   </div>
+
+  <div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': chiTietThongBao}" *ngIf="chiTietThongBao">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-header border-0 pb-0 pt-4 px-4">
+          <h5 class="modal-title fw-bold" style="color: #1e40af;">{{ chiTietThongBao.tieu_de }}</h5>
+          <button type="button" class="btn-close" (click)="chiTietThongBao = null"></button>
+        </div>
+
+        <div class="modal-body px-4 py-4">
+          <div class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
+            <p class="mb-0"><strong style="color: #374151;">Nội dung:</strong>
+              <span style="color: #4b5563;">{{ chiTietThongBao.noi_dung }}</span>
+            </p>
+          </div>
+
+          <div *ngIf="chiTietThongBao.cong_Ty" class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
+            <p class="mb-0"><strong style="color: #374151;">Công ty:</strong>
+              <span style="color: #4b5563;">{{ chiTietThongBao.cong_Ty.ten_cong_ty }}</span>
+            </p>
+          </div>
+
+          <div *ngIf="chiTietThongBao.ma_bai_dang" class="card-small-white mb-3 p-3 rounded-3"
+            (click)="dieuHuongTrangChiTietViecLam(chiTietThongBao.ma_bai_dang)">
+
+            <div class="title">{{ chiTietThongBao.bai_Dang.tieu_de }}</div>
+            <div class="date">{{ chiTietThongBao.bai_Dang.ngay_tao }}</div>
+
+          </div>
+
+          <div *ngIf="chiTietThongBao.quan_Tri" class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
+            <p class="mb-0"><strong style="color: #374151;">Người gửi:</strong>
+              <span style="color: #4b5563;">{{ chiTietThongBao.quan_Tri.ho_ten }}</span>
+            </p>
+          </div>
+          <div *ngIf="chiTietThongBao.chi_tiet_thu_moi?.length > 0" class="p-3 rounded-3"
+            style="background-color: #eff6ff; border-left: 4px solid #2563eb;">
+            <h6 class="fw-semibold mb-3" style="color: #1e40af;">Chi tiết thư mời:</h6>
+            <ul class="mb-0 ps-3" style="color: #374151;">
+              <li *ngFor="let ct of chiTietThongBao.chi_tiet_thu_moi" class="mb-2">
+                <strong>Thời gian:</strong> {{ ct.thoi_gian | date:'dd/MM/yyyy HH:mm' }}<br>
+                <strong>Địa điểm:</strong> {{ ct.dia_diem }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button class="btn px-4 py-2 rounded-3 fw-medium"
+            style="background-color: #e5e7eb; color: #374151; border: none;" (click)="chiTietThongBao = null">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
+    <div class="toast show border-0 rounded-4 shadow-lg" style="background-color: #fee2e2;">
+      <div class="d-flex align-items-center p-3">
+        <div class="toast-body fw-medium" style="color: #991b1b;">
+          ❌ Lấy thông tin thông báo thất bại!
+        </div>
+        <button type="button" class="btn-close ms-2" style="filter: brightness(0.5);"
+          (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': xoa_confirm_id}" *ngIf="xoa_confirm_id">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow-lg">
+        <div class="modal-header border-0 pb-0 pt-4 px-4">
+          <h5 class="modal-title fw-bold" style="color: #b91c1c;">Xác nhận xóa</h5>
+          <button type="button" class="btn-close" (click)="xoa_confirm_id = null"></button>
+        </div>
+        <div class="modal-body px-4 py-4">
+          <p>Bạn có chắc chắn muốn xóa thông báo này không?</p>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button class="btn px-4 py-2 rounded-3 fw-medium"
+            style="background-color: #e5e7eb; color: #374151; border: none;" (click)="xoa_confirm_id = null">
+            Hủy
+          </button>
+          <button class="btn px-4 py-2 rounded-3 fw-medium"
+            style="background-color: #dc2626; color: #fff; border: none;" (click)="xac_nhan_xoa()">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer-web></app-footer-web>
 </div>

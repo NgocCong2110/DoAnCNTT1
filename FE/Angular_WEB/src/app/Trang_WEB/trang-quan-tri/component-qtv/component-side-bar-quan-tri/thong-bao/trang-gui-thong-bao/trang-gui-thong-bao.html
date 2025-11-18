@@ -26,16 +26,11 @@
           <div class="mb-3">
             <label class="form-label">Loại thông báo</label>
             <select class="form-select" [(ngModel)]="du_lieu_thong_bao_server.loai_thong_bao" name="loai_thong_bao" required>
-              <option value="toan_Server" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">Toàn Server</option>
-              <option value="viec_Lam_Moi" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Việc làm mới</option>
-              <option value="thu_Moi_Phong_Van" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thư mời phỏng vấn</option>
+              <option value=1 *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">Toàn Server</option>
+              <!-- <option value="viec_Lam_Moi" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Việc làm mới</option>
+              <option value="thu_Moi_Phong_Van" *ngIf="auth?.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thư mời phỏng vấn</option> -->
             </select>
           </div>
-
-          <!-- <div class="mb-3">
-            <label class="form-label">Người nhận (ID)</label>
-            <input type="number" class="form-control" [(ngModel)]="du_lieu_thong_bao_server.ma_nguoi_nhan" name="ma_nguoi_nhan" />
-          </div> -->
         </form>
       </div>
       <div class="modal-footer">

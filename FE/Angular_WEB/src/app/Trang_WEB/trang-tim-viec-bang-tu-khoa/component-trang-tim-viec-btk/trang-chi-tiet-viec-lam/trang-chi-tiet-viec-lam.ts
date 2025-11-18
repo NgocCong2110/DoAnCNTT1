@@ -117,6 +117,16 @@ export class TrangChiTietViecLam {
     return url;
   }
 
+  moPopUpUngTuyen() {
+    this.pop_up_chon_cv = true;
+    this.cv_duoc_chon = null;
+
+    const maNguoiTimViec = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    if (!maNguoiTimViec) return;
+
+    this.layDanhSachCVOnlineNguoiTimViec();
+  }
+
   ungTuyenCongViec() {
 
     const maNguoiTimViec = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;

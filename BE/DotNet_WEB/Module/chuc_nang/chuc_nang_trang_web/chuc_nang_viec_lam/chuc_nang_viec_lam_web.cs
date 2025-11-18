@@ -119,7 +119,9 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                             join viec_lam vl on ut.ma_viec = vl.ma_viec
                             join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
 	                        join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
-                        group by vl.ma_viec, bd.ma_bai_dang, vl.nganh_nghe, ct.ten_cong_ty, vl.tieu_de, vl.mo_ta, vl.muc_luong, vl.dia_diem, ct.logo limit 12";
+                        group by vl.ma_viec, bd.ma_bai_dang, vl.nganh_nghe, ct.ten_cong_ty, vl.tieu_de, vl.mo_ta, vl.muc_luong, vl.dia_diem, ct.logo 
+                        order by so_luong desc
+                        limit 16";
                 using var cmd = new MySqlCommand(sql, coon);
                 using var reader = cmd.ExecuteReader();
                 var danh_sach = new List<so_luong_ung_vien_viec_lam>();
@@ -522,7 +524,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
         public static string Normalize(string? input)
         {
             if (string.IsNullOrWhiteSpace(input))
-                return null;
+                return "";
 
             string normalized = input.Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder();
@@ -537,7 +539,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
 
             result = Regex.Replace(result, @"[\s_\-.,/]+", "");
 
-            return string.IsNullOrWhiteSpace(result) ? null : result;
+            return string.IsNullOrWhiteSpace(result) ? "" : result;
         }
 
         public static double Similarity(string s1, string s2)

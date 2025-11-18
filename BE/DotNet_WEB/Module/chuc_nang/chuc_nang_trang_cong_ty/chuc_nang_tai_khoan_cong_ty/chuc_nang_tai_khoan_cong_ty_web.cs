@@ -56,6 +56,10 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
 
         public static bool kiemTraMatKhauCongTy(cong_ty cong_Ty)
         {
+            if(string.IsNullOrEmpty(cong_Ty.mat_khau_dn_cong_ty))
+            {
+                return false;
+            }
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
             string mat_khau = maHoaMatKhau(cong_Ty.mat_khau_dn_cong_ty);
@@ -69,6 +73,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
 
         public static bool capNhatMatKhauCongTy(cong_ty thong_tin_cong_ty)
         {
+            if(string.IsNullOrEmpty(thong_tin_cong_ty.mat_khau_dn_cong_ty))
+            {
+                return false;
+            }
+
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
 
@@ -192,12 +201,27 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
             return danh_sach;
         }
 
+        public static bool capNhatMoTaCongTy(cong_ty cong_Ty)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "update cong_ty set mo_ta = @mo_ta, ngay_cap_nhat = now() where ma_cong_ty = @ma_cong_ty";
+            using (var cmd = new MySqlCommand(sql, coon))
+            {
+                cmd.Parameters.AddWithValue("@mo_ta", cong_Ty.mo_ta);
+                cmd.Parameters.AddWithValue("@ma_cong_ty", cong_Ty.ma_cong_ty);
+                int rowsAffected = cmd.ExecuteNonQuery();
+                return rowsAffected > 0;
+            }
+        }   
+
+
         public static async Task<string> capNhatAnhBiaCongTy(IFormFile file, int ma_cong_ty)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
 
-            string anh_bia_cu = "";
+            string? anh_bia_cu = "";
             string lay_anh_bia_cu = "select anh_bia from cong_ty where ma_cong_ty = @ma_cong_ty";
             using (var cmd = new MySqlCommand(lay_anh_bia_cu, coon))
             {
@@ -247,12 +271,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
         {
             if (file == null || file.Length == 0)
             {
-                return null;
+                return "";
             }
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
 
-            string logo_cu = "";
+            string? logo_cu = "";
             string lay_lo_cu = "select logo from cong_ty where ma_cong_ty = @ma_cong_ty";
             using (var cmd_lay_logo = new MySqlCommand(lay_lo_cu, coon))
             {

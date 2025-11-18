@@ -26,7 +26,7 @@ export class HeaderWEB implements OnInit {
     { ten_label: 'Marketing', ten: 'marketing', loai: 'viec_lam', logo: '' },
     { ten_label: 'Sales', ten: 'sales', loai: 'viec_lam', logo: '' },
   ];
-  
+
   //subject la mot doi tuong Observable (có thể subscribe) vừa là Observer (có thể next(value) để phát giá trị).
   //subscribe la kenh nhan du lieu 
   //gia tri duoc gui bang next value
@@ -34,7 +34,7 @@ export class HeaderWEB implements OnInit {
 
   constructor(public auth: Auth, public router: Router, private httpclient: HttpClient, public cdr: ChangeDetectorRef) {
     this.tu_khoa_sub.pipe(debounceTime(300)).subscribe(tu_khoa => {
-      if(tu_khoa.trim()){
+      if (tu_khoa.trim()) {
         this.httpclient.post<any>('http://localhost:7000/api/API_WEB/goiYTuKhoa', `"${this.tu_khoa}"`, { headers: { 'Content-Type': 'application/json' } })
           .subscribe({
             next: (data) => {
@@ -43,34 +43,56 @@ export class HeaderWEB implements OnInit {
             }
           })
       }
-      else{
+      else {
         this.goiY = this.du_lieu_mac_dinh;
-        if(this.focus){
+        if (this.focus) {
           this.goiY = this.du_lieu_mac_dinh;
         }
       }
     })
   }
 
-  layGoiY(){
+  layAnhDaiDien(): string {
+    const anh = this.auth.layThongTinNguoiDung();
+
+    if (anh?.duong_dan_anh_dai_dien) {
+      return 'http://localhost:7000/' + anh.duong_dan_anh_dai_dien;
+    }
+
+    if (anh?.thong_tin_chi_tiet?.nguoi_tim_viec?.anh_dai_dien) {
+      return 'http://localhost:7000/' + anh.thong_tin_chi_tiet?.nguoi_tim_viec?.anh_dai_dien;
+    }
+
+    if (anh?.thong_tin_chi_tiet?.cong_ty?.logo) {
+      return 'http://localhost:7000/' + anh.thong_tin_chi_tiet?.cong_ty?.logo;
+    }
+
+    return 'anh_WEB/anh_icon_WEB/anh_icon_anh_dai_dien.webp';
+  }
+
+  layGoiY() {
     this.tu_khoa_sub.next(this.tu_khoa);
   }
 
-  layDuLieuMacDinh(){
+  layDuLieuMacDinh() {
     this.goiY = this.du_lieu_mac_dinh;
   }
 
 
 
-  chonGoiY(thong_tin_chon: any){
+  chonGoiY(thong_tin_chon: any) {
 
     this.item_chon = thong_tin_chon;
     this.tu_khoa = thong_tin_chon.ten;
+    const ma_cong_ty = thong_tin_chon.ma_cong_ty;
     this.cdr.detectChanges();
-    if(this.item_chon.loai == 'viec_lam'){
+    if (this.item_chon.loai == 'viec_lam') {
       this.router.navigate(['trang-tim-viec-theo-tu-khoa'], {
         queryParams: { nganh: this.item_chon.ten }
       })
+    }
+    if (this.item_chon.loai == 'cong_ty') {
+      this.router.navigate(['trang-gioi-thieu-cong-ty'], {queryParams: {ma_cong_ty}})
     }
     this.goiY = [];
   }
@@ -81,19 +103,19 @@ export class HeaderWEB implements OnInit {
     }
   }
 
-  focusVao(){
+  focusVao() {
     this.focus = true
-    if(!this.tu_khoa.trim()){
+    if (!this.tu_khoa.trim()) {
       this.goiY = this.du_lieu_mac_dinh;
     }
   }
 
-  roiKhoi(){
+  roiKhoi() {
     this.focus = false;
     this.cdr.markForCheck();
-    setTimeout(() =>{
+    setTimeout(() => {
       this.goiY = []
-    },1000);
+    }, 1000);
   }
 
   vaiTro() {
@@ -116,5 +138,5 @@ export class HeaderWEB implements OnInit {
     }, 1500);
   }
 
-  
+
 }

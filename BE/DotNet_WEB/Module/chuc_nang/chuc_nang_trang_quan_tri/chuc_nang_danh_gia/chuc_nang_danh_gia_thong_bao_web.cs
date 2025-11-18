@@ -56,5 +56,16 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_danh_gi
             cmd.Parameters.AddWithValue("@ma_danh_gia", danh_Gia.ma_danh_gia);
             return cmd.ExecuteNonQuery() > 0;
         }
+
+        public static bool xoaDanhGia(int ma_danh_gia)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "delete from danh_gia where ma_danh_gia = @ma_danh_gia";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_danh_gia", ma_danh_gia);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+        
     }
 }

@@ -174,6 +174,7 @@ export class TrangDanhSachUngVien implements OnInit {
 
   tuChoiUV() {
     const thong_tin = {
+      ma_viec: this.uvDangChon.ma_viec,
       ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
       ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec
     }
@@ -181,7 +182,7 @@ export class TrangDanhSachUngVien implements OnInit {
       .subscribe(data => {
         console.log(data.message);
         if (data.success) {
-          this.dongForm();
+          alert("tu choi ung vien thanh cong");
         }
         else{
           this.pop_up_tu_choi_that_bai = true;
@@ -192,6 +193,7 @@ export class TrangDanhSachUngVien implements OnInit {
           },2000)
           this.dongForm();
         }
+        this.cd.markForCheck();
       });
     this.dongForm();
   }
@@ -218,7 +220,8 @@ export class TrangDanhSachUngVien implements OnInit {
 
     const thong_tin_xoa = {
       ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
-      ma_nguoi_tim_viec: this.uvMuonXoa.ma_nguoi_tim_viec
+      ma_nguoi_tim_viec: this.uvMuonXoa.ma_nguoi_tim_viec,
+      ma_viec: this.uvMuonXoa.ma_viec
     }
 
     this.httpclient.post<API_RESPONSE>(

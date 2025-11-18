@@ -8,14 +8,40 @@ using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
-using Mysqlx.Crud;
-using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoan_cong_ty;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_tai_khoan
 {
     public class chuc_nang_tai_khoan_quan_tri_web
     {
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
+
+        public static bool kiemTraMatKhauQuanTri(quan_tri quan_Tri)
+        {
+            using var conn = new MySqlConnection(chuoi_KetNoi);
+            conn.Open();
+            string mat_khau = maHoaMatKhau(quan_Tri.mat_khau ?? "");
+            string sql = "SELECT COUNT(*) FROM quan_tri WHERE ma_quan_tri = @ma_quan_tri AND mat_khau = @mat_khau";
+            using var cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@ma_quan_tri", quan_Tri.ma_quan_tri);
+            cmd.Parameters.AddWithValue("@mat_khau", mat_khau);
+            int count = Convert.ToInt32(cmd.ExecuteScalar());
+            return count > 0;
+        }
+
+        public static bool capNhatMatKhauQuanTri(quan_tri quan_Tri)
+        {
+            using var conn = new MySqlConnection(chuoi_KetNoi);
+            conn.Open();
+            string mat_khau = maHoaMatKhau(quan_Tri.mat_khau ?? "");
+            string sql = "UPDATE quan_tri SET mat_khau = @mat_khau, ngay_cap_nhat = NOW() WHERE ma_quan_tri = @ma_quan_tri";
+            using var cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@mat_khau", mat_khau);
+            cmd.Parameters.AddWithValue("@ma_quan_tri", quan_Tri.ma_quan_tri);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
         private static readonly string[] allowed_fields = new string[]
         {
             "ho_ten",
@@ -59,7 +85,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_tai_kho
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
 
-            string anh_dai_dien_cu = "";
+            string? anh_dai_dien_cu = "";
             string lay_add_cu = "select duong_dan_anh_dai_dien from quan_tri where ma_quan_tri = @ma_quan_tri";
             using (var cmd_lay_danh_dai_dien_cu = new MySqlCommand(lay_add_cu, coon))
             {
@@ -106,6 +132,23 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_tai_kho
             }
             return duong_dan;
         }
+
+        public static string maHoaMatKhau(string mat_khau)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(mat_khau);
+                byte[] hash = sha256.ComputeHash(bytes);
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hash)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
     }
     public class thong_tin_truong_du_lieu_cap_nhat_quan_tri
     {

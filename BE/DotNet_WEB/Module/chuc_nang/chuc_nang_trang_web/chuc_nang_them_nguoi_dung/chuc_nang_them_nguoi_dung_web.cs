@@ -4,15 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using DotNet_WEB.Class;
-using ZstdSharp.Unsafe;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Quic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
+using System.Net.Mail;
 using System.Net;
+
 
 namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_dung
 {
@@ -106,7 +100,6 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_d
 
                 long ma_CongTy = Convert.ToInt64(cmd.ExecuteScalar());
 
-                // Thêm người dùng quản lý công ty
                 string them_NguoiDung = @"
             INSERT INTO nguoi_dung 
             (loai_nguoi_dung, ma_cong_ty, ten_dang_nhap, mat_khau, email, ngay_tao)
@@ -123,6 +116,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_d
                 cmd2.ExecuteNonQuery();
 
                 transaction.Commit();
+                _ = thongBaoTaoTaiKhoanCongTy(cong_Ty.email);
                 return true;
             }
             catch
@@ -131,6 +125,49 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_them_nguoi_d
                 return false;
             }
         }
+        public static async Task<bool> thongBaoTaoTaiKhoanCongTy(string email_yeu_cau)
+        {
+            try
+            {
+                ServicePointManager.SecurityProtocol =
+                    SecurityProtocolType.Tls12 |
+                    SecurityProtocolType.Tls13;
 
+                using var smtp = new SmtpClient("smtp-relay.brevo.com", 587)
+                {
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("9bd2ea001@smtp-brevo.com", "rWNkpnUTRz5xyZQ9"),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Timeout = 15000
+                };
+
+                smtp.SendCompleted += (s, e) =>
+                {
+                    Console.WriteLine("SendCompleted: " + e.Error?.Message);
+                };
+
+                using var mail = new MailMessage
+                {
+                    From = new MailAddress("cong20365@gmail.com", "JobFinder"),
+                    Subject = "Thông báo về tài khoản công ty",
+                    Body = $"Xin chào,\n\n Tài khoản công ty của bạn đã được tạo thành công\n\nTruy cập website để sử dụng các tính năng của JobFinder.\n\nCảm ơn bạn đã sử dụng JobFinder!",
+                    IsBodyHtml = false
+                };
+
+                mail.To.Add(email_yeu_cau);
+
+                await smtp.SendMailAsync(mail);
+
+                Console.WriteLine("Gửi OTP thành công!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("LỖI EMAIL: " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                return false;
+            }
+        }
     }
 }

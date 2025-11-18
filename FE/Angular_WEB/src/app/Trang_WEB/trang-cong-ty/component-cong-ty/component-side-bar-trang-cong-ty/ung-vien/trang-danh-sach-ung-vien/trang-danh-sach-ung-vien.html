@@ -1,12 +1,12 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Danh sách ứng viên</h2>
+<div class="container ds-ntv-container">
+  <h2 class="ds-ntv-title">Danh sách ứng viên</h2>
 
   <div *ngIf="loading">Đang tải dữ liệu...</div>
   <div *ngIf="error" class="text-danger">{{ error }}</div>
 
   <div *ngIf="!loading && !error">
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
+    <table class="table table-bordered table-striped ds-ntv-table">
+      <thead class="ds-ntv-thead">
         <tr>
           <th>#</th>
           <th>Họ tên</th>
@@ -34,19 +34,18 @@
           <td>{{ uv.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ uv.nguoi_tim_viec?.dien_thoai || 'Chưa có' }}</td>
           <td [ngClass]="{
-      'text-warning': uv.trang_thai_duyet === 1,
-      'text-success': uv.trang_thai_duyet === 2
-    }">
+                'text-warning': uv.trang_thai_duyet === 1,
+                'text-success': uv.trang_thai_duyet === 2
+              }">
             {{ uv.trang_thai_duyet === 1 ? 'Chưa duyệt' : 'Đã duyệt' }}
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" style="border: none;" (click)="moFormUV(uv)">
+            <button class="btn btn-primary btn-sm btn-xem" (click)="moFormUV(uv)">
               Xem chi tiết
             </button>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" style="background-color: red; border: none;"
-              (click)="moXacNhanXoa(uv, i)">
+            <button class="btn btn-danger btn-sm btn-xoa" (click)="moXacNhanXoa(uv, i)">
               Xóa ứng viên
             </button>
           </td>
@@ -54,13 +53,14 @@
       </tbody>
     </table>
 
-    <nav *ngIf="tongTrang > 1">
-      <ul class="pagination justify-content-center">
+    <nav *ngIf="tongTrang > 1" class="d-flex justify-content-center mt-3">
+      <ul class="pagination pagination-lg">
         <li class="page-item" [class.disabled]="trangHienTai === 1">
           <a class="page-link" (click)="chuyenTrang(trangHienTai - 1)">Trước</a>
         </li>
-        <li class="page-item" *ngFor="let t of [].constructor(tongTrang); let i = index"
-          [class.active]="trangHienTai === i + 1">
+        <li class="page-item"
+            *ngFor="let t of [].constructor(tongTrang); let i = index"
+            [class.active]="trangHienTai === i + 1">
           <a class="page-link" (click)="chuyenTrang(i + 1)">{{ i + 1 }}</a>
         </li>
         <li class="page-item" [class.disabled]="trangHienTai === tongTrang">
@@ -96,9 +96,9 @@
     <p><strong>Điện thoại:</strong> {{ uvDangChon.nguoi_tim_viec.dien_thoai || 'Chưa có' }}</p>
     <p><strong>Ngày sinh:</strong> {{ uvDangChon.nguoi_tim_viec.ngay_sinh | date:'dd/MM/yyyy' }}</p>
     <p><strong>CV:</strong></p>
-    <div class=cv-item (click)="moCV(uvDangChon?.cv_Online_Nguoi_Tim_Viec.duong_dan_file_pdf)">
+    <div class=cv-item (click)="moCV(uvDangChon?.cv_Online_Nguoi_Tim_Viec.duong_dan_file_pdf || uvDangChon?.duong_dan_file_cv_upload)">
       <div class="cv-info">
-        <h3>{{ uvDangChon?.cv_Online_Nguoi_Tim_Viec.ten_cv }}</h3>
+        <h3>{{ uvDangChon?.cv_Online_Nguoi_Tim_Viec.ten_cv || 'CV người tìm việc' }}</h3>
       </div>
     </div>
   </div>
@@ -127,14 +127,6 @@
     <button *ngIf="themThongTinPhongVan" class="btn btn-secondary" (click)="huyMoiPhongVan()">Hủy</button>
   </div>
 </div>
-
-
-
-
-
-
-
-
 
 
 
@@ -200,23 +192,21 @@
   </div>
 </div>
 
-<div class="modal" [class.show]="showXacNhanXoa">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Xác nhận</h5>
-        <button type="button" class="btn-close" (click)="dongXacNhanXoa()"></button>
-      </div>
-      <div class="modal-body">
-        <p>
-          Bạn có chắc muốn xóa ứng viên
-          <strong>{{ uvMuonXoa?.nguoi_tim_viec?.ho_ten }}</strong> không?
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="dongXacNhanXoa()">Hủy</button>
-        <button class="btn btn-danger" (click)="xoaUngVien()">Đồng ý</button>
-      </div>
+<div *ngIf="showXacNhanXoa" class="xac-nhan-xoa-overlay">
+  <div class="xac-nhan-xoa-form">
+    <div class="modal-header">
+      <h5 class="modal-title">Xác nhận</h5>
+      <button type="button" class="btn-close" (click)="dongXacNhanXoa()"></button>
+    </div>
+    <div class="modal-body">
+      <p>
+        Bạn có chắc muốn xóa ứng viên
+        <strong>{{ uvMuonXoa?.nguoi_tim_viec?.ho_ten }}</strong> không?
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="dongXacNhanXoa()">Hủy</button>
+      <button class="btn btn-danger" (click)="xoaUngVien()">Đồng ý</button>
     </div>
   </div>
 </div>

@@ -1,61 +1,349 @@
-
-.container {
-	max-width: 1100px;
-	margin: 40px auto;
-	background: #fff;
-	border-radius: 12px;
-	box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-	padding: 32px 24px 24px 24px;
+.notification-container {
+  max-width: 1700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-h2 {
-	text-align: center;
-	margin-bottom: 28px;
-	color: #2d3a4b;
-	font-weight: 700;
-	letter-spacing: 1px;
+.notification-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
 }
 
-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: 1.05rem;
-	background: #fafbfc;
-	border-radius: 8px;
-	overflow: hidden;
+.sidebar-left {
+  width: 320px;
+  flex-shrink: 0;
 }
 
-th, td {
-	padding: 14px 12px;
-	text-align: left;
+.select-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 20px;
 }
 
-th {
-	background: #2d3a4b;
-	color: #fff;
-	font-weight: 600;
-	position: sticky;
-	top: 0;
-	z-index: 2;
+.select-title {
+  margin: 0 0 20px 0;
+  color: #1e40af;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-tbody tr {
-	transition: background 0.2s;
+.notification-select {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-tbody tr:hover {
-	background: #e6f0fa;
+.notification-select:hover {
+  border-color: #2563eb;
 }
 
-@media (max-width: 800px) {
-	.container {
-		padding: 12px 2px;
-	}
-	th, td {
-		padding: 8px 4px;
-		font-size: 0.95rem;
-	}
-	h2 {
-		font-size: 1.1rem;
-	}
+.notification-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.content-right {
+  flex: 1;
+}
+
+.notification-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  min-height: 120px;
+}
+
+.content-title {
+  margin: 0 0 24px 0;
+  color: #2d3a4b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.spinner-border {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+.card-small-white {
+  background: #ffffff; 
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.card-small-white:hover {
+  background: #f9fafb; 
+  border-color: #9ca3af;
+}
+
+.card-small-white .title {
+  color: #1e40af; 
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.card-small-white .date {
+  color: #6b7280; 
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 16px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notification-item {
+  border: 3px solid #d1d5db;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.notification-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.notification-white {
+  background-color: #ffffff;
+  border-left: 4px solid #e5e7eb;
+}
+
+.notification-gray {
+  background-color: #f3f4f6;
+  border-left: 4px solid #d1d5db;
+}
+
+.notification-blue {
+  background-color: #eff6ff;
+  border-left: 4px solid #2563eb;
+}
+
+.notification-title {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.notification-content-text {
+  margin: 0 0 12px 0;
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.notification-date {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.notification-date svg {
+  margin-right: 6px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.empty-state svg {
+  margin: 0 auto 16px;
+}
+
+.empty-text {
+  color: #6b7280;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.modal.show.d-block {
+  background-color: rgba(31, 41, 55, 0.7);
+}
+
+.notification-item {
+  position: relative;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: #fff;
+}
+
+.notification-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.btn-action:hover {
+  color: #ef4444;
+}
+
+.btn-dots {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 28px;
+  right: auto;  
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  list-style: none;
+  padding: 5px 0;
+  min-width: 150px;
+  z-index: 100;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.dropdown-menu li {
+  padding: 5px 15px;
+}
+
+.dropdown-menu li button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-menu li button:hover {
+  background-color: #f1f1f1;
+}
+
+
+@media (max-width: 1024px) {
+  .notification-layout {
+    flex-direction: column;
+  }
+
+  .sidebar-left {
+    width: 100%;
+    position: relative;
+  }
+
+  .select-card {
+    position: relative;
+    top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .notification-container {
+    padding: 0 12px;
+    margin: 20px auto;
+  }
+
+  .select-card {
+    padding: 20px;
+  }
+
+  .notification-content {
+    padding: 20px;
+  }
+
+  .content-title {
+    font-size: 1.3rem;
+  }
+
+  .notification-item {
+    padding: 16px;
+  }
+
+  .notification-title {
+    font-size: 1rem;
+  }
+
+  .notification-content-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .select-card {
+    padding: 16px;
+  }
+
+  .notification-content {
+    padding: 16px;
+  }
+
+  .content-title {
+    font-size: 1.2rem;
+  }
+
+  .select-title {
+    font-size: 1.1rem;
+  }
+
+  .notification-select {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .hint-box {
+    padding: 12px;
+  }
+
+  .hint-text {
+    font-size: 0.85rem;
+  }
 }

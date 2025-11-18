@@ -67,7 +67,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_c
             
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string duong_dan_file_pdf = "";
+            string? duong_dan_file_pdf = "";
             string lay_cv = "select duong_dan_file_pdf from cv_online_nguoi_tim_viec where ma_cv = @ma_cv and ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
             using(var cmd_lay_cv = new MySqlCommand(lay_cv, coon))
             {

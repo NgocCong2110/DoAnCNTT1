@@ -100,7 +100,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_c
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string ten_file_chung_chi_xoa = "";
+            string? ten_file_chung_chi_xoa = "";
             string sql = "select duong_dan_file from chung_chi where ma_chung_chi = @ma_chung_chi and ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
             using (var cmd = new MySqlCommand(sql, coon))
             {

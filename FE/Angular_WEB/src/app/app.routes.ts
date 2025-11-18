@@ -25,7 +25,6 @@ import { TrangDanhSachThongBao } from './Trang_WEB/trang-quan-tri/component-qtv/
 import { TrangThongTinTaiKhoanNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/tai-khoan/trang-thong-tin-tai-khoan-ntv/trang-thong-tin-tai-khoan-ntv';
 import { TrangDanhSachChungChi } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ho-so/trang-danh-sach-chung-chi/trang-danh-sach-chung-chi';
 import { TrangLichSuUngTuyen } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ho-so/trang-lich-su-ung-tuyen/trang-lich-su-ung-tuyen';
-import { TrangThongBaoNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/thong-bao/trang-thong-bao-ntv/trang-thong-bao-ntv';
 import { TrangCvNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ho-so/trang-cv-ntv/trang-cv-ntv';
 import { TrangThongTinTaiKhoanCongTy } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/tai-khoan/trang-thong-tin-tai-khoan-cong-ty/trang-thong-tin-tai-khoan-cong-ty';
 import { TrangDanhSachUngVien } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/ung-vien/trang-danh-sach-ung-vien/trang-danh-sach-ung-vien';
@@ -47,6 +46,7 @@ import { TrangBaiDangCuaCongTy } from './Trang_WEB/trang-bai-dang-cua-cong-ty/tr
 import { MauCvCongNghe } from './Trang_WEB/mau-cv/mau-cv-cong-nghe/mau-cv-cong-nghe';
 import { TrangDoiMatKhauCongTy } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/tai-khoan/trang-doi-mat-khau-cong-ty/trang-doi-mat-khau-cong-ty';
 import { TrangDoiMatKhauNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/tai-khoan/trang-doi-mat-khau-ntv/trang-doi-mat-khau-ntv';
+import { TrangDoiMatKhauQuanTri } from './Trang_WEB/trang-quan-tri/component-qtv/component-side-bar-quan-tri/tai-khoan/trang-doi-mat-khau-quan-tri/trang-doi-mat-khau-quan-tri';
 
 // ==== thang nao import vao trang cha thi khoi can import vao trang nay ====
 export const routes: Routes = [
@@ -85,8 +85,6 @@ export const routes: Routes = [
             { path: 'trang-danh-sach-chung-chi', component: TrangDanhSachChungChi },
 
             { path: 'trang-lich-su-ung-tuyen', component: TrangLichSuUngTuyen },
-
-            { path: 'trang-thong-bao-ntv', component: TrangThongBaoNtv },
             
             { path: 'trang-cv-ntv', component: TrangCvNtv}
         ],
@@ -148,7 +146,9 @@ export const routes: Routes = [
 
             { path: 'trang-danh-sach-thong-bao', component: TrangDanhSachThongBao },
 
-            { path: 'trang-duyet-danh-gia-web', component: TrangDuyetDanhGiaWeb }
+            { path: 'trang-duyet-danh-gia-web', component: TrangDuyetDanhGiaWeb },
+
+            { path: 'trang-doi-mat-khau-quan-tri', component: TrangDoiMatKhauQuanTri }
         ],
         canActivate: [VaiTroGuard],
         data: { allowedRoles: ['quan_Tri_Vien'] }

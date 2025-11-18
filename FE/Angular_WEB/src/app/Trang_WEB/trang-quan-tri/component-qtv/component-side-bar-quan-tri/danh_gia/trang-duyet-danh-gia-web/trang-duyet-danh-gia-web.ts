@@ -99,4 +99,20 @@ export class TrangDuyetDanhGiaWeb implements OnInit {
         }
       })
   }
+  xoaDanhGia(ma_danh_gia: number){
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/xoaDanhGia', ma_danh_gia)
+      .subscribe({
+        next: (data) =>{
+          if(data.success){
+            this.danh_sach_danh_gia = this.danh_sach_danh_gia.filter(dg => dg.ma_danh_gia !== ma_danh_gia);
+            this.danh_sach_danh_gia_goc = this.danh_sach_danh_gia_goc.filter(dg => dg.ma_danh_gia !== ma_danh_gia);
+            this.cd.detectChanges();
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) =>{
+          console.log(err);
+        }
+      });
+  }
 }

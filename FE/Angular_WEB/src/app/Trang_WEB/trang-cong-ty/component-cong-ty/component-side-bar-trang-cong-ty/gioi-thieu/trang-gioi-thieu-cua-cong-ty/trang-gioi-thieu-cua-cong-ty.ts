@@ -90,6 +90,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
   dang_theo_doi = false;
   mo_ta_van_hoa_cong_ty: string = "";
   ma_cong_ty: number = 0;
+  danh_sach_viec_lam_noi_bat_cua_cong_ty: any;
 
   danh_sach_viec_lam: any;
 
@@ -153,6 +154,27 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       })
   }
 
+  layDanhSachViecLamNoiBatCuaCongTy(){
+    const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_cong_ty;
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachViecLamNoiBatCuaCongTy', `"${ma_cong_ty}"`, { headers: { "Content-Type": "application/json" } })
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_viec_lam_noi_bat_cua_cong_ty = data.danh_sach;
+            this.cd.detectChanges();
+          }
+          else {
+            console.log("loi");
+          }
+          this.cd.markForCheck();
+        },
+        error: (err) => {
+          console.log("loi");
+          this.cd.markForCheck();
+        }
+      })
+  }
+
   themGioiThieuCongTY() {
     this.httpclient.post<any>('http://localhost:7000/api/API_WEB/themGioiThieuVeCongTy', {})
   }
@@ -172,6 +194,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
           this.cong_ty.gia_tri_cot_loi_cong_ty = data.danh_sach[0].gia_Tri_Cot_Loi_Cong_Ty || [];
           this.cong_ty.lien_ket_mang_xa_hoi = data.danh_sach[0].lien_Ket_Mang_Xa_Hoi || [];
           this.layDanhSachViecLamCuaCongTy();
+          this.layDanhSachViecLamNoiBatCuaCongTy();
         } else {
           console.log('Lỗi lấy thông tin công ty');
         }
@@ -228,8 +251,9 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
   luuChinhSuaGioiThieuCongTy(ma_cong_ty: number) {
     const du_lieu = {
       ma_cong_ty: ma_cong_ty,
-      ma_ta: this.cong_ty.mo_ta
+      mo_ta: this.cong_ty.mo_ta
     }
+    console.log(du_lieu);
     this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatMoTaCongTy', du_lieu)
       .subscribe({
         next: (res) => {

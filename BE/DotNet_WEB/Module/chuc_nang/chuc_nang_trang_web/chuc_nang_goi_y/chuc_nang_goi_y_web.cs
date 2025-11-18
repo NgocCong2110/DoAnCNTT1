@@ -19,7 +19,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_goi_y
     public class chuc_nang_goi_y_web
     {
         private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
-        public static List<thongTinGoiY> goiYTuKhoa(string tu_khoa)
+        public static List<thongTinGoiY> goiYTuKhoa(string? tu_khoa)
         {
             var danh_sach = new List<thongTinGoiY>();
 
@@ -29,7 +29,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_goi_y
             tu_khoa = Normalize(tu_khoa);
 
             string sql = @"
-        SELECT DISTINCT nganh_nghe AS ten, NULL AS logo, 'viec_lam' AS loai
+        SELECT DISTINCT nganh_nghe AS ten, NULL AS logo, 'viec_lam' AS loai, ma_cong_ty
         FROM viec_lam
         WHERE LOWER(
             REPLACE(
@@ -41,7 +41,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_goi_y
 
         UNION ALL
 
-        SELECT ten_cong_ty AS ten, logo AS logo, 'cong_ty' AS loai
+        SELECT ten_cong_ty AS ten, logo AS logo, 'cong_ty' AS loai, ma_cong_ty
         FROM cong_ty
         WHERE LOWER(
             REPLACE(
@@ -61,6 +61,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_goi_y
                 var goi_y = new thongTinGoiY
                 {
                     ten = reader.IsDBNull(reader.GetOrdinal("ten")) ? null : reader.GetString("ten"),
+                    ma_cong_ty = reader.IsDBNull(reader.GetOrdinal("ma_cong_ty")) ? null : reader.GetInt32("ma_cong_ty"),
                     loai = reader.IsDBNull(reader.GetOrdinal("loai")) ? null : reader.GetString("loai"),
                     logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo")
                 };
@@ -97,6 +98,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_goi_y
     public class thongTinGoiY
     {
         public string? ten { get; set; }
+        public int? ma_cong_ty { get; set; }    
         public string? loai { get; set; }
         public string? logo { get; set; }
     }

@@ -1,4 +1,104 @@
-.text-wait {
-  color: #ffc107; 
-  font-weight: 500;
+.container.ds-danhgia-container {
+  max-width: 1800px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+  padding: 40px 32px 32px 32px;
+  color: #4b5563;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.ds-danhgia-title {
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #1f2937;
+  font-size: 1.9rem;
+}
+
+.ds-danhgia-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  table-layout: auto;
+}
+
+.ds-danhgia-table th {
+  background: #ffffff;
+  color: #4b5563;
+  font-weight: 600;
+  padding: 16px 18px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: center;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.ds-danhgia-table td {
+  padding: 14px 16px;
+  text-align: center;
+  color: #6b7280;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+.ds-danhgia-table button {
+  width: 100px;
+}
+
+.ds-danhgia-table tbody tr:hover {
+  background: #f9fafb;
+  transition: background 0.2s ease;
+}
+
+.text-warning {
+  color: #f59e0b !important;
+  font-weight: 600;
+}
+
+.text-success {
+  color: #10b981 !important;
+  font-weight: 600;
+}
+
+@media (max-width: 1400px) {
+  .container.ds-danhgia-container {
+    max-width: 95%;
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container.ds-danhgia-container {
+    padding: 24px 16px;
+  }
+  .ds-danhgia-title {
+    font-size: 1.6rem;
+  }
+  .ds-danhgia-table th, .ds-danhgia-table td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ds-danhgia-table th, .ds-danhgia-table td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+  .ds-danhgia-title {
+    font-size: 1.4rem;
+  }
 }

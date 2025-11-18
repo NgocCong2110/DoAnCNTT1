@@ -23,8 +23,6 @@ namespace DotNet_WEB.Module
 {
     public class Module_QTV
     {
-        private static readonly string chuoi_KetNoi = "server=localhost;user=root;password=123456;database=hethong_timviec";
-
         //tao tai khoan quan tri
         public static bool themQuanTriVien(quan_tri quan_Tri)
         {
@@ -36,6 +34,16 @@ namespace DotNet_WEB.Module
         public static bool guiThongBaoToiServer(thong_bao thong_Bao)
         {
             return chuc_nang_thong_bao_web.guiThongBaoToiServer(thong_Bao);
+        }
+
+        public static List<thong_bao> thongBaoQuanTriRieng(int ma_quan_tri)
+        {
+            return chuc_nang_thong_bao_web.thongBaoQuanTriRieng(ma_quan_tri);
+        }
+
+        public static bool xoaThongBaoQuanTri(thong_bao thong_Bao)
+        {
+            return chuc_nang_thong_bao_web.xoaThongBaoQuanTri(thong_Bao);
         }
         //gui thong bao
 
@@ -60,6 +68,16 @@ namespace DotNet_WEB.Module
         public static async Task<string> capNhatAnhDaiDienQuanTriVien(IFormFile file, int ma_quan_tri)
         {
             return await chuc_nang_tai_khoan_quan_tri_web.capNhatAnhDaiDienQuanTriVien(file, ma_quan_tri);
+        }
+
+        public static bool kiemTraMatKhauQuanTri(quan_tri quan_Tri)
+        {
+            return chuc_nang_tai_khoan_quan_tri_web.kiemTraMatKhauQuanTri(quan_Tri);
+        }
+        
+        public static bool capNhatMatKhauQuanTri(quan_tri quan_Tri)
+        {
+            return chuc_nang_tai_khoan_quan_tri_web.capNhatMatKhauQuanTri(quan_Tri);
         }
         //cap nhat thong tin quan tri
 
@@ -131,6 +149,11 @@ namespace DotNet_WEB.Module
         public static bool capNhatTrangThaiDanhGia(danh_gia danh_Gia)
         {
             return chuc_nang_danh_gia_thong_bao_web.capNhatTrangThaiDanhGia(danh_Gia);
+        }
+
+        public static bool xoaDanhGia(int ma_danh_gia)
+        {
+            return chuc_nang_danh_gia_thong_bao_web.xoaDanhGia(ma_danh_gia);
         }
         //danh gia web
 

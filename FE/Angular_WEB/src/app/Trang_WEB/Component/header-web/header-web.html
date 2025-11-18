@@ -3,68 +3,21 @@
     <button class="btn btn-outline-secondary me-2 d-lg-none" type="button" data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">☰</button>
     <a class="navbar-brand d-flex align-items-center" [routerLink]="['/trang-chu']">
-      <img src="anh_WEB/anh_Logo.png" alt="Logo" style="height: 45px; width: auto;">
+      <img src="anh_WEB/anh_Logo.png" alt="Logo" style="height: 60px; width: auto;">
     </a>
 
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-chu']">Trang chủ</a></li>
+        <!-- <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-chu']">Trang chủ</a></li> -->
 
-        <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-tim-viec-theo-tu-khoa']" *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Tìm việc theo
-            từ khóa</a></li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false" *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'quan_Tri_Vien'">
-            Danh mục
-          </a>
-          <div class="dropdown-menu p-3" style="min-width: 700px;" *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == null">
-            <div class="row">
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">Việc làm</h4>
-                <a class="dropdown-item" [routerLink]="['/trang-viec-lam-da-luu']">Việc làm đã lưu</a>
-                <a class="dropdown-item" [routerLink]="['/trang-thong-bao']">Thông báo</a>
-              </div>
-
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">CV</h4>
-                <a class="dropdown-item" [routerLink]="['/trang-cv-cua-nguoi-tim-viec']">CV của tôi</a>
-                <a class="dropdown-item" [routerLink]="['/trang-tao-cv']">Tạo CV mới</a>
-              </div>
-
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">Hỗ trợ</h4>
-                <a class="dropdown-item" href="#">Hướng dẫn</a>
-                <a class="dropdown-item" href="#">Liên hệ</a>
-              </div>
-            </div>
-          </div>
-          <div class="dropdown-menu p-3" style="min-width: 700px;" *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">
-            <div class="row">
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">Thông báo</h4>
-                <a class="dropdown-item" [routerLink]="['/trang-thong-bao']">Thông báo</a>
-              </div>
-
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">Quản lý tin tuyển dụng</h4>
-                <a class="dropdown-item" [routerLink]="['/trang-bai-dang-cua-cong-ty']">Tin tuyển dụng của tôi</a>
-              </div>
-
-              <div class="col-4">
-                <h4 class="dropdown-header" style="color: black;">Hỗ trợ</h4>
-                <a class="dropdown-item" href="#">Hướng dẫn</a>
-                <a class="dropdown-item" href="#">Liên hệ</a>
-              </div>
-            </div>
-          </div>
-
-        </li>
-
+        <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-tim-viec-theo-tu-khoa']"
+            *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == null">Tìm
+            việc làm</a></li>
 
       </ul>
 
-      <form class="d-flex search-bar me-3" role="search" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">
+      <form class="d-flex search-bar me-3" role="search"
+        *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || auth.layThongTinNguoiDung() == null">
         <input class="form-control search-input" type="search" [(ngModel)]="tu_khoa" name="tu_khoa" (input)="layGoiY()"
           (focus)="focusVao()" (blur)="roiKhoi()" placeholder="Tìm kiếm việc làm, công ty..." aria-label="Search"
           autocomplete="off">
@@ -73,7 +26,7 @@
           <li class="list-group-item list-group-item-action d-flex align-items-center" *ngFor="let item of goiY"
             (click)="chonGoiY(item)">
 
-            <img *ngIf="item.logo" [src]="'http://localhost:65001/' + item.logo" alt="logo" class="me-2"
+            <img *ngIf="item.logo" [src]="'http://localhost:7000/' + item.logo" alt="logo" class="me-2"
               style="width:30px; height:30px; object-fit:cover; border-radius:4px">
 
             <span>{{ item.ten_label || item.ten }}</span>
@@ -83,8 +36,58 @@
         </ul>
       </form>
 
+      <ul class="navbar-nav me-3">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-dark danh-muc-border" href="#" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false" *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung != 'quan_Tri_Vien'">
 
+            <span class="d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                class="me-2">
+                <path fill-rule="evenodd"
+                  d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+              </svg>
 
+              Danh mục
+            </span>
+
+          </a>
+
+          <div class="dropdown-menu p-3" style="min-width: 700px;"
+            *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == null">
+            <div class="row">
+              <div class="col-6">
+                <h4 class="dropdown-header" style="color: black; font-size: 1.10rem;">Việc làm</h4>
+                <a class="dropdown-item" [routerLink]="['/trang-viec-lam-da-luu']">Việc làm đã lưu</a>
+                <a class="dropdown-item" [routerLink]="['/trang-thong-bao']">Thông báo</a>
+              </div>
+
+              <div class="col-6">
+                <h4 class="dropdown-header" style="color: black; font-size: 1.10rem;">CV</h4>
+                <a class="dropdown-item" [routerLink]="['/trang-cv-cua-nguoi-tim-viec']">CV của tôi</a>
+                <a class="dropdown-item" [routerLink]="['/trang-tao-cv']">Tạo CV mới</a>
+              </div>
+
+            </div>
+          </div>
+          <div class="dropdown-menu p-3" style="min-width: 700px;"
+            *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">
+            <div class="row">
+              <div class="col-6">
+                <h4 class="dropdown-header" style="color: black; font-size: 1.10rem;">Thông báo</h4>
+                <a class="dropdown-item" [routerLink]="['/trang-thong-bao']">Thông báo</a>
+              </div>
+
+              <div class="col-6">
+                <h4 class="dropdown-header" style="color: black; font-size: 1.10rem;">Quản lý tin tuyển dụng</h4>
+                <a class="dropdown-item" [routerLink]="['/trang-bai-dang-cua-cong-ty']">Tin tuyển dụng của tôi</a>
+              </div>
+
+            </div>
+          </div>
+
+        </li>
+      </ul>
 
       <ul class="navbar-nav">
         <li class="nav-item dropdown" *ngIf="!auth.layThongTinNguoiDung()">
@@ -97,7 +100,8 @@
         </li>
         <li class="nav-item dropdown" *ngIf="auth.layThongTinNguoiDung()">
           <a class="nav-link dropdown-toggle text-dark" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false">Xin chào {{ nguoi_Dung?.ten_dang_nhap }}</a>
+            aria-expanded="false"><img [src]="layAnhDaiDien()" class="rounded-circle"
+              style="width: 60px; height: 60px; border: 2px solid #999;"></a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" (click)="vaiTro()"
                 *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'quan_Tri_Vien'">Quản trị hệ thống</a></li>

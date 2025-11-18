@@ -23,9 +23,9 @@ namespace DotNet_WEB.Class
         public int? ma_nguoi_tim_viec { get; set; }
         [ForeignKey(nameof(ma_nguoi_tim_viec))]
         public nguoi_tim_viec? nguoi_Tim_Viec { get; set; }
-        public int ma_nguoi_nhan { get; set; }
-        [ForeignKey(nameof(ma_nguoi_nhan))]
-        public nguoi_dung? nguoi_Dung { get; set; }
+        public int? ma_bai_dang { get; set; }
+        [ForeignKey(nameof(ma_bai_dang))]
+        public bai_dang? bai_Dang { get; set; }
         public DateTime ngay_tao { get; set; }
         public DateTime ngay_cap_nhat { get; set; }
         public List<chi_tiet_thu_moi>? chi_tiet_thu_moi { get; set; }

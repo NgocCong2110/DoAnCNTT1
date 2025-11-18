@@ -58,6 +58,10 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
         {
             using var coon = new MySqlConnection(chuoi_ket_noi);
             coon.Open();
+            if(string.IsNullOrEmpty(nguoi_Tim_Viec.mat_khau))
+            {
+                return false;
+            }
             string mat_khau = maHoaMatKhau(nguoi_Tim_Viec.mat_khau);
             string sql = "select count(*) from nguoi_tim_viec where mat_khau = @mat_khau and ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
             using var cmd = new MySqlCommand(sql, coon);
@@ -71,6 +75,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
         {
             using var coon = new MySqlConnection(chuoi_ket_noi);
             coon.Open();
+
+            if(string.IsNullOrEmpty(nguoi_Tim_Viec.mat_khau))
+            {
+                return false;
+            }
 
             string mat_khau_ma_hoa = maHoaMatKhau(nguoi_Tim_Viec.mat_khau);
 
@@ -114,7 +123,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_t
             using var coon = new MySqlConnection(chuoi_ket_noi);
             coon.Open();
 
-            string anh_dai_dien_cu = "";
+            string? anh_dai_dien_cu = "";
             string lay_add_cu = "select anh_dai_dien from nguoi_tim_viec where ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
             using (var cmd_lay_danh_dai_dien_cu = new MySqlCommand(lay_add_cu, coon))
             {

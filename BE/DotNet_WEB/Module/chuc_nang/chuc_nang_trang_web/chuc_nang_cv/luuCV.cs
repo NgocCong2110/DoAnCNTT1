@@ -16,17 +16,20 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
 
         public static async Task<string> luuCVOnline(cv_online_nguoi_tim_viec cv)
         {
+
+
             string duong_dan_folder = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCVOnline");
             if (!Directory.Exists(duong_dan_folder))
                 Directory.CreateDirectory(duong_dan_folder);
 
-            string ten_file = !string.IsNullOrEmpty(cv.ten_cv)
-                ? $"{cv.ten_cv.Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.pdf"
-                : $"{cv.ho_ten.Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
+            string baseName = !string.IsNullOrWhiteSpace(cv.ten_cv)
+    ? cv.ten_cv
+    : (!string.IsNullOrWhiteSpace(cv.ho_ten) ? cv.ho_ten : "Unknown");
+
+            string ten_file = $"{baseName.Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
+
             string duong_dan_pdf = Path.Combine(duong_dan_folder, ten_file);
             string duong_dan_file_pdf = $"LuuTruCVOnline/{ten_file}";
-
-
 
 
             string duong_dan_folder_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV");
@@ -38,7 +41,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
             if (!string.IsNullOrEmpty(cv.anh_dai_dien))
             {
                 var base64Data = cv.anh_dai_dien.Split(',')[1];
-                var mimeType = cv.anh_dai_dien.Substring(5, cv.anh_dai_dien.IndexOf(";") - 5); 
+                var mimeType = cv.anh_dai_dien.Substring(5, cv.anh_dai_dien.IndexOf(";") - 5);
                 string extension = mimeType switch
                 {
                     "image/png" => "png",
@@ -48,7 +51,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
                 };
 
                 var bytes = Convert.FromBase64String(base64Data);
-                string ten_file_anh = $"{cv.ten_cv.Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.{extension}";
+                string ten_file_anh = $"{(cv.ten_cv ?? "Unknown").Replace(" ", "_")}_{DateTime.Now:yyyyMMddHHmmss}.{extension}";
                 string duong_dan_file_anh_dai_dien = Path.Combine(Directory.GetCurrentDirectory(), duong_dan_folder_anh_dai_dien, ten_file_anh);
 
                 if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "LuuTruAnhDaiDienCV")))
