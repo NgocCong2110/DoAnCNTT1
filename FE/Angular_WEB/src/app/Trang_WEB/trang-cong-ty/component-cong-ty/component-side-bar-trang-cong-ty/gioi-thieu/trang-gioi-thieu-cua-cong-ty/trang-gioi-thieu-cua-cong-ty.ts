@@ -139,7 +139,9 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       .subscribe({
         next: (data) => {
           if (data.success) {
-            this.cong_ty.jobs = data.danh_sach;
+            const danh_sach = data.danh_sach.filter((x: any) => x.bai_dang.trang_thai === 1);
+            console.log(danh_sach)
+            this.cong_ty.jobs = danh_sach;
             this.cd.detectChanges();
           }
           else {
@@ -253,7 +255,6 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       ma_cong_ty: ma_cong_ty,
       mo_ta: this.cong_ty.mo_ta
     }
-    console.log(du_lieu);
     this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatMoTaCongTy', du_lieu)
       .subscribe({
         next: (res) => {
@@ -339,7 +340,6 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
 
   danh_sach_mang_xa_hoi = [
     { ten: 'facebook', bieu_tuong: 'anh_WEB/anh_icon_WEB/anh_icon_mang_xa_hoi/icon_facebook.jpg', lien_ket: '' },
-    { ten: 'zalo', bieu_tuong: 'bi-chat-dots', lien_ket: '' },
     { ten: 'instagram', bieu_tuong: 'bi-instagram', lien_ket: '' },
     { ten: 'linkedin', bieu_tuong: 'bi-linkedin', lien_ket: '' },
   ];
@@ -367,14 +367,12 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
   facebook: 'bi-facebook',
   instagram: 'bi-instagram',
   twitter: 'bi-twitter',
-  linkedin: 'bi-linkedin',
-  zalo: 'bi-chat-dots'
+  linkedin: 'bi-linkedin'
 };
 
   danh_sach_mang_xa_hoi_co_san = [
     { ten: 'facebook', bieu_tuong: 'bi-facebook' },
     { ten: 'instagram', bieu_tuong: 'bi-instagram' },
-    { ten: 'zalo', bieu_tuong: 'bi-chat-dots' },
     { ten: 'linkedin', bieu_tuong: 'bi-linkedin' },
     { ten: 'twitter', bieu_tuong: 'bi-twitter' }
   ];
@@ -401,6 +399,7 @@ export class TrangGioiThieuCuaCongTy implements OnInit {
       ma_cong_ty: this.cong_ty.ma_cong_ty,
       lien_Ket_Mang_Xa_Hoi: this.cong_ty.lien_ket_mang_xa_hoi
     }
+    console.log(du_lieu)
     this.httpclient.post<any>('http://localhost:7000/api/API_WEB/capNhatLienKetMangXaHoi', du_lieu)
       .subscribe({
         next: (res) => {

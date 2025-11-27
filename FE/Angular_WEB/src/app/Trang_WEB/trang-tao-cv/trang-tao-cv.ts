@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Auth } from '../../services/auth';
 import { ChangeDetectorRef } from '@angular/core';
+import { FooterWeb } from '../Component/footer-web/footer-web';
 
 interface mau_cv {
   name: string;
@@ -19,7 +20,7 @@ interface API_RESPONSE {
 
 @Component({
   selector: 'app-trang-tao-cv',
-  imports: [HeaderWEB, RouterLink, CommonModule],
+  imports: [HeaderWEB, RouterLink, CommonModule, FooterWeb],
   templateUrl: './trang-tao-cv.html',
   styleUrl: './trang-tao-cv.css'
 })
@@ -33,8 +34,7 @@ export class TrangTaoCv implements OnInit {
   }
   mau_cv_co_san: mau_cv[] = [
     { name: 'Mẫu CV 1', image: 'anh_WEB/anh-mau-cv/anh-mau-cv-mac-dinh.png', route: '/app-mau-cv-mac-dinh' },
-    { name: 'Mẫu CV 2', image: 'assets/cv2.png', route: '/app-mau-cv-cong-nghe' },
-    { name: 'Mẫu CV 3', image: 'assets/cv3.png', route: '/cv-detail/3' }
+    { name: 'Mẫu CV 2', image: 'anh_WEB/anh-mau-cv/anh-mau-cv-mac-dinh-2.png', route: '/app-mau-cv-mac-dinh-2' }
   ]
   layDanhSachCVOnlineNguoiTimViec() {
     const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;

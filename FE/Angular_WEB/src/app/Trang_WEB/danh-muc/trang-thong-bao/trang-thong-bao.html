@@ -10,12 +10,11 @@
           <select class="notification-select" (change)="chonThongBao($event)">
             <option selected disabled>-- Vui lòng chọn --</option>
             <option value="toan_Bo">Toàn bộ thông báo</option>
-            <option value="1">Thông báo từ server</option>
-            <option value="2">Việc làm mới</option>
-            <option value="3" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn
-            </option>
-            <option value="thong_bao_cua_toi" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thông
-              báo của tôi</option>
+            <option value="toan_Server">Thông báo từ server</option>
+            <option value="viec_Lam_Moi" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Việc làm mới</option>
+            <option value="thu_Moi_Phong_Van" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec'">Thư mời phỏng vấn</option>
+            <option value="thong_bao_cua_toi" *ngIf="auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'cong_Ty'">Thông báo của tôi</option>
+            <option value="thong_bao_da_an">Thông báo đã ẩn</option>
           </select>
         </div>
       </div>
@@ -30,22 +29,28 @@
           </div>
 
           <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="notification-list">
-            <div *ngFor="let tb of danh_sach_thong_bao" class="notification-item dropdown">
+            <div *ngFor="let tb of danh_sach_thong_bao" class="notification-item dropdown" (click)="xemChiTiet(tb)">
 
               <div class="notification-actions">
-                <button class="btn btn-light btn-sm" type="button"
-                  id="dropdownMenuButton{{tb.ma_thong_bao}}" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-light btn-sm" type="button" id="dropdownMenuButton{{tb.ma_thong_bao}}"
+                  data-bs-toggle="dropdown" aria-expanded="false" (click)="$event.stopPropagation()">
                   ⋮
                 </button>
 
                 <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + tb.ma_thong_bao">
-                  <li>
-                    <a class="dropdown-item" href="#" (click)="anThongBao(tb.ma_thong_bao)">Ẩn thông báo</a>
+                  <li *ngIf="tb.trang_Thai_Thong_Bao?.trang_thai_an == false">
+                    <button class="dropdown-item" (click)="anThongBao(tb.ma_thong_bao); $event.stopPropagation()" 
+                    *ngIf="auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty !== tb.ma_cong_ty">Ẩn thông báo</button>
+                  </li>
+                  <li *ngIf="tb.trang_Thai_Thong_Bao?.trang_thai_an == true">
+                    <button class="dropdown-item" (click)="boAnThongBao(tb.ma_thong_bao); $event.stopPropagation()" >Bỏ ẩn thông báo</button>
                   </li>
                   <li *ngIf="auth.layThongTinNguoiDung() &&
                 (tb.ma_cong_ty === auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty ||
                  tb.ma_quan_tri === auth.layThongTinNguoiDung()?.ma_quan_tri)">
-                    <a class="dropdown-item" href="#" (click)="moPopUpXoaThongBao(tb.ma_thong_bao)">Xóa bài đăng</a>
+                    <button class="dropdown-item" (click)="moPopUpXoaThongBao(tb.ma_thong_bao); $event.stopPropagation()">
+                    Xóa thông báo
+                  </button>
                   </li>
                 </ul>
               </div>

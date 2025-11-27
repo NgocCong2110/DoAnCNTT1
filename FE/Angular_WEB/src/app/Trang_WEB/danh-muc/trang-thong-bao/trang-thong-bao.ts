@@ -24,6 +24,8 @@ export class TrangThongBao implements OnInit {
 
   danh_sach_thong_bao: any[] = [];
 
+  danh_sach_thong_bao_goc: any[] = [];
+
   pop_up_lay_thong_tin_that_bai = false;
 
   loading = true;
@@ -44,9 +46,13 @@ export class TrangThongBao implements OnInit {
     this.danh_sach_thong_bao = [];
     this.loading = true;
     const thong_tin = {
-      kieu_nguoi_dung: this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung ?? 'nguoi_tim_viec',
-      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec ?? null
+      kieu_nguoi_dung: this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung ?? 'nguoi_Tim_Viec',
+      ma_nguoi_nhan: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_nguoi_dung || 0,
+      ma_cong_ty: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_cong_ty || 0,
+      ma_nguoi_tim_viec: this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_nguoi_tim_viec || 0,
     }
+
+    console.log(thong_tin)
 
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachThongBao', thong_tin)
       .subscribe({
@@ -54,6 +60,7 @@ export class TrangThongBao implements OnInit {
           this.loading = false;
           if (data.success) {
             this.danh_sach_thong_bao = data.danh_sach;
+            this.danh_sach_thong_bao_goc = [...data.danh_sach];
             this.cd.detectChanges();
           }
           else {
@@ -70,10 +77,9 @@ export class TrangThongBao implements OnInit {
   chonThongBao(event: any) {
     this.danh_sach_thong_bao = [];
     this.loading = true;
-    const value = event.target.value;
-    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec || 0;
-    const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty || 0;
-    const ma_quan_tri = this.auth.layThongTinNguoiDung()?.ma_quan_tri || 0;
+    const value = event.target.value.trim();
+    const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet.ma_cong_ty;
+    let thong_bao_loc: any[] = [];  
     if (value === 'toan_Bo') {
       this.danhSachThongBao();
       return;
@@ -83,8 +89,26 @@ export class TrangThongBao implements OnInit {
       this.thongBaoCongTyRieng(ma_cong_ty);
       return;
     }
-    const value_num = Number(value);
-    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/chonThongBaoCoDinh', { loai_thong_bao: value_num, ma_nguoi_tim_viec, ma_cong_ty, ma_quan_tri })
+    if (value === 'toan_Server') {
+      thong_bao_loc = [...this.danh_sach_thong_bao_goc.filter(tb => tb.loai_thong_bao === 1)];
+    }
+
+    else if (value === 'viec_Lam_Moi') {
+      thong_bao_loc = [...this.danh_sach_thong_bao_goc.filter(tb => tb.loai_thong_bao === 2)];
+    }
+    else if (value === 'thu_Moi_Phong_Van') {
+      thong_bao_loc = [...this.danh_sach_thong_bao_goc.filter(tb => tb.loai_thong_bao === 3)];
+    }
+    else if( value === 'thong_bao_da_an'){
+      this.layDanhSachThongBaoDaAn();
+    }
+    this.danh_sach_thong_bao = [...thong_bao_loc];
+    this.cd.detectChanges();
+    this.loading = false;
+  }
+
+  thongBaoCongTyRieng(ma_cong_ty: number) {
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/thongBaoCongTyRieng', ma_cong_ty)
       .subscribe({
         next: (data) => {
           this.loading = false;
@@ -103,8 +127,12 @@ export class TrangThongBao implements OnInit {
       });
   }
 
-  thongBaoCongTyRieng(ma_cong_ty: number) {
-    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/thongBaoCongTyRieng', ma_cong_ty)
+  layDanhSachThongBaoDaAn(){
+    const thong_tin = {
+      ma_nguoi_nhan: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_nguoi_dung,
+      kieu_nguoi_dung: this.auth.layThongTinNguoiDung().kieu_nguoi_dung
+    }
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachThongBaoDaAn', thong_tin)
       .subscribe({
         next: (data) => {
           this.loading = false;
@@ -160,9 +188,29 @@ export class TrangThongBao implements OnInit {
   anThongBao(ma_thong_bao: number) {
     const thong_tin = {
       ma_thong_bao: ma_thong_bao,
-      ma_nguoi_dung: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_nguoi_dung
-    }
+      ma_nguoi_nhan: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_nguoi_dung,
+      loai_nguoi_nhan: this.auth.layThongTinNguoiDung().kieu_nguoi_dung
+    };
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/anThongBao', thong_tin)
+      .subscribe({
+        next: (data) => {
+          this.loading = false;
+          if (data.success) {
+            this.danh_sach_thong_bao.splice(this.danh_sach_thong_bao.findIndex(tb => tb.ma_thong_bao === ma_thong_bao), 1);
+            this.cd.detectChanges();
+          }
+          this.cd.markForCheck();
+        }
+      });
+  }
+
+  boAnThongBao(ma_thong_bao: number) {
+    const thong_tin = {
+      ma_thong_bao: ma_thong_bao,
+      ma_nguoi_nhan: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_nguoi_dung || 0,
+      loai_nguoi_nhan: this.auth.layThongTinNguoiDung().kieu_nguoi_dung
+    }
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/boAnThongBao', thong_tin)
       .subscribe({
         next: (data) => {
           this.loading = false;

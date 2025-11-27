@@ -11,5 +11,6 @@ namespace DotNet_WEB.Class
     {
         public string? ma_nganh_nghe { get; set; }
         public string? ten_nganh_nghe { get; set; }
+        public int thu_tu { get; set; }
     }
 }

@@ -50,7 +50,6 @@ namespace DotNet_WEB.Module
             return await luuCV.luuCVOnline(cv_Online_Nguoi_Tim_Viec);
         }
 
-
         //viec lam
         public static List<so_luong_nganh_nghe> layNganhNgheNoiBat()
         {
@@ -62,6 +61,15 @@ namespace DotNet_WEB.Module
             return chuc_nang_viec_lam_web.layDanhSachNganhNghe();
         }
         
+        public static bool themNganhNgheMoi(nganh_nghe nganh_Nghe)
+        {
+            return chuc_nang_viec_lam_web.themNganhNgheMoi(nganh_Nghe);
+        }
+
+        public static bool xoaNganhNghe(nganh_nghe nganh_Nghe)
+        {
+            return chuc_nang_viec_lam_web.xoaNganhNghe(nganh_Nghe);
+        }
 
         public static viec_lam? layViecLamTheoBaiDang(int ma_bai_dang)
         {
@@ -213,9 +221,9 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_ung_tuyen_web.ungTuyenCongViec(ung_Tuyen);
         }
-        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, IFormFile duong_dan_file_cv_upload)
+        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, int ma_nguoi_nhan, IFormFile duong_dan_file_cv_upload)
         {
-            return await chuc_nang_ung_tuyen_web.ungTuyenCongViecUploadCV(ma_viec, ma_cong_ty, ma_nguoi_tim_viec, duong_dan_file_cv_upload);
+            return await chuc_nang_ung_tuyen_web.ungTuyenCongViecUploadCV(ma_viec, ma_cong_ty, ma_nguoi_tim_viec, ma_nguoi_nhan, duong_dan_file_cv_upload);
         }
         //ung tuyen
 
@@ -228,9 +236,19 @@ namespace DotNet_WEB.Module
             return chuc_nang_thong_bao_web.layDanhSachThongBao(tb_knd);
         }
 
-        public static List<thong_bao> chonThongBaoCoDinh(thong_bao thong_Bao)
+        public static List<thong_bao> layDanhSachThongBaoDaAn(thong_bao_kieu_nguoi_dung tb_knd)
         {
-            return chuc_nang_thong_bao_web.chonThongBaoCoDinh(thong_Bao);
+            return chuc_nang_thong_bao_web.layDanhSachThongBaoDaAn(tb_knd);
+        }
+
+        public static bool anThongBao(trang_thai_thong_bao trang_Thai_Thong_Bao)
+        {
+            return chuc_nang_thong_bao_web.anThongBao(trang_Thai_Thong_Bao);
+        }
+
+        public static bool boAnThongBao(trang_thai_thong_bao trang_Thai_Thong_Bao)
+        {
+            return chuc_nang_thong_bao_web.boAnThongBao(trang_Thai_Thong_Bao);
         }
 
         //thong bao

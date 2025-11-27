@@ -12,17 +12,17 @@ namespace DotNet_WEB.Class
         [Key]
         public int ma_trang_thai_thong_bao { get; set; }
 
-        public int ma_nguoi_dung { get; set; }
-        [ForeignKey(nameof(ma_nguoi_dung))]
-        public nguoi_dung? nguoi_Dung { get; set; }
-
+        public int ma_nguoi_nhan { get; set; }
+        
         public int ma_thong_bao { get; set; }
         [ForeignKey(nameof(ma_thong_bao))]
         public thong_bao? thong_bao { get; set; }
 
         public bool trang_thai_doc { get; set; } = false;   
 
-        public bool trang_thai_an { get; set; } = false;   
+        public bool trang_thai_an { get; set; } = false; 
+
+        public string? loai_nguoi_nhan { get; set; }  
 
         public DateTime ngay_tao { get; set; } = DateTime.Now;
 

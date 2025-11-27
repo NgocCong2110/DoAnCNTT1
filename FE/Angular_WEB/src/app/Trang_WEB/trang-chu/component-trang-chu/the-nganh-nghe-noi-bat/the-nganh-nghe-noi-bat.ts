@@ -44,6 +44,23 @@ export class TheNganhNgheNoiBat {
     "marketing": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_marketing.webp",
     "sales": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_sales.webp",
     "cham_soc_khach_hang": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_cham_soc_khach_hang.webp",
+    "tai_chinh": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_tai_chinh.png",
+    "khac": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_nganh_nghe_khac.png",
+    "bat_dong_san": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_bat_dong_san.png",
+    "co_khi_dien_dien_tu": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_co_khi_dien_tu.png",
+    "cong_tac_xa_hoi": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_cong_tac_xa_hoi.png",
+    "du_lich": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_du_lich.png",
+    "giao_duc": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_giao_duc.png",
+    "hanh_chinh": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_hanh_chinh.png",
+    "luat": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_luat.png",
+    "nhan_su": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_nhan_su.png",
+    "nong_lam_ngu_nghiep": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_nong_lam_ngu_nghiep.png",
+    "san_xuat": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_san_xuat.png",
+    "thiet_ke": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_thiet_ke.png",
+    "truyen_thong": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_truyen_thong.png",
+    "van_tai": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_van_tai.png",
+    "xay_dung": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_xay_dung .png",
+    "y_te": "anh_WEB/anh_icon_WEB/anh_icon_viec_lam/anh_icon_y_te.png",
   }
 
   nganh_nghe_map: { [key: string]: string } = {

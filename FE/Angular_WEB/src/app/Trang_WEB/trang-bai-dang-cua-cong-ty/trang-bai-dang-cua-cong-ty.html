@@ -22,6 +22,18 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                 <li>
+                  <a class="dropdown-item" *ngIf="bai.bai_dang.trang_thai === 1"
+                    (click)="anBaiDangCongTy(bai.ma_bai_dang)">
+                    <i class="bi bi-eye-slash me-2"></i>Ẩn bài đăng
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" *ngIf="bai.bai_dang.trang_thai === 2"
+                    (click)="boAnBaiDangCongTy(bai.ma_bai_dang)">
+                    <i class="bi bi-eye me-2"></i>Công khai bài đăng
+                  </a>
+                </li>
+                <li>
                   <a class="dropdown-item text-danger" (click)="moPopUpXoa()">
                     <i class="bi bi-trash me-2"></i>Xóa bài đăng
                   </a>
@@ -32,12 +44,16 @@
 
           <div class="mb-3 pb-3" style="border-bottom: 2px solid #e9ecef;">
             <p class="mb-2 text-secondary">
-              <i class="bi bi-building me-2" style="color: #007BFF;"></i>
+              <i class="bi bi-building me-2"></i>
               <strong>Công ty:</strong> {{ bai.cong_Ty.ten_cong_ty }}
             </p>
             <p class="mb-0 text-secondary">
-              <i class="bi bi-calendar me-2" style="color: #007BFF;"></i>
+              <i class="bi bi-calendar me-2"></i>
               <strong>Ngày đăng:</strong> {{ bai.ngay_tao | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+            <p class="mb-0 text-secondary">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>Trạng thái:</strong> {{ layTrangThaiBaiDang(bai.bai_dang.trang_thai) }}
             </p>
           </div>
 
@@ -49,87 +65,267 @@
 
             <div class="row g-3">
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Ngành nghề</label>
-                  <p class="mb-0">{{ laynganhnghe(bai.nganh_nghe) }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Ngành nghề</label>
+                    <button *ngIf="editingField !== 'nganh_nghe'" class="btn btn-sm btn-link p-0" (click)="enableEdit('nganh_nghe')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'nganh_nghe'; else viewNganhNghe">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['nganh_nghe']">
+                      <option *ngFor="let nn of nganhNgheList" [value]="nn.value">{{ nn.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewNganhNghe>
+                    <p class="mb-0">{{ laynganhnghe(bai.nganh_nghe) }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Vị trí</label>
-                  <p class="mb-0">{{ bai.vi_tri }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Vị trí</label>
+                    <button *ngIf="editingField !== 'vi_tri'" class="btn btn-sm btn-link p-0" (click)="enableEdit('vi_tri')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'vi_tri'; else viewViTri">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['vi_tri']">
+                      <option *ngFor="let vt of viTriList" [value]="vt.value">{{ vt.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewViTri>
+                    <p class="mb-0">{{ layViTri(bai.vi_tri) }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Kinh nghiệm</label>
-                  <p class="mb-0 fw-semibold">{{ bai.kinh_nghiem }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Kinh nghiệm</label>
+                    <button *ngIf="editingField !== 'kinh_nghiem'" class="btn btn-sm btn-link p-0" (click)="enableEdit('kinh_nghiem')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'kinh_nghiem'; else viewKinhNghiem">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['kinh_nghiem']">
+                      <option *ngFor="let kn of kinhNghiemList" [value]="kn.value">{{ kn.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewKinhNghiem>
+                    <p class="mb-0 fw-semibold">{{ bai.kinh_nghiem }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Mức lương</label>
-                  <p class="mb-0 fw-semibold">{{ bai.muc_luong }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Mức lương</label>
+                    <button *ngIf="editingField !== 'muc_luong'" class="btn btn-sm btn-link p-0" (click)="enableEdit('muc_luong')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'muc_luong'; else viewMucLuong">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['muc_luong']">
+                      <option *ngFor="let ml of mucLuongList" [ngValue]="ml.value">{{ ml.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewMucLuong>
+                    <p class="mb-0 fw-semibold">{{ bai.muc_luong }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Địa điểm</label>
-                  <p class="mb-0">{{ bai.dia_diem }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Địa điểm</label>
+                    <button *ngIf="editingField !== 'dia_diem'" class="btn btn-sm btn-link p-0" (click)="enableEdit('dia_diem')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'dia_diem'; else viewDiaDiem">
+                    <input type="text" class="form-control form-control-sm mb-2" [(ngModel)]="editingValues['dia_diem']">
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewDiaDiem>
+                    <p class="mb-0">{{ bai.dia_diem }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Loại hình</label>
-                  <p class="mb-0">{{ layLoaiHinh(bai.loai_hinh) }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Loại hình</label>
+                    <button *ngIf="editingField !== 'loai_hinh'" class="btn btn-sm btn-link p-0" (click)="enableEdit('loai_hinh')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'loai_hinh'; else viewLoaiHinh">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['loai_hinh']">
+                      <option *ngFor="let lh of loaiHinhList" [value]="lh.value">{{ lh.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewLoaiHinh>
+                    <p class="mb-0">{{ layLoaiHinh(bai.loai_hinh) }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-12">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Mô tả</label>
-                  <p class="mb-0">{{ bai.mo_ta }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Mô tả</label>
+                    <button *ngIf="editingField !== 'mo_ta'" class="btn btn-sm btn-link p-0" (click)="enableEdit('mo_ta')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'mo_ta'; else viewMoTa">
+                    <textarea class="form-control form-control-sm mb-2" rows="3" [(ngModel)]="editingValues['mo_ta']"></textarea>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewMoTa>
+                    <p class="mb-0">{{ bai.mo_ta }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-12">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Yêu cầu</label>
-                  <p class="mb-0">{{ bai.yeu_cau }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Yêu cầu</label>
+                    <button *ngIf="editingField !== 'yeu_cau'" class="btn btn-sm btn-link p-0" (click)="enableEdit('yeu_cau')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'yeu_cau'; else viewYeuCau">
+                    <textarea class="form-control form-control-sm mb-2" rows="2" [(ngModel)]="editingValues['yeu_cau']"></textarea>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewYeuCau>
+                    <p class="mb-0">{{ bai.yeu_cau }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-12">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Quyền lợi</label>
-                  <p class="mb-0">{{ bai.quyen_loi_cong_viec }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Quyền lợi</label>
+                    <button *ngIf="editingField !== 'quyen_loi_cong_viec'" class="btn btn-sm btn-link p-0" (click)="enableEdit('quyen_loi_cong_viec')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'quyen_loi_cong_viec'; else viewQuyenLoi">
+                    <textarea class="form-control form-control-sm mb-2" rows="2" [(ngModel)]="editingValues['quyen_loi_cong_viec']"></textarea>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewQuyenLoi>
+                    <p class="mb-0">{{ bai.quyen_loi_cong_viec }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Trình độ</label>
-                  <p class="mb-0">{{ layTrinhDoHocVan(bai.trinh_do_hoc_van_yeu_cau) }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Trình độ</label>
+                    <button *ngIf="editingField !== 'trinh_do_hoc_van_yeu_cau'" class="btn btn-sm btn-link p-0" (click)="enableEdit('trinh_do_hoc_van_yeu_cau')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'trinh_do_hoc_van_yeu_cau'; else viewTrinhDo">
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="editingValues['trinh_do_hoc_van_yeu_cau']">
+                      <option [value]="0">Không yêu cầu</option>
+                      <option *ngFor="let td of trinhDoHocVanCapNhatList" [value]="td.value">{{ td.label }}</option>
+                    </select>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewTrinhDo>
+                    <p class="mb-0">{{ layTrinhDoHocVan(bai.trinh_do_hoc_van_yeu_cau) }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Thời gian làm việc</label>
-                  <p class="mb-0">{{ bai.thoi_gian_lam_viec }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Thời gian làm việc</label>
+                    <button *ngIf="editingField !== 'thoi_gian_lam_viec'" class="btn btn-sm btn-link p-0" (click)="enableEdit('thoi_gian_lam_viec')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'thoi_gian_lam_viec'; else viewThoiGian">
+                    <input type="text" class="form-control form-control-sm mb-2" [(ngModel)]="editingValues['thoi_gian_lam_viec']">
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewThoiGian>
+                    <p class="mb-0">{{ bai.thoi_gian_lam_viec }}</p>
+                  </ng-template>
                 </div>
               </div>
 
               <div class="col-12">
-                <div class="info-item">
-                  <label class="fw-semibold text-secondary d-block mb-1">Hạn nộp CV</label>
-                  <p class="mb-0">{{ bai.thoi_han_nop_cv |
-                    date:'dd/MM/yyyy' }}</p>
+                <div class="field-card p-3 rounded" style="background-color: white; border: 1px solid #e9ecef;">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="fw-semibold text-secondary mb-0">Hạn nộp CV</label>
+                    <button *ngIf="editingField !== 'thoi_han_nop_cv'" class="btn btn-sm btn-link p-0" (click)="enableEdit('thoi_han_nop_cv')">
+                      <i class="bi bi-pencil-square">Sửa</i>
+                    </button>
+                  </div>
+                  <ng-container *ngIf="editingField === 'thoi_han_nop_cv'; else viewHanNopCV">
+                    <input type="date" class="form-control form-control-sm mb-2" [(ngModel)]="editingValues['thoi_han_nop_cv']">
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-success btn-sm" (click)="saveEdit()">Lưu</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Hủy</button>
+                    </div>
+                  </ng-container>
+                  <ng-template #viewHanNopCV>
+                    <p class="mb-0">{{ bai.thoi_han_nop_cv | date:'dd/MM/yyyy' }}</p>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -168,19 +364,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- button dang bai -->
 
 <div class="modal fade" tabindex="-1" id="modalDangBai" #modalDangBai>
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -261,27 +444,21 @@
           </div>
 
           <div class="mb-3">
-            <label>Ngành nghề</label>
+            <label>Vị trí tuyển dụng</label>
             <div class="dropdown w-100">
               <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                {{ nganh_nghe_label || 'Ngành nghề' }}
+                {{ vi_tri_label || 'Vị Trí' }}
               </button>
               <ul class="dropdown-menu dropdown-scroll w-100">
-                <li *ngFor="let nganh of nganhNgheList">
+                <li *ngFor="let vt of viTriList">
                   <button class="dropdown-item" type="button"
-                    (click)="nganh_nghe = nganh.value; nganh_nghe_label = nganh.label">
-                    {{ nganh.label }}
+                    (click)="vi_tri = vt.value; vi_tri_label = vt.label">
+                    {{ vt.label }}
                   </button>
                 </li>
               </ul>
             </div>
-          </div>
-
-          <div class="mb-3">
-            <label>Vị trí tuyển dụng</label>
-            <input [(ngModel)]="vi_tri" name="vi_tri" type="text" class="form-control"
-              placeholder="Ví dụ: Nhân viên, Trưởng phòng, Quản lý...">
           </div>
 
           <div class="mb-3">
@@ -342,7 +519,6 @@
             <input type="date" [(ngModel)]="thoi_han_nop_cv" name="thoi_han" placeholder="Thời gian hết hạn nộp cv"
               class="form-control">
           </div>
-
         </form>
       </div>
 
@@ -354,29 +530,6 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_dang_bai_thanh_cong">
   <div class="toast show text-bg-success border-0">
@@ -401,7 +554,6 @@
     </div>
   </div>
 </div>
-
 
 <div *ngIf="pop_up_xoa_bai"
   class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"

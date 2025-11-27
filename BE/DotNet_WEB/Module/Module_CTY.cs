@@ -44,12 +44,27 @@ namespace DotNet_WEB.Module
         }
         //ung vien
 
-
+        //bai dang
         public static List<bai_dang> layBaiDangTheoIDCongTy(int ma_Cong_Ty)
         {
             return chuc_nang_bai_dang_cong_ty_web.layBaiDangTheoIDCongTy(ma_Cong_Ty);
         }
 
+        public static bool anBaiDangCongTy(bai_dang bai_Dang)
+        {
+            return chuc_nang_bai_dang_cong_ty_web.anBaiDangCongTy(bai_Dang);
+        }
+
+        public static bool boAnBaiDangCongTy(bai_dang bai_Dang)
+        {
+            return chuc_nang_bai_dang_cong_ty_web.boAnBaiDangCongTy(bai_Dang);
+        }
+
+        public static bool capNhatBaiDang(thong_tin_truong_du_lieu_cap_nhat_bai_dang req)
+        {
+            return chuc_nang_bai_dang_cong_ty_web.capNhatBaiDang(req);
+        }
+        //bai dang
 
         //thong ke
         public static List<thong_ke_ung_vien> laySoLuongUngVien(int ma_cong_ty)
@@ -60,6 +75,11 @@ namespace DotNet_WEB.Module
         public static List<thong_ke_bai_dang_cua_cong_ty> laySoLuongBaiDangCuaCongTy(int ma_cong_ty)
         {
             return chuc_nang_thong_ke_cong_ty_web.laySoLuongBaiDangCuaCongTy(ma_cong_ty);
+        }
+
+        public static List<so_luong_ung_vien_tung_bai> laySoLuongUngVienTungBai(int ma_cong_ty)
+        {
+            return chuc_nang_thong_ke_cong_ty_web.laySoLuongUngVienTungBai(ma_cong_ty);
         }
 
         //thong ke
@@ -86,7 +106,7 @@ namespace DotNet_WEB.Module
             return await chuc_nang_tai_khoan_cong_ty_web.capNhatLogoCongTy(file, ma_cong_ty);
         }
 
-        public static bool capNhatThongTinCongTy(thong_tin_truong_du_lieu_cap_nhat req)
+        public static bool capNhatThongTinCongTy(thong_tin_truong_du_lieu_cap_nhat_cong_ty req)
         {
             return chuc_nang_tai_khoan_cong_ty_web.capNhatThongTinCongTy(req);
         }
@@ -96,6 +116,7 @@ namespace DotNet_WEB.Module
             return chuc_nang_tai_khoan_cong_ty_web.layThongTinCongTy(ma_cong_ty);
         }
 
+        //viec lam
         public static List<viec_lam> layDanhSachViecLamCuaCongTy(int ma_cong_ty)
         {
             return chuc_nang_viec_lam_cong_ty_web.layDanhSachViecLamCuaCongTy(ma_cong_ty);
@@ -105,6 +126,12 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_viec_lam_cong_ty_web.layDanhSachViecLamNoiBatCuaCongTy(ma_cong_ty);
         }
+
+        public static List<viec_lam> layToanBoDanhSachViecLamCuaCongTy(int ma_cong_ty)
+        {
+            return chuc_nang_viec_lam_cong_ty_web.layToanBoDanhSachViecLamCuaCongTy(ma_cong_ty);
+        }
+        //viec lam
 
         public static async Task<string> capNhatAnhBiaCongTy(IFormFile file, int ma_cong_ty)
         {

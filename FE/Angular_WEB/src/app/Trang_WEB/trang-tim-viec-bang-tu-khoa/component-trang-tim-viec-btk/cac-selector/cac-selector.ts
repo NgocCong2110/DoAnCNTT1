@@ -211,17 +211,10 @@ export class CacSelector implements OnInit {
 
   xuLyThayDoiParam(params: any) {
     const nganh = params['nganh'];
-
     if (nganh) {
       this.nganh_nghe_params = nganh;
       this.nganh_nghe = nganh;
-
-      const found = this.nganhNgheList.find(item => item.value === nganh);
-      if (found) {
-        this.nganh_nghe_label = found.label;
-      } else {
-        this.nganh_nghe_label = '';
-      }
+      this.nganh_nghe_label = nganh
 
       const thong_tin = {
         nganh_nghe: nganh,

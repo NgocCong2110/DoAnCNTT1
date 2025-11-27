@@ -220,12 +220,10 @@
               </div>
 
               <div *ngIf="phan_dang_chinh_sua === 'social'">
-                <div *ngFor="let s of cong_ty?.lien_ket_mang_xa_hoi; let i = index"
+                <div *ngFor="let s of danh_sach_mang_xa_hoi; let i = index"
                   class="mb-2 d-flex gap-2 align-items-center">
-                  <i *ngIf="s.ten_mang_xa_hoi" class="bi fs-4"
-                    [ngClass]="ban_do_bieu_tuong_mang_xa_hoi[s.ten_mang_xa_hoi] || 'bi-globe'"></i>
-                  <input [(ngModel)]="s.duong_dan" class="form-control"
-                    [placeholder]="'Nhập đường dẫn ' + s.ten_mang_xa_hoi" />
+                  <i *ngIf="s.ten" class="bi fs-4" [ngClass]="ban_do_bieu_tuong_mang_xa_hoi[s.ten] || 'bi-globe'"></i>
+                  <input [(ngModel)]="s.lien_ket" class="form-control" [placeholder]="'Nhập đường dẫn ' + s.ten" />
                 </div>
 
                 <div class="d-flex gap-2 mt-2">
@@ -233,6 +231,7 @@
                   <button class="btn btn-sm btn-secondary" (click)="huyChinhSua()">Hủy</button>
                 </div>
               </div>
+
             </div>
 
           </aside>

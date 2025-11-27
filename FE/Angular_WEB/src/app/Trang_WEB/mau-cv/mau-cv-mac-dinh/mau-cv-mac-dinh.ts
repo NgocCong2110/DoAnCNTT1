@@ -1,9 +1,10 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderWEB } from '../../Component/header-web/header-web';
 import { Auth } from '../../../services/auth';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-mau-cv-mac-dinh',
@@ -12,9 +13,10 @@ import { Auth } from '../../../services/auth';
   templateUrl: './mau-cv-mac-dinh.html',
   styleUrls: ['./mau-cv-mac-dinh.css']
 })
-export class MauCvMacDinh {
-
+export class MauCvMacDinh implements OnInit{
+  
   pop_up_nhap_ten_file = false;
+  so_luong_cv = 0;
 
   formCv = {
     ten_cv: '',
@@ -48,7 +50,28 @@ export class MauCvMacDinh {
     ]
   };
 
-  constructor(private http: HttpClient, private auth: Auth) { }
+  constructor(private http: HttpClient, private auth: Auth, private cd: ChangeDetectorRef) { }
+
+
+  layDanhSachCVOnlineNguoiTimViec() {
+    const ma_nguoi_tim_viec = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    this.http.post<any>('http://localhost:7000/api/API_WEB/layDanhSachCVOnlineNguoiTimViec', ma_nguoi_tim_viec,
+      { headers: { "Content-Type": "application/json" } })
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.so_luong_cv = data.danh_sach.length;
+          }
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      })
+  }
+
+  ngOnInit(): void {
+    this.layDanhSachCVOnlineNguoiTimViec();
+  }
 
   chonAnhDaiDien() {
     const fileInput = document.querySelector('input[type="file"]') as HTMLElement;
@@ -75,19 +98,7 @@ export class MauCvMacDinh {
     };
     reader.readAsDataURL(file);
   }
-
-  taiCV() {
-    this.http.post('https://localhost:5001/api/CV/tai-cv', this.formCv, {
-      responseType: 'blob'
-    }).subscribe(fileBlob => {
-      const url = window.URL.createObjectURL(fileBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.formCv.ho_ten || 'CV'}.pdf`;
-      a.click();
-    });
-  }
-
+  
   moPopupNhapTen() {
     this.pop_up_nhap_ten_file = true;
   }
@@ -111,6 +122,11 @@ export class MauCvMacDinh {
       alert('Vui lòng đăng nhập để lưu CV');
       return;
     }
+    console.log(this.so_luong_cv)
+    if(this.so_luong_cv >= 5){
+      alert('Đã tới giới hạn số lượng cv là 5');
+      return;
+    }
 
     const thong_tin_cv = {
       ma_nguoi_tim_viec: nguoi_dung.thong_tin_chi_tiet.ma_nguoi_tim_viec,
@@ -128,7 +144,8 @@ export class MauCvMacDinh {
       muc_tieu: this.formCv.muc_tieu,
       vi_tri_ung_tuyen: this.formCv.vi_tri_ung_tuyen,
       hoc_Van: this.formCv.hoc_van,
-      kinh_Nghiem: this.formCv.kinh_nghiem
+      kinh_Nghiem: this.formCv.kinh_nghiem,
+      mau_cv: 1
     };
 
     console.log('Dữ liệu lưu CV:', thong_tin_cv);
@@ -138,6 +155,7 @@ export class MauCvMacDinh {
         next: (res: any) => {
           alert(' Lưu CV thành công!');
           console.log('Kết quả lưu CV:', res);
+          this.cd.detectChanges();
         },
         error: (err) => {
           console.error(' Lỗi khi lưu CV:', err);

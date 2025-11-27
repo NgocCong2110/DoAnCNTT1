@@ -28,7 +28,8 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
         SELECT vl.*, ct.logo, ct.ten_cong_ty
         FROM viec_lam vl
         JOIN cong_ty ct ON vl.ma_cong_ty = ct.ma_cong_ty
-        WHERE vl.ma_bai_dang = @ma_bai_dang
+        JOIN bai_dang bd ON vl.ma_bai_dang = bd.ma_bai_dang
+        WHERE vl.ma_bai_dang = @ma_bai_dang and bd.trang_thai = 'cong_Khai'
         LIMIT 1";
 
             using var cmdViec = new MySqlCommand(sqlViec, conn);
@@ -119,6 +120,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                             join viec_lam vl on ut.ma_viec = vl.ma_viec
                             join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
 	                        join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
+                        WHERE bd.trang_thai = 'cong_Khai'
                         group by vl.ma_viec, bd.ma_bai_dang, vl.nganh_nghe, ct.ten_cong_ty, vl.tieu_de, vl.mo_ta, vl.muc_luong, vl.dia_diem, ct.logo 
                         order by so_luong desc
                         limit 16";
@@ -176,8 +178,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = @"select nganh_nghe, count(*) as so_luong from viec_lam 
-            group by nganh_nghe order by so_luong desc limit 14";
+            string sql = @"select vl.nganh_nghe, count(*) as so_luong 
+            from viec_lam  vl
+            JOIN bai_dang bd ON vl.ma_bai_dang = bd.ma_bai_dang
+            WHERE bd.trang_thai = 'cong_Khai'
+            group by vl.nganh_nghe order by so_luong desc limit 14";
             using var cmd = new MySqlCommand(sql, coon);
             using var reader = cmd.ExecuteReader();
             var danh_sach = new List<so_luong_nganh_nghe>();
@@ -206,11 +211,34 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                 var sl = new nganh_nghe
                 {
                     ma_nganh_nghe = reader.IsDBNull(reader.GetOrdinal("ma_nganh_nghe")) ? null : reader.GetString("ma_nganh_nghe"),
-                    ten_nganh_nghe = reader.IsDBNull(reader.GetOrdinal("ten_nganh_nghe")) ? null : reader.GetString("ten_nganh_nghe")
+                    ten_nganh_nghe = reader.IsDBNull(reader.GetOrdinal("ten_nganh_nghe")) ? null : reader.GetString("ten_nganh_nghe"),
+                    thu_tu = reader.IsDBNull(reader.GetOrdinal("thu_tu")) ? 0 : reader.GetInt32("thu_tu"),
                 };
                 danh_sach.Add(sl);
             }
             return danh_sach;
+        }
+
+        public static bool themNganhNgheMoi(nganh_nghe nganh_Nghe)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = @"insert into nganh_nghe values(@ma_nganh_nghe, @ten_nganh_nghe, @thu_tu)";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_nganh_nghe", nganh_Nghe.ma_nganh_nghe);
+            cmd.Parameters.AddWithValue("@ten_nganh_nghe", nganh_Nghe.ten_nganh_nghe);
+            cmd.Parameters.AddWithValue("@thu_tu", nganh_Nghe.thu_tu);
+            return cmd.ExecuteNonQuery() > 0;
+        }
+
+        public static bool xoaNganhNghe(nganh_nghe nganh_Nghe)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = @"delete from nganh_nghe where ma_nganh_nghe = @ma_nganh_nghe";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_nganh_nghe", nganh_Nghe.ma_nganh_nghe);
+            return cmd.ExecuteNonQuery() > 0;
         }
 
         public static List<viec_lam_ket_qua> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
@@ -220,13 +248,162 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             var mapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "laptrinhvien", "cong_nghe_thong_tin" },
+                { "laptrinh", "cong_nghe_thong_tin" },
                 { "developer", "cong_nghe_thong_tin" },
+                { "dev", "cong_nghe_thong_tin" },
                 { "coder", "cong_nghe_thong_tin" },
+                { "it", "cong_nghe_thong_tin" },
+                { "itsupport", "cong_nghe_thong_tin" },
+                { "helpdesk", "cong_nghe_thong_tin" },
                 { "tester", "cong_nghe_thong_tin" },
-                { "ke toan", "Tài chính - kế toán" },
-                { "accountant", "Tài chính - kế toán" },
-                { "giaovien", "Giáo dục - đào tạo" },
-                { "teacher", "Giáo dục - đào tạo" }
+                { "qa", "cong_nghe_thong_tin" },
+                { "qc", "cong_nghe_thong_tin" },
+                { "softwareengineer", "cong_nghe_thong_tin" },
+                { "frontend", "cong_nghe_thong_tin" },
+                { "backend", "cong_nghe_thong_tin" },
+                { "fullstack", "cong_nghe_thong_tin" },
+                { "data", "cong_nghe_thong_tin" },
+                { "dataanalyst", "cong_nghe_thong_tin" },
+                { "ai", "cong_nghe_thong_tin" },
+                { "machinelearning", "cong_nghe_thong_tin" },
+                { "cybersecurity", "cong_nghe_thong_tin" },
+
+                { "ketoan", "tai_chinh" },
+                { "accountant", "tai_chinh" },
+                { "accounting", "tai_chinh" },
+                { "finance", "tai_chinh" },
+                { "financial", "tai_chinh" },
+                { "nganhang", "tai_chinh" },
+                { "banking", "tai_chinh" },
+                { "thungan", "tai_chinh" },
+                { "thuquy", "tai_chinh" },
+
+                { "giaovien", "giao_duc" },
+                { "giangvien", "giao_duc" },
+                { "teacher", "giao_duc" },
+                { "giasu", "giao_duc" },
+                { "daotao", "giao_duc" },
+                { "training", "giao_duc" },
+
+                { "sales", "sales" },
+                { "sale", "sales" },
+                { "banhang", "sales" },
+                { "telesales", "sales" },
+                { "kinhdoanh", "sales" },
+                { "nhanvienkinhdoanh", "sales" },
+                { "salesman", "sales" },
+
+                { "marketing", "marketing" },
+                { "marketer", "marketing" },
+                { "content", "marketing" },
+                { "contentcreator", "marketing" },
+                { "seo", "marketing" },
+                { "sem", "marketing" },
+                { "facebookads", "marketing" },
+                { "googleads", "marketing" },
+                { "chayquangcao", "marketing" },
+
+                { "hanhchinh", "hanh_chinh" },
+                { "vanphong", "hanh_chinh" },
+                { "admin", "hanh_chinh" },
+                { "adminoffice", "hanh_chinh" },
+                { "letan", "hanh_chinh" },
+                { "receptionist", "hanh_chinh" },
+
+                { "hr", "nhan_su" },
+                { "humanresource", "nhan_su" },
+                { "tuyendung", "nhan_su" },
+                { "recruiter", "nhan_su" },
+
+                { "designer", "thiet_ke" },
+                { "graphic", "thiet_ke" },
+                { "graphicdesign", "thiet_ke" },
+                { "uiux", "thiet_ke" },
+                { "uiuxdesigner", "thiet_ke" },
+                { "uxdesigner", "thiet_ke" },
+                { "uidesigner", "thiet_ke" },
+
+                { "xaydung", "xay_dung" },
+                { "kysuxaydung", "xay_dung" },
+                { "construction", "xay_dung" },
+                { "civilengineer", "xay_dung" },
+
+                { "bacsi", "y_te" },
+                { "doctor", "y_te" },
+                { "dieuduong", "y_te" },
+                { "nurse", "y_te" },
+                { "duoc", "y_te" },
+                { "duocsi", "y_te" },
+                { "pharmacist", "y_te" },
+                { "batdongsan", "bat_dong_san" },
+                { "bdst", "bat_dong_san" },
+                { "nhadat", "bat_dong_san" },
+                { "moi gioi", "bat_dong_san" },
+                { "moigioi", "bat_dong_san" },
+                { "salesbatdongsan", "bat_dong_san" },
+
+                { "chamsockhachhang", "cham_soc_khach_hang" },
+                { "cskh", "cham_soc_khach_hang" },
+                { "callcenter", "cham_soc_khach_hang" },
+                { "support", "cham_soc_khach_hang" },
+
+                { "cokhi", "co_khi_dien_dien_tu" },
+                { "dien", "co_khi_dien_dien_tu" },
+                { "dienlanh", "co_khi_dien_dien_tu" },
+                { "diencongnghiep", "co_khi_dien_dien_tu" },
+                { "kythuatdien", "co_khi_dien_dien_tu" },
+                { "baotri", "co_khi_dien_dien_tu" },
+
+                { "congtacxahoi", "cong_tac_xa_hoi" },
+                { "philoinhuan", "cong_tac_xa_hoi" },
+                { "nongovernment", "cong_tac_xa_hoi" },
+                { "ngoc", "cong_tac_xa_hoi" },
+
+                { "dulich", "du_lich" },
+                { "nhahang", "du_lich" },
+                { "khachsan", "du_lich" },
+                { "phucvu", "du_lich" },
+                { "phucvuong", "du_lich" },
+                { "phache", "du_lich" },
+                { "buongphong", "du_lich" },
+                { "housekeeping", "du_lich" },
+                { "hotel", "du_lich" },
+                { "restaurant", "du_lich" },
+
+                { "luat", "luat" },
+                { "law", "luat" },
+                { "lawyer", "luat" },
+                { "tuvanluat", "luat" },
+
+                { "nongnghiep", "nong_lam_ngu_nghiep" },
+                { "nonglamngu", "nong_lam_ngu_nghiep" },
+                { "lamnghiep", "nong_lam_ngu_nghiep" },
+                { "nungnghiep", "nong_lam_ngu_nghiep" },
+                { "channuoi", "nong_lam_ngu_nghiep" },
+                { "thuyhai", "nong_lam_ngu_nghiep" },
+
+                { "sanxuat", "san_xuat" },
+                { "congnghiep", "san_xuat" },
+                { "congnhan", "san_xuat" },
+                { "vanhanhmay", "san_xuat" },
+                { "kcs", "san_xuat" },
+                { "kho", "san_xuat" },
+                { "quanlychuyeng", "san_xuat" },
+
+                { "truyenthong", "truyen_thong" },
+                { "quangcao", "truyen_thong" },
+                { "pr", "truyen_thong" },
+                { "publicrelation", "truyen_thong" },
+                { "copywriter", "truyen_thong" },
+                { "truyenthongbaochi", "truyen_thong" },
+
+                { "vantai", "van_tai" },
+                { "giaohang", "van_tai" },
+                { "shipper", "van_tai" },
+                { "logistics", "van_tai" },
+                { "khovan", "van_tai" },
+                { "taixe", "van_tai" },
+                { "tx", "van_tai" }
             };
 
             string mappedNganh = "";
@@ -263,8 +440,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             using (var coon = new MySqlConnection(chuoi_KetNoi))
             {
                 coon.Open();
-                string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty FROM viec_lam vl join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
-                 WHERE nganh_nghe = @nganh ";
+                string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty 
+                FROM viec_lam vl 
+                join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
+                join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
+                WHERE nganh_nghe = @nganh and bd.trang_thai = 'cong_Khai'";
                 using var cmd = new MySqlCommand(sql, coon);
                 cmd.Parameters.AddWithValue("@nganh", mappedNganh);
 
@@ -337,7 +517,11 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = "select vl.*, ct.ten_cong_ty, ct.logo from viec_lam vl join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty join bai_dang bd on bd.ma_bai_dang = vl.ma_bai_dang where bd.ma_bai_dang <> @ma_bai_dang and ct.ma_cong_ty = @ma_cong_ty";
+            string sql = @"select vl.*, ct.ten_cong_ty, ct.logo 
+            from viec_lam vl 
+                join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty 
+                join bai_dang bd on bd.ma_bai_dang = vl.ma_bai_dang 
+            where bd.ma_bai_dang <> @ma_bai_dang and ct.ma_cong_ty = @ma_cong_ty and bd.trang_thai = 'cong_Khai'";
             using var cmd = new MySqlCommand(sql, coon);
             cmd.Parameters.AddWithValue("@ma_bai_dang", bai_Dang.ma_bai_dang);
             cmd.Parameters.AddWithValue("@ma_cong_ty", bai_Dang.ma_nguoi_dang);
@@ -374,7 +558,9 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
             coon.Open();
             string sql = @"SELECT v.*, c.logo, c.ten_cong_ty 
                FROM viec_lam v
-               INNER JOIN cong_ty c ON v.ma_cong_ty = c.ma_cong_ty";
+               INNER JOIN cong_ty c ON v.ma_cong_ty = c.ma_cong_ty
+               INNER JOIN bai_dang bd ON v.ma_bai_dang = bd.ma_bai_dang
+               WHERE bd.trang_thai = 'cong_Khai'";
             using var cmd = new MySqlCommand(sql, coon);
             using var reader = cmd.ExecuteReader();
             var danh_sach = new List<viec_lam_ket_qua>();
@@ -454,7 +640,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam
                     vl.diem_phu_hop += 4;
                 }
 
-                if (!string.IsNullOrEmpty(req_nganh_nghe) && !string.IsNullOrEmpty(vl_nganh_nghe) && vl_nganh_nghe.Contains(req_nganh_nghe))
+                if (!string.IsNullOrEmpty(req_nganh_nghe) && !string.IsNullOrEmpty(vl_nganh_nghe) && vl_nganh_nghe == req_nganh_nghe)
                 {
                     vl.diem_phu_hop += 6;
                 }

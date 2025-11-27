@@ -16,12 +16,14 @@ import { ComponentThongKeNguoiDung } from '../Component_trang_chu_quan_tri/thong
 import { ComponentThongKeTuyenDungCuaCongTy } from '../Component_trang_chu_cong_ty/tuyen-dung/thong-ke-tuyen-dung/component-thong-ke-tuyen-dung-cua-cong-ty/component-thong-ke-tuyen-dung-cua-cong-ty';
 import { ComponentThongKePhanLoaiNguoiDung } from '../Component_trang_chu_quan_tri/thong-ke/thong-ke-nguoi-dung/component-thong-ke-phan-loai-nguoi-dung/component-thong-ke-phan-loai-nguoi-dung';
 import { ComponentThongKeTinTuyenDung } from '../Component_trang_chu_quan_tri/thong-ke/thong-ke-tin-tuyen-dung/component-thong-ke-tin-tuyen-dung/component-thong-ke-tin-tuyen-dung';
+import { ComponentThongKeUngVienTungBai } from '../Component_trang_chu_cong_ty/tuyen-dung/thong-ke-tuyen-dung/component-thong-ke-ung-vien-tung-bai/component-thong-ke-ung-vien-tung-bai';
 
 @Component({
   selector: 'app-trang-chu',
   imports: [RouterModule, CommonModule, RouterLink, FormsModule, HeaderWEB, FooterWeb, TheTimKiemViecLam, ThongTinNoiBat, 
     TheNganhNgheNoiBat, TheBanner, TheDanhGiaTuNguoiDung, TheViecLamDuocQuanTam, TheChuyenTrangTaoCv, 
-    ComponentThongKeNguoiDung, ComponentThongKeTuyenDungCuaCongTy, ComponentThongKePhanLoaiNguoiDung, ComponentThongKeTinTuyenDung],
+    ComponentThongKeNguoiDung, ComponentThongKePhanLoaiNguoiDung, ComponentThongKeTinTuyenDung,
+    ComponentThongKeUngVienTungBai, ComponentThongKeTuyenDungCuaCongTy],
   templateUrl: './trang-chu.html',
   styleUrls: ['./trang-chu.css']
 })

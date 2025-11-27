@@ -13,11 +13,10 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
     {
         private static readonly string chuoi_KetNoi =
             "server=localhost;user=root;password=123456;database=hethong_timviec";
-
+        private static IConverter _instance;
+        private static readonly object _lock = new object();
         public static async Task<string> luuCVOnline(cv_online_nguoi_tim_viec cv)
         {
-
-
             string duong_dan_folder = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCVOnline");
             if (!Directory.Exists(duong_dan_folder))
                 Directory.CreateDirectory(duong_dan_folder);
@@ -62,7 +61,14 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
                 cv.anh_dai_dien = $"LuuTruAnhDaiDienCV/{ten_file_anh}";
             }
 
-            taoPDFMauCVMacDinh(cv, duong_dan_pdf);
+            if (cv.mau_cv == 1)
+            {
+                taoPDFMauCVMacDinh(cv, duong_dan_pdf);
+            }
+            else if (cv.mau_cv == 2)
+            {
+                taoPDFMauCVMacDinh2(cv, duong_dan_pdf);
+            }
 
             long ma_cv = 0;
 
@@ -135,108 +141,526 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_cv
             return duong_dan_file_pdf;
         }
 
+
         public static void taoPDFMauCVMacDinh(cv_online_nguoi_tim_viec cv, string duong_dan_file)
         {
-            string duong_dan_file_anh_dai_dien = $"http://localhost:65001/{cv.anh_dai_dien}";
-            string css = @"
-.cv-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 40px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  font-family: 'Segoe UI', Roboto, sans-serif;
-}
-.cv-header {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  border-bottom: 3px solid #0d6efd;
-  padding-bottom: 25px;
-  margin-bottom: 25px;
-}
-.avatar {
-  width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-.avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; border:3px solid #0d6efd; }
-.info h1 { font-size: 26px; margin: 0; color: #222; }
-.cv-section { margin-bottom: 25px; }
-.cv-section h2 { color: #0d6efd; font-size: 18px; margin-bottom: 10px; }
-.cv-item { margin-bottom: 16px; border-left: 3px solid #e0e0e0; padding-left: 12px; }
-";
+            Console.WriteLine("=== Bắt đầu tạo PDF ===");
+            Console.WriteLine($"Đường dẫn PDF: {duong_dan_file}");
 
-            string html = $@"
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8'>
-<style>{css}</style>
-</head>
-<body>
-<div class='cv-container'>
-  <div class='cv-header'>
-    <div class='avatar'>
-      <img src='{duong_dan_file_anh_dai_dien ?? "assets/default-avatar.png"}' alt='avatar' />
-    </div>
-    <div class='info'>
-      <h1>{cv.ho_ten}</h1>
-      <p><b>Vị trí ứng tuyển:</b> {cv.vi_tri_ung_tuyen}</p>
-      <p><b>Email:</b> {cv.email}</p>
-      <p><b>Điện thoại:</b> {cv.dien_thoai}</p>
-      <p><b>Ngày sinh:</b> {(cv.ngay_sinh != DateTime.MinValue ? cv.ngay_sinh.ToString("dd/MM/yyyy") : "")}</p>
-      <p><b>Giới tính:</b> {(cv.gioi_tinh == GioiTinh.nam ? "Nam" : cv.gioi_tinh == GioiTinh.nu ? "Nữ" : "Khác")}</p>
-      <p><b>Địa chỉ:</b> {cv.dia_chi}</p>
-    </div>
-  </div>
-
-  <div class='cv-section'><h2>Chuyên ngành</h2><p>{cv.chuyen_nganh}</p></div>
-  <div class='cv-section'><h2>Kỹ năng</h2><p>{cv.ky_nang}</p></div>
-  <div class='cv-section'><h2>Dự án</h2><p>{cv.du_an}</p></div>
-  <div class='cv-section'><h2>Mục tiêu nghề nghiệp</h2><p>{cv.muc_tieu}</p></div>
-  <div class='cv-section'><h2>Học vấn</h2>";
-
-            if (cv.hoc_Van != null)
+            var folder = Path.GetDirectoryName(duong_dan_file);
+            if (!Directory.Exists(folder))
             {
-                foreach (var hv in cv.hoc_Van)
-                {
-                    html += $@"<div class='cv-item'><p><b>{hv.thoi_gian_hoc_tap}</b> – {hv.ten_truong} ({hv.nganh_hoc})</p><p>{hv.mo_ta}</p></div>";
-                }
+                Console.WriteLine("Folder chưa tồn tại, tạo folder...");
+                Directory.CreateDirectory(folder);
             }
 
-            html += "<h2>Kinh nghiệm làm việc</h2>";
-
-            if (cv.kinh_Nghiem != null)
+            if (File.Exists(duong_dan_file))
             {
-                foreach (var kn in cv.kinh_Nghiem)
-                {
-                    html += $@"<div class='cv-item'><p><b>{kn.thoi_gian_lam_viec}</b> – {kn.ten_cong_ty} ({kn.vi_tri})</p><p>{kn.mo_ta}</p></div>";
-                }
+                Console.WriteLine("File cũ tồn tại, xóa...");
+                File.Delete(duong_dan_file);
             }
 
-            html += "</div></div></body></html>";
-
-            var converter = new SynchronizedConverter(new PdfTools());
-            var doc = new HtmlToPdfDocument()
+            ThreadPool.QueueUserWorkItem(state =>
             {
-                GlobalSettings = new GlobalSettings
+                try
                 {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Out = duong_dan_file
-                },
-                Objects =
-                {
+                    string css = @"
+                        .cv-container { 
+                            max-width: 900px; 
+                            margin: 40px auto; 
+                            padding: 40px; 
+                            background: #fff; 
+                            border-radius: 16px; 
+                            box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+                            font-family: 'Segoe UI', Roboto, sans-serif; 
+                        }
+                        .cv-header {
+                            display: table;
+                            width: 100%;
+                            border-bottom: 3px solid #0d6efd;
+                            padding-bottom: 25px;
+                            margin-bottom: 25px;
+                        }
+                        .cv-header .avatar {
+                            display: table-cell;
+                            width: 150px;
+                            vertical-align: top;
+                        }
+                        .cv-header .avatar .img-box {
+                            width: 140px;
+                            height: 140px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                            border: 3px solid #0d6efd;
+                            background-size: cover;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                        }
+                        .cv-header .info {
+                            display: table-cell;
+                            vertical-align: top;
+                            padding-left: 30px;
+                        }
+                        .info h1 { 
+                            font-size: 26px; 
+                            margin: 0; 
+                            color: #222; 
+                        }
+                        .cv-section { 
+                            margin-bottom: 25px; 
+                        }
+                        .cv-section h2 { 
+                            color: #0d6efd; 
+                            font-size: 18px; 
+                            margin-bottom: 10px; 
+                        }
+                        .cv-item { 
+                            margin-bottom: 16px; 
+                            border-left: 3px solid #e0e0e0; 
+                            padding-left: 12px; 
+                        }
+                        ";
+
+                    string html = $@"
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset='utf-8'>
+                        <style>
+                            {css}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='cv-container'>
+                            <div class='cv-header'>
+                                <div class='avatar'>
+                                    <div class='img-box' style=""background-image:url('http://localhost:7000/{cv.anh_dai_dien}')""></div>
+                                </div>
+
+                                <div class='info'>
+                                    <h1>{cv.ho_ten}</h1>
+                                    <p><b>Vị trí ứng tuyển:</b> {cv.vi_tri_ung_tuyen}</p>
+                                    <p><b>Email:</b> {cv.email}</p>
+                                    <p><b>Điện thoại:</b> {cv.dien_thoai}</p>
+                                    <p><b>Ngày sinh:</b> {(cv.ngay_sinh != DateTime.MinValue ? cv.ngay_sinh.ToString("dd/MM/yyyy") : "")}</p>
+                                    <p><b>Giới tính:</b> {(cv.gioi_tinh == GioiTinh.nam ? "Nam" : cv.gioi_tinh == GioiTinh.nu ? "Nữ" : "Khác")}</p>
+                                    <p><b>Địa chỉ:</b> {cv.dia_chi}</p>
+                                </div>
+                            </div>
+
+                            <div class='cv-section'><h2>Chuyên ngành</h2><p>{cv.chuyen_nganh}</p></div>
+                            <div class='cv-section'><h2>Kỹ năng</h2><p>{cv.ky_nang}</p></div>
+                            <div class='cv-section'><h2>Dự án</h2><p>{cv.du_an}</p></div>
+                            <div class='cv-section'><h2>Mục tiêu nghề nghiệp</h2><p>{cv.muc_tieu}</p></div>
+
+                            <div class='cv-section'>
+                                <h2>Học vấn</h2>";
+
+                    if (cv.hoc_Van != null)
+                    {
+                        foreach (var hv in cv.hoc_Van)
+                        {
+                            html += $@"
+                                <div class='cv-item'>
+                                    <div><b>Thời gian:</b> {hv.thoi_gian_hoc_tap}</div>
+                                    <div><b>Trường:</b> {hv.ten_truong}</div>
+                                    <div><b>Ngành học:</b> {hv.nganh_hoc}</div>
+                                    <div><b>Mô tả:</b> {hv.mo_ta}</div>
+                                </div>";
+                        }
+                    }
+
+                    html += @"<h2>Kinh nghiệm làm việc</h2>";
+
+                    if (cv.kinh_Nghiem != null)
+                    {
+                        foreach (var kn in cv.kinh_Nghiem)
+                        {
+                            html += $@"
+                                <div class='cv-item'>
+                                    <div><b>Thời gian:</b> {kn.thoi_gian_lam_viec}</div>
+                                    <div><b>Công ty:</b> {kn.ten_cong_ty}</div>
+                                    <div><b>Vị trí:</b> {kn.vi_tri}</div>
+                                    <div><b>Mô tả:</b> {kn.mo_ta}</div>
+                                </div>";
+                        }
+                    }
+
+                    html += @"
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+                    Console.WriteLine($"HTML length: {html.Length}");
+
+                    var converter = Instance;
+
+                    var doc = new HtmlToPdfDocument
+                    {
+                        GlobalSettings = new GlobalSettings
+                        {
+                            ColorMode = ColorMode.Color,
+                            Orientation = Orientation.Portrait,
+                            PaperSize = PaperKind.A4,
+                            Out = duong_dan_file,
+                        },
+                        Objects =
+                        {
                     new ObjectSettings
                     {
                         HtmlContent = html,
-                        WebSettings = { DefaultEncoding = "utf-8", LoadImages = true, EnableJavascript = true }
+                        WebSettings = {
+                            DefaultEncoding = "utf-8",
+                            LoadImages = true,
+                            EnableJavascript = false
+                        }
+                    }
+                        }
+                    };
+
+                    Console.WriteLine("Đang convert sang PDF...");
+                    converter.Convert(doc);
+                    Console.WriteLine("TẠO PDF THÀNH CÔNG!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("=== LỖI KHI TẠO PDF ===");
+                    Console.WriteLine(ex.ToString());
+                }
+            });
+
+            Console.WriteLine("=== Đã giao việc tạo PDF cho background thread ===");
+
+        }
+
+        public static void taoPDFMauCVMacDinh2(cv_online_nguoi_tim_viec cv, string duong_dan_file)
+        {
+            Console.WriteLine("=== Bắt đầu tạo PDF ===");
+            Console.WriteLine($"Đường dẫn PDF: {duong_dan_file}");
+
+            var folder = Path.GetDirectoryName(duong_dan_file);
+            if (!Directory.Exists(folder))
+            {
+                Console.WriteLine("Folder chưa tồn tại, tạo folder...");
+                Directory.CreateDirectory(folder);
+            }
+
+            if (File.Exists(duong_dan_file))
+            {
+                Console.WriteLine("File cũ tồn tại, xóa...");
+                File.Delete(duong_dan_file);
+            }
+
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                try
+                {
+                    string css = @"
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    padding: 40px 20px;
+    min-height: 100vh;
+}
+
+.cv-container, .cv-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.cv-header {
+    display: table;
+    width: 100%;
+    border-bottom: 3px solid #0d6efd;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+}
+
+.cv-header .avatar-section {
+    display: table-cell;
+    width: 160px; /* đủ chứa ảnh */
+    vertical-align: top;
+}
+
+.cv-header .avatar .img-box {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #0d6efd;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.cv-header .basic-info {
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 30px;
+}
+
+.info h1 { 
+    font-size: 26px; 
+    margin: 0; 
+    color: #222; 
+}
+
+.position {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.contact-grid {
+    display: table;
+    width: 100%;
+    border-spacing: 0 8px;
+}
+
+.contact-row {
+    display: table-row;
+}
+
+.contact-col {
+    display: table-cell;
+    padding-right: 20px;
+    vertical-align: top;
+}
+
+.contact-item {
+    display: table-row;
+    color: #333;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.contact-item span.contact-value {
+    display: inline-block;
+    padding: 4px 8px;
+    border-bottom: 1px solid #ccc;
+    min-width: 120px;
+    font-size: 14px;
+    color: #333;
+}
+
+.contact-row-two {
+    display: table-row;
+}
+
+.contact-row-two > .contact-col {
+    display: table-cell;
+    padding-right: 20px;
+    vertical-align: top;
+}
+
+.contact-value {
+    display: inline-block;
+    padding: 4px 8px;
+    border-bottom: 1px solid #ccc;
+    min-width: 120px;
+    font-size: 14px;
+    color: #333;
+}
+
+.cv-body { 
+    padding: 40px 40px 30px 40px; 
+    background: #fff; 
+}
+
+.cv-section { 
+    margin-bottom: 25px; 
+    page-break-inside: avoid; 
+}
+
+.cv-section h2 { 
+    font-size: 20px; 
+    color: #667eea; 
+    margin-bottom: 12px; 
+    padding-bottom: 6px; 
+    border-bottom: 2px solid #667eea; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+}
+
+.cv-item { 
+    position: relative; 
+    padding-left: 20px; 
+    margin-bottom: 18px; 
+    border-left: 3px solid #e0e0e0; 
+}
+
+.cv-item:before { 
+    content: ''; 
+    position: absolute; 
+    left: -7px; 
+    top: 0; 
+    width: 11px; 
+    height: 11px; 
+    background: #667eea; 
+    border-radius: 50%; 
+}
+
+.cv-item div { 
+    margin-bottom: 5px; 
+    font-size: 13px; 
+    line-height: 1.6; 
+}
+
+.cv-item b { 
+    color: #667eea; 
+    font-weight: 600; 
+    margin-right: 5px; 
+}
+";
+
+
+                    string html = $@"
+            <!DOCTYPE html>
+            <html lang='vi'>
+            <head>
+            <meta charset='UTF-8'>
+            <style>{css}</style>
+            </head>
+            <body>
+            <div class='cv-wrapper'>
+                <div class='cv-header'>
+                    <div class='avatar-section'>
+                        <div class='avatar'>
+                            <div class='img-box' style=""background-image:url('http://localhost:7000/{cv.anh_dai_dien}')""></div>
+                        </div>
+                    </div>
+                    <div class='basic-info'>
+                        <h1>{cv.ho_ten}</h1>
+                        <div class='position'>{cv.vi_tri_ung_tuyen}</div>
+                        <div class='contact-grid'>
+                                <div class='contact-item'>
+                                    <span class='contact-value'>{cv.dien_thoai}</span>
+                                </div>
+                                <div class='contact-item'>
+                                    <span class='contact-value'>{cv.email}</span>
+                                </div>
+                                <div class='contact-item'>
+                                    <span class='contact-value'>{(cv.ngay_sinh != DateTime.MinValue ? cv.ngay_sinh.ToString("yyyy-MM-dd") : "")}</span>
+                                </div>
+                                <div class='contact-row'>
+                                    <div class='contact-col'>
+                                        <span class='contact-value'>{(cv.gioi_tinh == GioiTinh.nam ? "Nam" : "Nữ")}</span>
+                                    </div>
+                                    <div class='contact-col'>
+                                        <span class='contact-value'>{cv.dia_chi}</span>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class='cv-body'>
+                    <div class='cv-section'><h2>Chuyên ngành</h2><p>{cv.chuyen_nganh}</p></div>
+                    <div class='cv-section'><h2>Kỹ năng</h2><p>{cv.ky_nang}</p></div>
+                    <div class='cv-section'><h2>Dự án</h2><p>{cv.du_an}</p></div>
+                    <div class='cv-section'><h2>Mục tiêu nghề nghiệp</h2><p>{cv.muc_tieu}</p></div>
+
+                    <div class='cv-section'>
+                        <h2>Học vấn</h2>";
+
+                    if (cv.hoc_Van != null)
+                    {
+                        foreach (var hv in cv.hoc_Van)
+                        {
+                            html += $@"
+                        <div class='cv-item'>
+                            <div><b>Thời gian:</b> {hv.thoi_gian_hoc_tap}</div>
+                            <div><b>Trường:</b> {hv.ten_truong}</div>
+                            <div><b>Ngành học:</b> {hv.nganh_hoc}</div>
+                            <div><b>Mô tả:</b> {hv.mo_ta}</div>
+                        </div>";
+                        }
+                    }
+
+                    html += @"
+                    </div>
+
+                    <div class='cv-section'>
+                        <h2>Kinh nghiệm làm việc</h2>";
+
+                    if (cv.kinh_Nghiem != null)
+                    {
+                        foreach (var kn in cv.kinh_Nghiem)
+                        {
+                            html += $@"
+                        <div class='cv-item'>
+                            <div><b>Thời gian:</b> {kn.thoi_gian_lam_viec}</div>
+                            <div><b>Công ty:</b> {kn.ten_cong_ty}</div>
+                            <div><b>Vị trí:</b> {kn.vi_tri}</div>
+                            <div><b>Mô tả:</b> {kn.mo_ta}</div>
+                        </div>";
+                        }
+                    }
+
+                    html += @"
+                    </div>
+                </div>
+            </div>
+            </body>
+            </html>
+            ";
+
+                    var converter = Instance;
+                    var doc = new HtmlToPdfDocument
+                    {
+                        GlobalSettings = new GlobalSettings
+                        {
+                            ColorMode = ColorMode.Color,
+                            Orientation = Orientation.Portrait,
+                            PaperSize = PaperKind.A4,
+                            Out = duong_dan_file
+                        },
+                        Objects =
+                        {
+                            new ObjectSettings
+                            {
+                                HtmlContent = html,
+                                WebSettings = { DefaultEncoding="utf-8", LoadImages=true }
+                            }
+                        }
+                    };
+                    converter.Convert(doc);
+                    Console.WriteLine("TẠO PDF THÀNH CÔNG!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("=== LỖI KHI TẠO PDF ===");
+                    Console.WriteLine(ex.ToString());
+                }
+            });
+
+            Console.WriteLine("=== Đã giao việc tạo PDF cho background thread ===");
+
+        }
+        public static IConverter Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new SynchronizedConverter(new PdfTools());
+                            Console.WriteLine("SynchronizedConverter được khởi tạo lần đầu (Singleton)");
+                        }
                     }
                 }
-            };
-            converter.Convert(doc);
+                return _instance;
+            }
         }
     }
 }

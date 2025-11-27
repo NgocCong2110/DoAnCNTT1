@@ -62,6 +62,20 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_c
             return danh_sach;
         }
 
+        public static bool kiemTraCVUngTuyen(ung_tuyen ung_Tuyen)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+
+            string sql = "SELECT Count(*) FROM ung_tuyen WHERE ma_cv = @ma_cv and ma_nguoi_tim_viec = @ma_nguoi_tim_viec";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma_nguoi_tim_viec", ung_Tuyen.ma_nguoi_tim_viec);
+            cmd.Parameters.AddWithValue("@ma_cv", ung_Tuyen.ma_cv);
+            int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+            return count > 0;
+        }
+
         public static bool xoaCVNguoiTimViec(cv_online_nguoi_tim_viec cv_Online_Nguoi_Tim_Viec)
         {
             
@@ -95,5 +109,66 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_tramg_nguoi_tim_viec.chuc_nang_c
             return false;
         }
 
+        public static async Task<bool> dangTaiCV(IFormFile cvFile, int ma_Nguoi_Tim_Viec)
+        {
+            if (cvFile == null || cvFile.Length == 0)
+                return false;
+
+            var duongDanFolder = Path.Combine(Directory.GetCurrentDirectory(), "LuuTruCV");
+            if (!Directory.Exists(duongDanFolder))
+                Directory.CreateDirectory(duongDanFolder);
+
+            var tenFile = $"{Guid.NewGuid()}_{cvFile.FileName}";
+            var duongDanFile = Path.Combine(duongDanFolder, tenFile);
+
+            using (var stream = new FileStream(duongDanFile, FileMode.Create))
+            {
+                await cvFile.CopyToAsync(stream);
+            }
+
+            using (var conn = new MySqlConnection(chuoi_KetNoi))
+            {
+                string sql = @"INSERT INTO cv_nguoi_tim_viec 
+                           (ma_nguoi_tim_viec, ten_file, duong_dan_file, ngay_tao) 
+                           VALUES (@ma, @ten, @duong, now())";
+
+                using var cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@ma", ma_Nguoi_Tim_Viec);
+                cmd.Parameters.AddWithValue("@ten", cvFile.FileName);
+                cmd.Parameters.AddWithValue("@duong", tenFile);
+
+                conn.Open();
+                await cmd.ExecuteNonQueryAsync();
+            }
+
+            return true;
+        }
+        public static List<cv_nguoi_tim_viec> layDanhSachCV(int ma_Nguoi_Tim_Viec)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from cv_nguoi_tim_viec where ma_nguoi_tim_viec = @ma";
+            using var cmd = new MySqlCommand(sql, coon);
+            cmd.Parameters.AddWithValue("@ma", ma_Nguoi_Tim_Viec);
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<cv_nguoi_tim_viec>();
+            while (reader.Read())
+            {
+                var cv = new cv_nguoi_tim_viec
+                {
+                    ma_cv = reader.IsDBNull(reader.GetOrdinal("ma_cv")) ? 0 : reader.GetInt32("ma_cv"),
+
+                    ma_nguoi_tim_viec = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_tim_viec")) ? 0 : reader.GetInt32("ma_nguoi_tim_viec"),
+
+                    ten_file = reader.IsDBNull(reader.GetOrdinal("ten_file")) ? null : reader.GetString("ten_file"),
+
+                    duong_dan_file = reader.IsDBNull(reader.GetOrdinal("duong_dan_file")) ? null : reader.GetString("duong_dan_file"),
+
+                    ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao")
+                };
+                danh_sach.Add(cv);
+            }
+            return danh_sach;
+        }
     }
 }

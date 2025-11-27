@@ -130,6 +130,7 @@ export class TrangChiTietViecLam {
   ungTuyenCongViec() {
 
     const maNguoiTimViec = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_tim_viec;
+    const ma_nguoi_nhan = this.thongTin?.thong_tin_chi_tiet?.ma_nguoi_dung;
     if (!maNguoiTimViec) {
       alert("Vui lòng đăng nhập để ứng tuyển công việc.");
       return;
@@ -144,7 +145,7 @@ export class TrangChiTietViecLam {
     this.httpclient.post<any>("http://localhost:7000/api/API_WEB/kiemTraUngTuyen", ktra)
       .subscribe({
         next: (data) => {
-          if (!data.success) {
+          if (data.success) {
             alert("Bạn đã ứng tuyển công việc này rồi.");
             return;
           }
@@ -152,6 +153,7 @@ export class TrangChiTietViecLam {
           const thong_tin = {
             ma_viec: this.chi_tiet?.viec_lam?.ma_viec,
             ma_cong_ty: this.chi_tiet?.ma_nguoi_dang,
+            ma_nguoi_nhan: ma_nguoi_nhan,
             ma_nguoi_tim_viec: maNguoiTimViec,
             ma_cv: this.cv_duoc_chon
           };
@@ -175,9 +177,8 @@ export class TrangChiTietViecLam {
             formData.append('ma_viec', String(this.chi_tiet?.viec_lam?.ma_viec) || '');
             formData.append('ma_cong_ty', String(this.chi_tiet?.ma_nguoi_dang) || '');
             formData.append('ma_nguoi_tim_viec', maNguoiTimViec || '');
+            formData.append('ma_nguoi_nhan', ma_nguoi_nhan || '');
             formData.append('duong_dan_file_cv_upload', this.file_cv_upload);
-
-            console.log('FormData chuẩn bị gửi:', formData);
 
             this.httpclient.post<any>(
               'http://localhost:7000/api/API_WEB/ungTuyenCongViecUploadCV',

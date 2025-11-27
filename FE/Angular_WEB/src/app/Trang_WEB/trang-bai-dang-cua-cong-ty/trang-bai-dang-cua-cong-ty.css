@@ -33,12 +33,13 @@
 }
 
 label{
-  color: #0d6efd;
+  color: #4e555b;
   font-weight: bold;
 }
 
 .form-check-label{
-  color: #4e555b;
+  color: #0d6efd;
+  
 }
 
 input, textarea{

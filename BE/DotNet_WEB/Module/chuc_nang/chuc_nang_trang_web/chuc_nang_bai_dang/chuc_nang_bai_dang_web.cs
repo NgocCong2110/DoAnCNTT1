@@ -23,7 +23,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_bai_dang
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = "select * from bai_dang where ma_bai_dang = @ma_Bai_Dang";
+            string sql = "select * from bai_dang where ma_bai_dang = @ma_Bai_Dang and trang_thai = 'cong_Khai'";
             using var cmd = new MySqlCommand(sql, coon);
             cmd.Parameters.AddWithValue("@ma_Bai_Dang", ma_Bai_Dang);
             using var reader = cmd.ExecuteReader();
@@ -109,6 +109,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_bai_dang
     ct.logo
 FROM bai_dang bd
 LEFT JOIN cong_ty ct ON bd.ma_nguoi_dang = ct.ma_cong_ty
+WHERE bd.trang_thai = 'cong_Khai'
 ORDER BY bd.ngay_tao DESC;
     ";
 

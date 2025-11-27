@@ -1,1 +1,31 @@
-<p>trang-danh-muc-nganh-nghe works!</p>
+<div class="container ds-nganh-nghe-container">
+  <h2 class="ds-nganh-nghe-title">Danh sách ngành nghề</h2>
+
+  <div class="them-nganh-nghe-form mb-4">
+    <input type="text" placeholder="Mã ngành nghề" [(ngModel)]="maNganhNghe" class="form-input" />
+    <input type="text" placeholder="Tên ngành nghề" [(ngModel)]="tenNganhNghe" class="form-input" />
+    <input type="number" placeholder="Thứ tự" [(ngModel)]="thuTu" class="form-input" />
+    <button class="btn btn-primary" (click)="themNganhNghe()">Thêm ngành nghề</button>
+  </div>
+
+  <table class="table table-bordered table-striped ds-nganh-nghe-table">
+    <thead>
+      <tr>
+        <th>Mã ngành nghề</th>
+        <th>Tên ngành nghề</th>
+        <th>Thứ tự</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let nganh of danh_sach_nganh_nghe; let i = index">
+        <td>{{ nganh.ma_nganh_nghe }}</td>
+        <td>{{ nganh.ten_nganh_nghe }}</td>
+        <td>{{ nganh.thu_tu }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="xoaNganhNghe(i)">Xóa</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

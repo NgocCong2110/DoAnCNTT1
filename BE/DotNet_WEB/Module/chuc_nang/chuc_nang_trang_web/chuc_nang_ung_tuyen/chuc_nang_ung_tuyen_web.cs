@@ -26,11 +26,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_ung_tuyen
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string ut = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, ma_cv, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @ma_CV, @trang_Thai, @trang_Thai_Duyet)";
+            string ut = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, ma_nguoi_nhan, ma_cv, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @ma_nguoi_nhan, @ma_CV, @trang_Thai, @trang_Thai_Duyet)";
             using var cmd = new MySqlCommand(ut, coon);
             cmd.Parameters.AddWithValue("@ma_Viec", ung_Tuyen.ma_viec);
             cmd.Parameters.AddWithValue("@ma_Cong_Ty", ung_Tuyen.ma_cong_ty);
             cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ung_Tuyen.ma_nguoi_tim_viec);
+            cmd.Parameters.AddWithValue("@ma_nguoi_nhan", ung_Tuyen.ma_nguoi_nhan);
             cmd.Parameters.AddWithValue("@ma_CV", ung_Tuyen.ma_cv);
             cmd.Parameters.AddWithValue("@trang_Thai", "dang_Cho");
             cmd.Parameters.AddWithValue("@trang_Thai_Duyet", "chua_Duyet");
@@ -41,7 +42,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_ung_tuyen
             return false;
         }
 
-        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, IFormFile duong_dan_file_cv_upload)
+        public static async Task<bool> ungTuyenCongViecUploadCV(int ma_viec, int ma_cong_ty, int ma_nguoi_tim_viec, int ma_nguoi_nhan, IFormFile duong_dan_file_cv_upload)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
@@ -61,11 +62,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_ung_tuyen
 
             var duong_dan = $"LuuTruCVUngTuyen/{ten_file}";
 
-            string ung_tuyen = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, duong_dan_file_cv_upload, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @duong_dan_file_cv_upload, @trang_Thai, @trang_Thai_Duyet)";
+            string ung_tuyen = "INSERT INTO ung_tuyen (ma_viec, ma_cong_ty, ma_nguoi_tim_viec, ma_nguoi_nhan, duong_dan_file_cv_upload, trang_thai, trang_thai_duyet) VALUES (@ma_Viec, @ma_Cong_Ty, @ma_Nguoi_Tim_Viec, @ma_nguoi_nhan, @duong_dan_file_cv_upload, @trang_Thai, @trang_Thai_Duyet)";
             using var cmd = new MySqlCommand(ung_tuyen, coon);
             cmd.Parameters.AddWithValue("@ma_Viec", ma_viec);
             cmd.Parameters.AddWithValue("@ma_Cong_Ty", ma_cong_ty);
             cmd.Parameters.AddWithValue("@ma_Nguoi_Tim_Viec", ma_nguoi_tim_viec);
+            cmd.Parameters.AddWithValue("@ma_nguoi_nhan", ma_nguoi_nhan);
             cmd.Parameters.AddWithValue("@duong_dan_file_cv_upload", duong_dan);
             cmd.Parameters.AddWithValue("@trang_Thai", "dang_Cho");
             cmd.Parameters.AddWithValue("@trang_Thai_Duyet", "chua_Duyet");

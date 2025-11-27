@@ -6,12 +6,12 @@ import { HeaderWEB } from '../../Component/header-web/header-web';
 import { Auth } from '../../../services/auth';
 
 @Component({
-  selector: 'app-mau-cv-cong-nghe',
+  selector: 'app-mau-cv-mac-dinh-2',
   imports: [HeaderWEB, CommonModule, FormsModule],
-  templateUrl: './mau-cv-cong-nghe.html',
-  styleUrl: './mau-cv-cong-nghe.css'
+  templateUrl: './mau-cv-mac-dinh-2.html',
+  styleUrl: './mau-cv-mac-dinh-2.css'
 })
-export class MauCvCongNghe {
+export class MauCvMacDinh2 {
   pop_up_nhap_ten_file = false;
 
   formCv = {
@@ -74,18 +74,6 @@ export class MauCvCongNghe {
     reader.readAsDataURL(file);
   }
 
-  taiCV() {
-    this.http.post('https://localhost:5001/api/CV/tai-cv', this.formCv, {
-      responseType: 'blob'
-    }).subscribe(fileBlob => {
-      const url = window.URL.createObjectURL(fileBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${this.formCv.ho_ten || 'CV'}.pdf`;
-      a.click();
-    });
-  }
-
   moPopupNhapTen() {
     this.pop_up_nhap_ten_file = true;
   }
@@ -126,10 +114,9 @@ export class MauCvCongNghe {
       muc_tieu: this.formCv.muc_tieu,
       vi_tri_ung_tuyen: this.formCv.vi_tri_ung_tuyen,
       hoc_Van: this.formCv.hoc_van,
-      kinh_Nghiem: this.formCv.kinh_nghiem
+      kinh_Nghiem: this.formCv.kinh_nghiem,
+      mau_cv: 2
     };
-
-    console.log('Dữ liệu lưu CV:', thong_tin_cv);
 
     this.http.post('http://localhost:7000/api/API_WEB/luuCV', thong_tin_cv)
       .subscribe({

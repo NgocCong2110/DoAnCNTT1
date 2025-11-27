@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vUDehEfzrQg=",
+  "dgSpecHash": "He6WnaELLe0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\BE\\DotNet_WEB\\DotNet_WEB.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\DoAnCNTT\\be\\dotnet_web\\DotNet_WEB.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\bouncycastle.cryptography\\2.3.1\\bouncycastle.cryptography.2.3.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\dinktopdf\\1.0.8\\dinktopdf.1.0.8.nupkg.sha512",

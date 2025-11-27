@@ -1,56 +1,62 @@
-<div class="container ds-ntv-container">
-  <h2 class="ds-ntv-title">Danh sách ứng tuyển công việc</h2>
+  <div class="container ds-ntv-container">
+    <h2 class="ds-ntv-title">Danh sách ứng tuyển công việc</h2>
 
-  <div *ngIf="loading">Đang tải dữ liệu...</div>
-  <div *ngIf="error" class="text-danger">{{ error }}</div>
+    <div *ngIf="loading">Đang tải dữ liệu...</div>
+    <div *ngIf="error" class="text-danger">{{ error }}</div>
 
-  <div *ngIf="!loading && !error">
-    <table class="table table-bordered table-striped ds-ntv-table">
-      <thead class="ds-ntv-thead">
-        <tr>
-          <th>#</th>
-          <th>Vị trí ứng tuyển</th>
-          <th>Ngành nghề</th>
-          <th>Mức lương</th>
-          <th>Kinh nghiệm</th>
-          <th>Tên công ty</th>
-          <th>Địa điểm</th>
-          <th>Trạng thái</th>
-          <th>Ngày ứng tuyển</th>
-        </tr>
-      </thead>
+    <div *ngIf="!loading && !error">
+      <table class="table table-bordered table-striped ds-ntv-table">
+        <thead class="ds-ntv-thead">
+          <tr>
+            <th>#</th>
+            <th>Vị trí ứng tuyển</th>
+            <th>Ngành nghề</th>
+            <th>Mức lương</th>
+            <th>Kinh nghiệm</th>
+            <th>Tên công ty</th>
+            <th>Địa điểm</th>
+            <th>Trạng thái</th>
+            <th>Ngày ứng tuyển</th>
+            <th></th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr *ngFor="let ls of danh_sach_lich_su_ung_tuyen; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ ls.viec_Lam?.vi_tri }}</td>
-          <td>{{ laynganhnghe(ls.viec_Lam?.nganh_nghe) }}</td>
-          <td>{{ ls.viec_Lam?.muc_luong }}</td>
-          <td>{{ ls.viec_Lam?.kinh_nghiem }}</td>
-          <td>{{ ls.cong_Ty?.ten_cong_ty }}</td>
-          <td>{{ ls.cong_Ty?.dia_chi }}</td>
-          <td [ngClass]="{
-            'text-warning': ls.trang_thai === 1,
-            'text-success': ls.trang_thai === 2,
-            'text-danger': ls.trang_thai === 3
-          }">
-            {{ trangThaiMap(ls.trang_thai) }}
-          </td>
-          <td>{{ ls.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
-  <div class="toast show text-bg-danger border-0">
-    <div class="d-flex">
-      <div class="toast-body">
-        ❌ Lấy thông tin ứng tuyển thất bại!
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+        <tbody>
+          <tr *ngFor="let ls of danh_sach_lich_su_ung_tuyen; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ ls.viec_Lam?.vi_tri }}</td>
+            <td>{{ laynganhnghe(ls.viec_Lam?.nganh_nghe) }}</td>
+            <td>{{ ls.viec_Lam?.muc_luong }}</td>
+            <td>{{ ls.viec_Lam?.kinh_nghiem }}</td>
+            <td>{{ ls.cong_Ty?.ten_cong_ty }}</td>
+            <td>{{ ls.cong_Ty?.dia_chi }}</td>
+            <td [ngClass]="{
+              'text-warning': ls.trang_thai === 1,
+              'text-success': ls.trang_thai === 2,
+              'text-danger': ls.trang_thai === 3
+            }">
+              {{ trangThaiMap(ls.trang_thai) }}
+            </td>
+            <td>{{ ls.ngay_ung_tuyen | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="huyUngTuyen(ls)">
+                Hủy ứng tuyển
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
+    <div class="toast show text-bg-danger border-0">
+      <div class="d-flex">
+        <div class="toast-body">
+          ❌ Lấy thông tin ứng tuyển thất bại!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+          (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      </div>
+    </div>
+  </div>

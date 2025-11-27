@@ -27,19 +27,36 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_phuc_loi
             {
                 return false;
             }
-            string sql = @"INSERT INTO phuc_loi_cong_ty (ma_cong_ty, ten_phuc_loi, mo_ta)
+
+            string them_phuc_loi = @"INSERT INTO phuc_loi_cong_ty (ma_cong_ty, ten_phuc_loi, mo_ta)
             VALUES (@ma_cong_ty, @ten_phuc_loi, @mo_ta)";
+
+            string cap_nhat_phuc_loi = @"UPDATE phuc_loi_cong_ty 
+                        SET ten_phuc_loi = @ten_phuc_loi, mo_ta = @mo_ta 
+                        WHERE ma_phuc_loi_cty = @ma_phuc_loi_cty";
+
             int r = 0;
+
             foreach (var plct in pl.phuc_Loi_Cong_Ty)
             {
-                using (var cmd = new MySqlCommand(sql, coon))
+                if (plct.ma_phuc_loi_cty == 0)
                 {
-                    cmd.Parameters.AddWithValue("@ma_cong_ty", pl.ma_cong_ty);
-                    cmd.Parameters.AddWithValue("@ten_phuc_loi", plct.ten_phuc_loi);
-                    cmd.Parameters.AddWithValue("@mo_ta", plct.mo_ta);
-                    r += cmd.ExecuteNonQuery();
+                    using var insertCmd = new MySqlCommand(them_phuc_loi, coon);
+                    insertCmd.Parameters.AddWithValue("@ma_cong_ty", pl.ma_cong_ty);
+                    insertCmd.Parameters.AddWithValue("@ten_phuc_loi", plct.ten_phuc_loi);
+                    insertCmd.Parameters.AddWithValue("@mo_ta", plct.mo_ta);
+                    r += insertCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    using var updateCmd = new MySqlCommand(cap_nhat_phuc_loi, coon);
+                    updateCmd.Parameters.AddWithValue("@ma_phuc_loi_cty", plct.ma_phuc_loi_cty);
+                    updateCmd.Parameters.AddWithValue("@ten_phuc_loi", plct.ten_phuc_loi);
+                    updateCmd.Parameters.AddWithValue("@mo_ta", plct.mo_ta);
+                    r += updateCmd.ExecuteNonQuery();
                 }
             }
+
             return r > 0;
         }
 
@@ -47,7 +64,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_phuc_loi
         {
             if (pl == null || pl.phuc_Loi_Cong_Ty == null || pl.phuc_Loi_Cong_Ty.Count == 0)
                 return false;
-                
+
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
             string sql = @"delete from phuc_loi_cong_ty where ma_cong_ty = @ma_cong_ty and ma_phuc_loi_cty = @ma_phuc_loi_cong_ty";

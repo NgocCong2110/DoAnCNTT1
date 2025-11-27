@@ -28,13 +28,29 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   pop_up_bao_cao: boolean = false;
   noi_dung_bao_cao: string = "";
   thongTin: any;
+  so_luong_bai_dang: number = 0;
+
+  editingField: string | null = null;
+  editingValues: Record<string, any> = {};
+
+  danh_sach_loai_hinh: any[] = [];
 
   ngOnInit(): void {
     this.layDanhSachNganhNghe();
     this.layDanhSachBaiDang();
+    this.khoi_tao_danh_sach_loai_hinh();
   }
 
   constructor(private httpclient: HttpClient, private auth: Auth, private cdr: ChangeDetectorRef, private baiDangService: BaiDang) { }
+
+  khoi_tao_danh_sach_loai_hinh() {
+    this.danh_sach_loai_hinh = [
+      { id: 1, ten: 'Toàn thời gian' },
+      { id: 2, ten: 'Bán thời gian' },
+      { id: 3, ten: 'Thực tập' },
+      { id: 4, ten: 'Tự Do' }
+    ];
+  }
 
   moPopUpXoa() {
     this.pop_up_xoa_bai = true;
@@ -73,14 +89,63 @@ export class TrangBaiDangCuaCongTy implements OnInit {
 
   layDanhSachBaiDang() {
     const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty;
-    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layDanhSachViecLamCuaCongTy', ma_cong_ty, { headers: { "Content-Type": "application/json" } })
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/layToanBoDanhSachViecLamCuaCongTy', ma_cong_ty, { headers: { "Content-Type": "application/json" } })
       .subscribe({
         next: (data) => {
           if (data.success) {
             this.danh_sach_bai_lien_quan = data.danh_sach;
+            this.so_luong_bai_dang = this.danh_sach_bai_lien_quan.length;
             if (this.bai_dang_duoc_chon == null) {
               this.bai_dang_duoc_chon = this.danh_sach_bai_lien_quan[0];
             }
+            this.cdr.detectChanges();
+          } else {
+            console.log("loi")
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.log(err);
+          this.cdr.markForCheck();
+        }
+      });
+  }
+
+  anBaiDangCongTy(ma_bai_dang: number) {
+    const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty;
+    const thong_tin = {
+      ma_nguoi_dang: ma_cong_ty,
+      ma_bai_dang: ma_bai_dang
+    }
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/anBaiDangCongTy', thong_tin)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.layDanhSachBaiDang();
+            this.cdr.detectChanges();
+          } else {
+            console.log("loi")
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.log(err);
+          this.cdr.markForCheck();
+        }
+      });
+  }
+
+  boAnBaiDangCongTy(ma_bai_dang: number) {
+    const ma_cong_ty = this.auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty;
+    const thong_tin = {
+      ma_nguoi_dang: ma_cong_ty,
+      ma_bai_dang: ma_bai_dang
+    }
+    this.httpclient.post<any>('http://localhost:7000/api/API_WEB/boAnBaiDangCongTy', thong_tin)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.layDanhSachBaiDang();
             this.cdr.detectChanges();
           } else {
             console.log("loi")
@@ -142,6 +207,28 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     return this.loaiHinhMap[loaiHinh] || 'Không xác định';
   }
 
+  viTriMap: { [key: string]: string } = {
+    nhan_vien: "Nhân viên",
+    truong_nhom: "Trưởng nhóm",
+    quan_ly: "Quản lý",
+    giam_doc: "Giám đốc",
+    chu_tich: "Chủ tịch"
+  };
+
+  layViTri(viTri: string): string {
+    return this.viTriMap[viTri] || 'Không xác định';
+  }
+
+  layTrangThaiBaiDang(trang_thai: number) {
+    if (trang_thai == 1) {
+      return 'Công khai';
+    }
+    else if (trang_thai == 2) {
+      return 'Riêng tư';
+    }
+    return 'Đã đóng'
+  }
+
   @ViewChild('modalDangBai') modalDangBai!: ElementRef;
 
   phucLoiList: { ma_phuc_loi: number, ten_phuc_loi: string }[] = [
@@ -168,13 +255,22 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   ];
 
   mucLuongList = [
-    { min: 10, max: 15, label: '10 – 15 triệu' },
-    { min: 15, max: 20, label: '15 – 20 triệu' },
-    { min: 20, max: 30, label: '20 – 30 triệu' },
-    { min: 30, max: 40, label: '30 – 40 triệu' },
-    { min: null, max: null, label: 'Thỏa thuận' },
-    { min: null, max: null, label: 'Khác' }
+    { min: 10, max: 15, value: 1, label: '10 – 15 triệu' },
+    { min: 15, max: 20, value: 2, label: '15 – 20 triệu' },
+    { min: 20, max: 30, value: 3, label: '20 – 30 triệu' },
+    { min: 30, max: 40, value: 4, label: '30 – 40 triệu' },
+    { min: null, max: null, value: 5, label: 'Thỏa thuận' },
+    { min: null, max: null, value: 6, label: 'Khác' }
   ];
+
+  viTriList = [
+    { value: 'nhan_vien', label: 'Nhân viên' },
+    { value: 'truong_nhom', label: 'Trưởng nhóm' },
+    { value: 'quan_ly', label: 'Quản lý' },
+    { value: 'giam_doc', label: 'Giám đốc' },
+    { value: 'chu_tich', label: 'Chủ tịch' }
+  ];
+  vi_tri_label = '';
 
   muc_luong_label: string | null = null;
   muc_luong_min: number | null = null;
@@ -182,7 +278,6 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   showCustomLuong: boolean = false;
   loai_hinh: string | null = null;
   loai_hinh_label: string | null = null;
-
 
   vi_tri: string = '';
 
@@ -226,7 +321,6 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     }
   }
 
-
   chuanHoaMucLuong() {
     if (this.showCustomLuong) {
       if (this.muc_luong_min == null || this.muc_luong_max == null) {
@@ -241,9 +335,6 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     return true;
   }
 
-
-
-
   nganhNgheList: { value: string, label: string }[] = [];
 
   trinhDoHocVanList = [
@@ -251,8 +342,19 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     { value: 2, label: 'Cao Đẳng' },
     { value: 3, label: 'Đại Học' },
     { value: 4, label: 'Tốt nghiệp' },
-    { value: 5, label: 'Khác' }
+    { value: 5, label: 'Khác' },
+    { value: 6, label: 'Không yêu cầu' }
   ]
+
+  trinhDoHocVanCapNhatList = [
+    { value: 'trung_Hoc', label: 'Trung Học' },
+    { value: 'cao_Dang', label: 'Cao Đẳng' },
+    { value: 'dai_Hoc', label: 'Đại Học' },
+    { value: 'tot_Nghiep', label: 'Tốt nghiệp' },
+    { value: 'khac', label: 'Khác' },
+    { value: 'khong_Yeu_Cau', label: 'Không yêu cầu' }
+  ]
+
   nganh_nghe: string | null = null;
   nganh_nghe_label: string | null = null;
 
@@ -285,7 +387,6 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     { value: '2', label: 'Bán thời gian' },
     { value: '3', label: 'Thực tập' }
   ];
-
 
   chonPhucLoi(event: any, phuc: { ma_phuc_loi: number, ten_phuc_loi: string }) {
     if (event.target.checked) {
@@ -329,6 +430,11 @@ export class TrangBaiDangCuaCongTy implements OnInit {
       return;
     }
 
+    if(this.so_luong_bai_dang > 10){
+      alert('Bạn đã vượt giới hạn đăng bài là 10 bài!');
+      return;
+    }
+
     const thong_Tin = {
       bai_Dang: {
         ma_nguoi_dang: nguoiDung.thong_tin_chi_tiet.ma_cong_ty,
@@ -349,8 +455,8 @@ export class TrangBaiDangCuaCongTy implements OnInit {
         mo_ta: this.noi_dung_moi,
         yeu_cau: this.yeu_cau_moi,
         muc_luong: this.showCustomLuong ? `${this.muc_luong_min} – ${this.muc_luong_max} triệu` : this.muc_luong_label,
-        muc_luong_thap_nhat: this.showCustomLuong ? this.muc_luong_min : null,
-        muc_luong_cao_nhat: this.showCustomLuong ? this.muc_luong_max : null,
+        muc_luong_thap_nhat: this.muc_luong_min,
+        muc_luong_cao_nhat: this.muc_luong_max,
         quyen_loi_cong_viec: this.quyen_loi_khac,
         trinh_do_hoc_van_yeu_cau: Number(this.trinh_do_hoc_van) || 6,
         thoi_gian_lam_viec: this.gio_lam_viec,
@@ -360,6 +466,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
       },
       phuc_Loi: this.phucLoiDaChon,
     };
+
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/themBaiDangMoi', thong_Tin)
       .subscribe({
         next: (data) => {
@@ -398,9 +505,87 @@ export class TrangBaiDangCuaCongTy implements OnInit {
         }
       });
   }
+
   isLuongTooLong(): boolean {
     const minStr = this.muc_luong_min?.toString() || '';
     const maxStr = this.muc_luong_max?.toString() || '';
     return minStr.length > 5 || maxStr.length > 5;
+  }
+
+  enableEdit(field: string) {
+    if (!this.bai_dang_duoc_chon) return;
+    this.editingField = field;
+    if (field === 'muc_luong' && this.bai_dang_duoc_chon.muc_luong) {
+      const mlObj = this.mucLuongList.find(ml => ml.label === this.bai_dang_duoc_chon.muc_luong);
+      this.editingValues[field] = mlObj ? mlObj.value : null;
+    } else {
+      this.editingValues[field] = this.bai_dang_duoc_chon[field];
+    }
+  }
+
+  cancelEdit() {
+    this.editingField = null;
+    this.editingValues = {};
+  }
+
+  saveEdit() {
+    if (!this.bai_dang_duoc_chon || !this.editingField) return;
+
+    const key = this.editingField;
+    const selectedValue = this.editingValues[key];
+
+    let gia_tri_moi: any = selectedValue;
+    let muc_luong_thap_nhat: number | null = null;
+    let muc_luong_cao_nhat: number | null = null;
+
+    if (key === 'muc_luong') {
+      const mlObj = this.mucLuongList.find(ml => ml.value === selectedValue);
+      if (mlObj) {
+        gia_tri_moi = mlObj.label;
+        muc_luong_thap_nhat = mlObj.min;
+        muc_luong_cao_nhat = mlObj.max;
+      }
+    }
+
+    if (key === 'thoi_han_nop_cv' && gia_tri_moi) {
+      gia_tri_moi = new Date(gia_tri_moi).toISOString();
+    }
+
+    const thong_tin_cap_nhat: any = {
+      ma_cong_ty: this.auth.layThongTinNguoiDung().thong_tin_chi_tiet?.ma_cong_ty,
+      ma_bai_dang: this.bai_dang_duoc_chon.ma_bai_dang,
+      truong: key,
+      gia_tri: gia_tri_moi
+    };
+
+    if (key === 'muc_luong') {
+      thong_tin_cap_nhat.muc_luong_thap_nhat = muc_luong_thap_nhat;
+      thong_tin_cap_nhat.muc_luong_cao_nhat = muc_luong_cao_nhat;
+    }
+
+    this.httpclient.patch<any>('http://localhost:7000/api/API_WEB/capNhatBaiDang', thong_tin_cap_nhat)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.bai_dang_duoc_chon[key] = gia_tri_moi;
+            if (key === 'muc_luong') {
+              this.bai_dang_duoc_chon.muc_luong_thap_nhat = muc_luong_thap_nhat;
+              this.bai_dang_duoc_chon.muc_luong_cao_nhat = muc_luong_cao_nhat;
+            }
+            alert('Cập nhật thành công!');
+            this.cancelEdit();
+            this.cdr.detectChanges();
+          } else {
+            alert('Cập nhật thất bại!');
+            this.cancelEdit();
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error('Lỗi khi cập nhật:', err);
+          alert('Có lỗi xảy ra khi cập nhật bài đăng!');
+          this.cancelEdit();
+        }
+      });
   }
 }

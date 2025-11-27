@@ -10,6 +10,7 @@
           <option value="toan_Bo">Toàn bộ thông báo</option>
           <option value="1">Thông báo từ server</option>
           <option value="thong_bao_quan_tri_rieng">Thông báo của tôi</option>
+          <option value="thong_bao_da_an">Thông báo đã ẩn</option>
         </select>
 
       </div>
@@ -25,31 +26,39 @@
         </div>
 
         <div *ngIf="!loading && danh_sach_thong_bao.length > 0" class="notification-list">
-            <div *ngFor="let tb of danh_sach_thong_bao" class="notification-item dropdown" (click)="xemChiTiet(tb)">
+          <div *ngFor="let tb of danh_sach_thong_bao" class="notification-item dropdown" (click)="xemChiTiet(tb)">
 
-              <div class="notification-actions">
-                <button class="btn btn-light btn-sm" type="button"
-                  id="dropdownMenuButton{{tb.ma_thong_bao}}" data-bs-toggle="dropdown" aria-expanded="false">
-                  ⋮
-                </button>
+            <div class="notification-actions">
+              <button class="btn btn-light btn-sm" type="button" id="dropdownMenuButton{{tb.ma_thong_bao}}"
+                data-bs-toggle="dropdown" aria-expanded="false" (click)="$event.stopPropagation()">
+                ⋮
+              </button>
 
-                <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + tb.ma_thong_bao">
-                  <li>
-                    <a class="dropdown-item" href="#" (click)="anThongBao(tb.ma_thong_bao)">Ẩn thông báo</a>
-                  </li>
-                  <li *ngIf="auth.layThongTinNguoiDung() &&
+              <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + tb.ma_thong_bao">
+                <li *ngIf="tb.trang_Thai_Thong_Bao?.trang_thai_an == false">
+                  <button class="dropdown-item" (click)="anThongBao(tb.ma_thong_bao); $event.stopPropagation()"
+                    *ngIf="auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty !== tb.ma_cong_ty">Ẩn thông
+                    báo</button>
+                </li>
+                <li *ngIf="tb.trang_Thai_Thong_Bao?.trang_thai_an == true">
+                  <button class="dropdown-item" (click)="boAnThongBao(tb.ma_thong_bao); $event.stopPropagation()">Bỏ ẩn
+                    thông báo</button>
+                </li>
+                <li *ngIf="auth.layThongTinNguoiDung() &&
                 (tb.ma_cong_ty === auth.layThongTinNguoiDung()?.thong_tin_chi_tiet?.ma_cong_ty ||
                  tb.ma_quan_tri === auth.layThongTinNguoiDung()?.ma_quan_tri)">
-                    <a class="dropdown-item" href="#" (click)="moPopUpXoaThongBao(tb.ma_thong_bao)">Xóa thông báo</a>
-                  </li>
-                </ul>
-              </div>
-
-              <h5>{{ tb.tieu_de }}</h5>
-              <p>{{ tb.noi_dung }}</p>
-              <small>{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
+                  <button class="dropdown-item" (click)="moPopUpXoaThongBao(tb.ma_thong_bao); $event.stopPropagation()">
+                    Xóa thông báo
+                  </button>
+                </li>
+              </ul>
             </div>
+
+            <h5>{{ tb.tieu_de }}</h5>
+            <p>{{ tb.noi_dung }}</p>
+            <small>{{ tb.ngay_tao | date:'dd/MM/yyyy HH:mm' }}</small>
           </div>
+        </div>
 
         <div *ngIf="!loading && danh_sach_thong_bao.length === 0" class="empty-state">
           <svg width="64" height="64" fill="#9ca3af" viewBox="0 0 16 16">
@@ -83,13 +92,13 @@
           </p>
         </div>
 
-         <div *ngIf="chiTietThongBao.ma_bai_dang" class="card-small-white mb-3 p-3 rounded-3"
-            (click)="dieuHuongTrangChiTietViecLam(chiTietThongBao.ma_bai_dang)">
+        <div *ngIf="chiTietThongBao.ma_bai_dang" class="card-small-white mb-3 p-3 rounded-3"
+          (click)="dieuHuongTrangChiTietViecLam(chiTietThongBao.ma_bai_dang)">
 
-            <div class="title">{{ chiTietThongBao.bai_Dang.tieu_de }}</div>
-            <div class="date">{{ chiTietThongBao.bai_Dang.ngay_tao }}</div>
+          <div class="title">{{ chiTietThongBao.bai_Dang.tieu_de }}</div>
+          <div class="date">{{ chiTietThongBao.bai_Dang.ngay_tao }}</div>
 
-          </div>
+        </div>
 
         <div *ngIf="chiTietThongBao.quan_Tri" class="mb-3 p-3 rounded-3" style="background-color: #f3f4f6;">
           <p class="mb-0"><strong style="color: #374151;">Người gửi:</strong>
@@ -120,9 +129,7 @@
   </div>
 </div>
 
-<div class="modal fade" tabindex="-1" 
-     [ngClass]="{'show d-block': xoa_confirm_id}" 
-     *ngIf="xoa_confirm_id">
+<div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': xoa_confirm_id}" *ngIf="xoa_confirm_id">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 rounded-4 shadow-lg">
       <div class="modal-header border-0 pb-0 pt-4 px-4">
@@ -134,13 +141,11 @@
       </div>
       <div class="modal-footer border-0 px-4 pb-4">
         <button class="btn px-4 py-2 rounded-3 fw-medium"
-                style="background-color: #e5e7eb; color: #374151; border: none;"
-                (click)="xoa_confirm_id = null">
+          style="background-color: #e5e7eb; color: #374151; border: none;" (click)="xoa_confirm_id = null">
           Hủy
         </button>
-        <button class="btn px-4 py-2 rounded-3 fw-medium"
-                style="background-color: #dc2626; color: #fff; border: none;"
-                (click)="xac_nhan_xoa()">
+        <button class="btn px-4 py-2 rounded-3 fw-medium" style="background-color: #dc2626; color: #fff; border: none;"
+          (click)="xac_nhan_xoa()">
           Xóa
         </button>
       </div>

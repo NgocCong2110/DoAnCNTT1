@@ -12,6 +12,7 @@ namespace DotNet_WEB.Class
         public int ma_viec { get; set; }
         public int ma_cong_ty { get; set; }
         public int ma_nguoi_tim_viec { get; set; }
+        public int ma_nguoi_nhan { get; set; }
         public DateTime thoi_gian { get; set; }
         public string dia_diem { get; set; } = "";
         public string noi_dung { get; set; } = "";

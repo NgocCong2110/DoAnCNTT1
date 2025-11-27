@@ -147,6 +147,7 @@ export class TrangDanhSachUngVien implements OnInit {
       ma_viec: this.uvDangChon.ma_viec,
       ma_cong_ty: this.thongTin.thong_tin_chi_tiet.ma_cong_ty,
       ma_nguoi_tim_viec: this.uvDangChon.ma_nguoi_tim_viec,
+      ma_nguoi_nhan: this.uvDangChon.ma_nguoi_nhan,
       thoi_gian: new Date(this.thoiGianPhongVan).toISOString(),
       dia_diem: this.diaDiemPhongVan,
       noi_dung: this.noiDungPhongVan,

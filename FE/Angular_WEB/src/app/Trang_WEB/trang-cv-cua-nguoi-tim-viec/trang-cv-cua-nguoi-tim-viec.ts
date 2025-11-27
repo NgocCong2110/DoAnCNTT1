@@ -35,9 +35,6 @@ export class TrangCvCuaNguoiTimViec implements OnInit {
             this.danh_sach_cv_nguoi_tim_viec = data.danh_sach;
             this.cd.detectChanges();
           }
-          else {
-            console.log("loi")
-          }
           this.cd.markForCheck();
         },
         error: (err) => {
@@ -82,6 +79,20 @@ export class TrangCvCuaNguoiTimViec implements OnInit {
       ma_nguoi_tim_viec: ma_nguoi_tim_viec,
       duong_dan_file_pdf: cv.duong_dan_file_pdf
     };
+    const check = {
+      ma_cv: cv.ma_cv,
+      ma_nguoi_tim_viec: ma_nguoi_tim_viec,
+    }
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/kiemTraCVUngTuyen', check)
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            alert("CV này của bạn đang được sử dụng để ứng tuyển");
+            return;
+          }
+          this.cd.markForCheck();
+        }
+      });
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/xoaCVNguoiTimViec', thong_tin)
       .subscribe({
         next: (data) => {

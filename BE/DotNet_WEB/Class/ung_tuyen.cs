@@ -20,6 +20,7 @@ namespace DotNet_WEB.Class
         public int? ma_cong_ty { get; set; }
         [ForeignKey(nameof(ma_cong_ty))]
         public cong_ty? cong_Ty { get; set; }
+        public int? ma_nguoi_nhan {get; set;}
         public int ma_cv { get; set; }
         [ForeignKey(nameof(ma_cv))]
         public cv_online_nguoi_tim_viec? cv_Online_Nguoi_Tim_Viec { get; set; } 

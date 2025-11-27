@@ -29,5 +29,8 @@ namespace DotNet_WEB.Class
         public DateTime ngay_tao { get; set; }
         public DateTime ngay_cap_nhat { get; set; }
         public List<chi_tiet_thu_moi>? chi_tiet_thu_moi { get; set; }
+        public int ma_trang_thai_thong_bao { get; set; }
+        [ForeignKey(nameof(trang_thai_thong_bao))]
+        public trang_thai_thong_bao? trang_Thai_Thong_Bao { get; set; } 
     }
 }

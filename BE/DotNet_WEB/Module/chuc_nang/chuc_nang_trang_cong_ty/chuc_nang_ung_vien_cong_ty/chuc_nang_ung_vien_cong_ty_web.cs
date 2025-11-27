@@ -18,7 +18,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_ung_vien
             coon.Open();
 
             string sql = @"
-SELECT u.ma_ung_tuyen, u.ma_viec, u.ma_nguoi_tim_viec, u.ma_cong_ty, u.ma_cv, u.duong_dan_file_cv_upload,
+SELECT u.ma_ung_tuyen, u.ma_viec, u.ma_nguoi_tim_viec, u.ma_cong_ty, u.ma_nguoi_nhan, u.ma_cv, u.duong_dan_file_cv_upload,
        u.ngay_ung_tuyen, u.trang_thai, u.trang_thai_duyet,
        v.ma_viec, v.ma_cong_ty, v.vi_tri, v.kinh_nghiem, v.tieu_de,
        v.mo_ta, v.yeu_cau, v.muc_luong, v.dia_diem, v.loai_hinh,
@@ -54,6 +54,8 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                     ma_nguoi_tim_viec = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_tim_viec")) ? 0 : reader.GetInt32("ma_nguoi_tim_viec"),
 
                     ma_cong_ty = reader.IsDBNull(reader.GetOrdinal("ma_cong_ty")) ? null : reader.GetInt32("ma_cong_ty"),
+
+                    ma_nguoi_nhan = reader.IsDBNull(reader.GetOrdinal("ma_nguoi_nhan")) ? null : reader.GetInt32("ma_nguoi_nhan"),
 
                     ma_cv = reader.IsDBNull(reader.GetOrdinal("ma_cv")) ? 0 : reader.GetInt32("ma_cv"),
 
@@ -239,7 +241,14 @@ WHERE u.ma_cong_ty = @ma_Cong_Ty;";
                         cmd.ExecuteNonQuery();
                     }
 
-
+                    string them_trang_thai_thong_bao = @"insert into trang_thai_thong_bao (ma_nguoi_nhan, ma_thong_bao, loai_nguoi_nhan, trang_thai_doc, trang_thai_an, ngay_tao, ngay_cap_nhat) 
+                                            values (@ma_nguoi_nhan, @ma_thong_bao, 'nguoi_Dung', 0, 0, now(), now())";
+                    using (var cmd = new MySqlCommand(them_trang_thai_thong_bao, coon, trans))
+                    {
+                        cmd.Parameters.AddWithValue("@ma_nguoi_nhan", ttpv.ma_nguoi_nhan);
+                        cmd.Parameters.AddWithValue("@ma_thong_bao", ma_thong_bao);
+                        cmd.ExecuteNonQuery();
+                    }
                     trans.Commit();
                     email = layEmailNguoiTimViec(ttpv.ma_nguoi_tim_viec);
                     _ = capNhatTrangThaiUngTuyen(email);

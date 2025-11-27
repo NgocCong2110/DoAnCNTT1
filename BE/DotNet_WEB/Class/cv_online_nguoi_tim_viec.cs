@@ -31,5 +31,6 @@ namespace DotNet_WEB.Class
         public DateTime ngay_tao { get; set; }
         public List<hoc_van>? hoc_Van { get; set; }
         public List<kinh_nghiem>? kinh_Nghiem { get; set; }
+        public int mau_cv { get; set; }
     }
 }

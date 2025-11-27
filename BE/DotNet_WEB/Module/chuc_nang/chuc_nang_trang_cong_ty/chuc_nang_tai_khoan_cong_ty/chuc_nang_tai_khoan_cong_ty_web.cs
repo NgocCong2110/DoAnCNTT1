@@ -34,7 +34,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
             "trang_thai",
             "mo_ta"
         };
-        public static bool capNhatThongTinCongTy(thong_tin_truong_du_lieu_cap_nhat req)
+        public static bool capNhatThongTinCongTy(thong_tin_truong_du_lieu_cap_nhat_cong_ty req)
         {
             if (req == null || string.IsNullOrEmpty(req.truong))
                 return false;
@@ -339,7 +339,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_tai_khoa
         }
 
     }
-    public class thong_tin_truong_du_lieu_cap_nhat
+    public class thong_tin_truong_du_lieu_cap_nhat_cong_ty
     {
         public int ma_cong_ty { get; set; }
         public string? truong { get; set; }

@@ -47,7 +47,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_thong_ke
         {
             using var conn = new MySqlConnection(chuoi_KetNoi);
             conn.Open();
-            string layDanhSach = @"select count(*) as so_luong, month(ngay_tao) as thang from bai_dang where ma_nguoi_dang = 1 group by month(ngay_tao) order by thang";
+            string layDanhSach = @"select count(*) as so_luong_bai_dang, month(ngay_tao) as thang from bai_dang where ma_nguoi_dang = @ma_nguoi_dang group by month(ngay_tao) order by thang";
 
             using var cmd = new MySqlCommand(layDanhSach, conn);
             cmd.Parameters.AddWithValue("@ma_nguoi_dang", ma_cong_ty);
@@ -66,6 +66,37 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_thong_ke
             }
             return danh_sach;
         }
+
+        public static List<so_luong_ung_vien_tung_bai> laySoLuongUngVienTungBai(int ma_cong_ty)
+        {
+            using var conn = new MySqlConnection(chuoi_KetNoi);
+            conn.Open();
+            string layDanhSach = @"SELECT bd.tieu_de, bd.ngay_tao, COUNT(uv.ma_nguoi_tim_viec) AS so_luong_ung_vien 
+            FROM bai_dang bd JOIN viec_lam vl ON bd.ma_bai_dang = vl.ma_bai_dang 
+            JOIN ung_tuyen uv ON vl.ma_viec = uv.ma_viec 
+            JOIN cong_ty ct ON uv.ma_cong_ty = ct.ma_cong_ty
+            WHERE uv.ma_cong_ty = @ma_cong_ty 
+            GROUP BY bd.ma_bai_dang, bd.tieu_de, bd.ngay_tao
+            ORDER BY so_luong_ung_vien DESC;";
+
+            using var cmd = new MySqlCommand(layDanhSach, conn);
+            cmd.Parameters.AddWithValue("@ma_cong_ty", ma_cong_ty);
+
+            using var reader = cmd.ExecuteReader();
+            var danh_sach = new List<so_luong_ung_vien_tung_bai>();
+
+            while (reader.Read())
+            {
+                var ung_Vien = new so_luong_ung_vien_tung_bai
+                {
+                    tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
+                    so_luong_ung_vien = reader.IsDBNull(reader.GetOrdinal("so_luong_ung_vien")) ? 0 : reader.GetInt32("so_luong_ung_vien"),
+                    ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+                };
+                danh_sach.Add(ung_Vien);
+            }
+            return danh_sach; 
+        }
     }
     public class thong_ke_ung_vien
     {
@@ -77,5 +108,12 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_thong_ke
     {
         public int so_luong_bai_dang { get; set; }
         public int thang { get; set; }
+    }
+
+    public class so_luong_ung_vien_tung_bai
+    {
+        public string? tieu_de { get; set; }
+        public int so_luong_ung_vien { get; set; }
+        public DateTime ngay_tao { get; set; }
     }
 }

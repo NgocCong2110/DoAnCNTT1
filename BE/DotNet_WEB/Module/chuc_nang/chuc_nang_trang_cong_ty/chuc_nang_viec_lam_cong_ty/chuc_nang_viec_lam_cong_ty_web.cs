@@ -24,8 +24,10 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_viec_lam
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
-            string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty FROM viec_lam vl join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
-                 WHERE ct.ma_cong_ty = @ma_cong_ty ";
+            string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty, bd.ma_bai_dang, bd.trang_thai FROM viec_lam vl 
+            join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
+            join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
+                 WHERE ct.ma_cong_ty = @ma_cong_ty and bd.trang_thai = 'cong_Khai'";
             using var cmd = new MySqlCommand(sql, coon);
             var danh_sach = new List<viec_lam>();
             cmd.Parameters.AddWithValue("@ma_cong_ty", ma_cong_ty);
@@ -78,7 +80,14 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_viec_lam
 
                     ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
 
-                    ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat")
+                    ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat"),
+
+                    bai_dang = new bai_dang
+                    {
+                        ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+
+                        trang_thai = reader.IsDBNull(reader.GetOrdinal("trang_thai")) ? TrangThaiBai.rieng_Tu : (TrangThaiBai)Enum.Parse(typeof(TrangThaiBai), reader.GetString("trang_thai")),
+                    }
                 };
                 danh_sach.Add(vl);
             }
@@ -91,7 +100,8 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_viec_lam
             string sql = @"SELECT vl.*, COUNT(ut.ma_viec) AS so_luong_ung_vien, vl.tieu_de
                             FROM ung_tuyen ut
                             JOIN viec_lam vl ON ut.ma_viec = vl.ma_viec
-                            WHERE vl.ma_cong_ty = @ma_cong_ty
+                            JOIN bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
+                            WHERE vl.ma_cong_ty = @ma_cong_ty AND bd.trang_thai = 'cong_Khai'
                             GROUP BY vl.ma_viec
                             ORDER BY so_luong_ung_vien DESC
                         limit 5";
@@ -116,6 +126,80 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_viec_lam
                     }
                 };
                 danh_sach.Add(ut);
+            }
+            return danh_sach;
+        }
+
+        public static List<viec_lam> layToanBoDanhSachViecLamCuaCongTy(int ma_cong_ty)
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = @"SELECT vl.*, ct.logo, ct.ten_cong_ty, bd.ma_bai_dang, bd.trang_thai FROM viec_lam vl 
+            join cong_ty ct on vl.ma_cong_ty = ct.ma_cong_ty
+            join bai_dang bd on vl.ma_bai_dang = bd.ma_bai_dang
+                 WHERE ct.ma_cong_ty = @ma_cong_ty";
+            using var cmd = new MySqlCommand(sql, coon);
+            var danh_sach = new List<viec_lam>();
+            cmd.Parameters.AddWithValue("@ma_cong_ty", ma_cong_ty);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var vl = new viec_lam
+                {
+                    ma_viec = reader.IsDBNull(reader.GetOrdinal("ma_viec")) ? 0 : reader.GetInt32("ma_viec"),
+
+                    ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+
+                    cong_Ty = new cong_ty
+                    {
+                        logo = reader.IsDBNull(reader.GetOrdinal("logo")) ? null : reader.GetString("logo"),
+
+                        ten_cong_ty = reader.IsDBNull(reader.GetOrdinal("ten_cong_ty")) ? null : reader.GetString("ten_cong_ty")
+                    },
+
+                    nganh_nghe = reader.IsDBNull(reader.GetOrdinal("nganh_nghe")) ? null : reader.GetString("nganh_nghe"),
+
+                    vi_tri = reader.IsDBNull(reader.GetOrdinal("vi_tri")) ? null : reader.GetString("vi_tri"),
+
+                    kinh_nghiem = reader.IsDBNull(reader.GetOrdinal("kinh_nghiem")) ? null : reader.GetString("kinh_nghiem"),
+
+                    tieu_de = reader.IsDBNull(reader.GetOrdinal("tieu_de")) ? null : reader.GetString("tieu_de"),
+
+                    mo_ta = reader.IsDBNull(reader.GetOrdinal("mo_ta")) ? null : reader.GetString("mo_ta"),
+
+                    yeu_cau = reader.IsDBNull(reader.GetOrdinal("yeu_cau")) ? null : reader.GetString("yeu_cau"),
+
+                    muc_luong = reader.IsDBNull(reader.GetOrdinal("muc_luong")) ? null : reader.GetString("muc_luong"),
+
+                    muc_luong_cao_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_cao_nhat")) ? null : reader.GetDecimal("muc_luong_cao_nhat"),
+
+                    muc_luong_thap_nhat = reader.IsDBNull(reader.GetOrdinal("muc_luong_thap_nhat")) ? null : reader.GetDecimal("muc_luong_thap_nhat"),
+
+                    quyen_loi_cong_viec = reader.IsDBNull(reader.GetOrdinal("quyen_loi_cong_viec")) ? null : reader.GetString("quyen_loi_cong_viec"),
+
+                    trinh_do_hoc_van_yeu_cau = reader.IsDBNull(reader.GetOrdinal("trinh_do_hoc_van_yeu_cau")) ? TrinhDoHocVan.khong_Yeu_Cau : (TrinhDoHocVan)Enum.Parse(typeof(TrinhDoHocVan), reader.GetString("trinh_do_hoc_van_yeu_cau")),
+
+                    thoi_gian_lam_viec = reader.IsDBNull(reader.GetOrdinal("thoi_gian_lam_viec")) ? null : reader.GetString("thoi_gian_lam_viec"),
+
+                    dia_diem = reader.IsDBNull(reader.GetOrdinal("dia_diem")) ? null : reader.GetString("dia_diem"),
+
+                    thoi_han_nop_cv = reader.IsDBNull(reader.GetOrdinal("thoi_han_nop_cv")) ? DateTime.MinValue : reader.GetDateTime("thoi_han_nop_cv"),
+
+                    loai_hinh = reader.IsDBNull(reader.GetOrdinal("loai_hinh")) ? LoaiHinhViecLam.None : (LoaiHinhViecLam)Enum.Parse(typeof(LoaiHinhViecLam), reader.GetString("loai_hinh")),
+
+                    ngay_tao = reader.IsDBNull(reader.GetOrdinal("ngay_tao")) ? DateTime.MinValue : reader.GetDateTime("ngay_tao"),
+
+                    ngay_cap_nhat = reader.IsDBNull(reader.GetOrdinal("ngay_cap_nhat")) ? DateTime.MinValue : reader.GetDateTime("ngay_cap_nhat"),
+
+                    bai_dang = new bai_dang
+                    {
+                        ma_bai_dang = reader.IsDBNull(reader.GetOrdinal("ma_bai_dang")) ? 0 : reader.GetInt32("ma_bai_dang"),
+
+                        trang_thai = reader.IsDBNull(reader.GetOrdinal("trang_thai")) ? TrangThaiBai.rieng_Tu : (TrangThaiBai)Enum.Parse(typeof(TrangThaiBai), reader.GetString("trang_thai")),
+                    }
+                };
+                danh_sach.Add(vl);
             }
             return danh_sach;
         }
