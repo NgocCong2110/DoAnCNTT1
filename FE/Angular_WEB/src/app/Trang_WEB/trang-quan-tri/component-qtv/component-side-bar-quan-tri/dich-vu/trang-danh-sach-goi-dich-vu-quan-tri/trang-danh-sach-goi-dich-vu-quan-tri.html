@@ -5,8 +5,7 @@
     <div class="col-md-4 mb-3" *ngFor="let dv of danh_sach_dich_vu">
       <div class="card shadow-sm p-3">
         <h5>{{ dv?.ten_dich_vu }}</h5>
-        <p>{{ dv?.mo_ta }}</p>
-        <strong>{{ dv?.gia | number }} VND</strong>
+        <strong>{{ dv?.so_tien | number }} VND</strong>
       </div>
     </div>
   </div>

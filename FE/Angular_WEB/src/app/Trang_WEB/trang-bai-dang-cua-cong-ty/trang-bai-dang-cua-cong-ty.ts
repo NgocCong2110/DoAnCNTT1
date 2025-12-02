@@ -23,6 +23,7 @@ interface API_RESPONSE {
 export class TrangBaiDangCuaCongTy implements OnInit {
   pop_up_xoa_bai = false;
   danh_sach_bai_lien_quan: any[] = [];
+  danh_sach_tinh_thanh: any[] = [];
   thong_tin_bai_xoa = false;
   bai_dang_duoc_chon: any;
   pop_up_bao_cao: boolean = false;
@@ -38,6 +39,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   ngOnInit(): void {
     this.layDanhSachNganhNghe();
     this.layDanhSachBaiDang();
+    this.layDanhSachTinhThanh();
     this.khoi_tao_danh_sach_loai_hinh();
   }
 
@@ -298,7 +300,8 @@ export class TrangBaiDangCuaCongTy implements OnInit {
   pop_up_dang_bai_thanh_cong: boolean = false;
   pop_up_dang_bai_that_bai: boolean = false;
 
-  phucLoiDaChon: any[] = []
+  phucLoiDaChon: any[] = [];
+  tinhThanhDaChon: any[] = [];
   quyen_loi_khac: string = "";
 
   chonMucLuong(muc: any) {
@@ -396,12 +399,38 @@ export class TrangBaiDangCuaCongTy implements OnInit {
     }
   }
 
+  chonTinhThanh(event: any, tinh: { ma_tinh: number, ten_tinh: string }) {
+    if (event.target.checked) {
+      this.tinhThanhDaChon.push(tinh.ma_tinh);
+    } else {
+      this.tinhThanhDaChon = this.tinhThanhDaChon.filter(x => x !== tinh.ma_tinh);
+    }
+  }
+
   layDanhSachNganhNghe() {
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachNganhNghe', {})
       .subscribe({
         next: (data) => {
           if (data.success) {
             this.nganhNgheList = data.danh_sach.map(n => ({ value: n.ma_nganh_nghe, label: n.ten_nganh_nghe }));
+          }
+          else {
+            console.log("loi");
+          }
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+
+        }
+      })
+  }
+
+  layDanhSachTinhThanh() {
+    this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/layDanhSachTinhThanh', {})
+      .subscribe({
+        next: (data) => {
+          if (data.success) {
+            this.danh_sach_tinh_thanh = data.danh_sach.map(n => ({ ma_tinh: n.ma_tinh, ten_tinh: n.ten_tinh }));
           }
           else {
             console.log("loi");
@@ -425,12 +454,8 @@ export class TrangBaiDangCuaCongTy implements OnInit {
 
   thongTinBaiDang() {
     const nguoiDung = this.auth.layThongTinNguoiDung();
-    if (!nguoiDung) {
-      alert('Bạn cần đăng nhập để đăng bài!');
-      return;
-    }
 
-    if(this.so_luong_bai_dang > 10){
+    if (this.so_luong_bai_dang > 10) {
       alert('Bạn đã vượt giới hạn đăng bài là 10 bài!');
       return;
     }
@@ -465,6 +490,7 @@ export class TrangBaiDangCuaCongTy implements OnInit {
         loai_hinh: Number(this.loai_hinh) || 1
       },
       phuc_Loi: this.phucLoiDaChon,
+      tinh_Thanh: this.tinhThanhDaChon
     };
 
     this.httpclient.post<API_RESPONSE>('http://localhost:7000/api/API_WEB/themBaiDangMoi', thong_Tin)

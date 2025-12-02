@@ -80,9 +80,9 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_viec_lam_web.layDanhSachViecLamDuocQuanTam();
         }
-        public static List<viec_lam_ket_qua> duaRaDanhSachDeXuat(string chuoi_yeu_cau)
+        public static List<viec_lam_ket_qua> duaRaDanhSachDeXuat(de_xuat_tuong_ung de_Xuat_Tuong_Ung)
         {
-            return chuc_nang_viec_lam_web.duaRaDanhSachDeXuat(chuoi_yeu_cau);
+            return chuc_nang_viec_lam_web.duaRaDanhSachDeXuat(de_Xuat_Tuong_Ung);
         }
 
         public static List<viec_lam_ket_qua> deXuatViecLamSelector(viec_lam viec_Lam)
@@ -176,9 +176,9 @@ namespace DotNet_WEB.Module
             return chuc_nang_bai_dang_web.layBaiDangTheoMa(ma_Bai_Dang);
         }
 
-        public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam, List<int> phuc_Loi)
+        public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam, List<int> phuc_Loi, List<int> tinh_Thanh)
         {
-            return chuc_nang_bai_dang_web.themBaiDangMoi(bai_Dang, viec_Lam, phuc_Loi);
+            return chuc_nang_bai_dang_web.themBaiDangMoi(bai_Dang, viec_Lam, phuc_Loi, tinh_Thanh);
         }
 
         public static bool luuBaiDangViPham(bai_dang_vi_pham bai_Dang_Vi_Pham)
@@ -274,6 +274,13 @@ namespace DotNet_WEB.Module
         {
             return chuc_nang_goi_y_web.goiYTuKhoa(tu_khoa);
         }
+        //goiYTuKhoa
 
+        //tinh thanh
+        public static List<tinh_thanh> layDanhSachTinhThanh()
+        {
+            return chuc_nang_lay_thong_tin_web.layDanhSachTinhThanh();
+        }
+        //tinh thanh
     }
 }

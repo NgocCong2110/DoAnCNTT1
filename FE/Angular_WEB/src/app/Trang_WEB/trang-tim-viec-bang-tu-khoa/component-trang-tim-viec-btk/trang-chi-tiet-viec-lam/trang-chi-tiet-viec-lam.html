@@ -212,7 +212,7 @@
                   <small class="text-muted">{{ cv.ho_ten }} • {{ cv.ngay_tao | date:'dd/MM/yyyy' }}</small>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                  <a *ngIf="cv.duong_dan_file_pdf" [href]="'http://localhost:65001/' + cv.duong_dan_file_pdf"
+                  <a *ngIf="cv.duong_dan_file_pdf" [href]="'http://localhost:7000/' + cv.duong_dan_file_pdf"
                     target="_blank" class="btn btn-sm btn-outline-primary">Xem</a>
                   <input type="radio" name="cv_chon" [value]="cv.ma_cv" [(ngModel)]="cv_duoc_chon">
                 </div>

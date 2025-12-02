@@ -1,4 +1,4 @@
-<div class="bg-white text-secondary p-3 shadow-sm" style="width: 260px;">
+<div class="bg-white text-secondary p-3 shadow-sm" style="width: 300px;">
   <h4 class="fw-bold text-center mb-4 border-bottom pb-2 text-dark">Quản trị hệ thống</h4>
 
   <!-- tai khoan quan tri -->
@@ -6,7 +6,7 @@
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTTaiKhoan()">
-      <span><i class="bi bi-person-circle me-2 text-primary"></i> Tài khoản <span>{{ trangThai_TaiKhoan ? '▾' : '▸'
+      <span><i class="bi bi-person-circle me-2 text-primary"></i> Quản lý tài khoản <span>{{ trangThai_TaiKhoan ? '▾' : '▸'
           }}</span></span>
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
@@ -14,7 +14,7 @@
         [routerLink]="['/trang-quan-tri','trang-thong-tin-tai-khoan']">Thông tin tài khoản</a>
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-quan-tri','trang-tao-tai-khoan-quan-tri']">Tạo tài khoản quản trị</a>
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-quan-tri','trang-doi-mat-khau-quan-tri']">Đổi mật khẩu</a>
     </div>
   </div>
@@ -24,7 +24,7 @@
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTQLNguoiDung()">
-      <span><i class="bi bi-people-fill me-2 text-primary"></i> Người dùng <span>{{ trangThai_QLNguoiDung ? '▾' : '▸'
+      <span><i class="bi bi-people-fill me-2 text-primary"></i> Quản lý người dùng <span>{{ trangThai_QLNguoiDung ? '▾' : '▸'
           }}</span></span>
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_QLNguoiDung">
@@ -50,25 +50,20 @@
   </div>
 
   <!-- quan ly danh muc -->
-  <div class="mb-3">
+  <div class="mb-4">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
-      type="button" (click)="chuyenDoi_TTQLDanhMuc()">
-      <span><i class="bi bi-list-ul me-2 text-info"></i> Danh mục <span>{{ trangThai_QLDanhMuc ? '▾' : '▸'
-          }}</span></span>
+      type="button" [routerLink]="['/trang-quan-tri', 'trang-danh-muc-nganh-nghe']">
+      <span><i class="bi bi-list-ul me-2 text-info"></i> Quản lý danh mục ngành nghề </span>
     </button>
-    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_QLDanhMuc">
-      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-        [routerLink]="['/trang-quan-tri','trang-danh-muc-nganh-nghe']">Danh mục ngành nghề</a>
-    </div>
   </div>
 
   <!-- quan ly dich vu -->
-  <!-- <div class="mb-3">
+  <div class="mb-3">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTQLDichVu()">
-      <span><i class="bi bi-bag-fill me-2 text-warning"></i> Dịch vụ <span>{{ trangThai_QLDichVu ? '▾' : '▸'
+      <span><i class="bi bi-bag-fill me-2 text-warning"></i> Quản lý dịch vụ <span>{{ trangThai_QLDichVu ? '▾' : '▸'
           }}</span></span>
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_QLDichVu">
@@ -79,13 +74,13 @@
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-quan-tri','trang-lich-su-giao-dich']">Lịch sử giao dịch</a>
     </div>
-  </div> -->
+  </div>
 
   <div class="mb-4">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" [routerLink]="['/trang-quan-tri', 'trang-duyet-danh-gia-web']">
-      <span><i class="bi bi-info-circle me-2 text-info"></i> Duyệt đánh giá </span>
+      <span><i class="bi bi-info-circle me-2 text-info"></i> Quản lý đánh giá </span>
     </button>
   </div>
 
@@ -94,7 +89,7 @@
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTThongBaoAdmin()">
-      <span><i class="bi bi-bell-fill me-2 text-danger"></i> Thông báo <span>{{ trangThai_ThongBaoAdmin ? '▾' : '▸'
+      <span><i class="bi bi-bell-fill me-2 text-danger"></i> Quản lý thông báo <span>{{ trangThai_ThongBaoAdmin ? '▾' : '▸'
           }}</span></span>
     </button>
     <div class="mt-2 ms-3 collapse" [class.show]="trangThai_ThongBaoAdmin">

@@ -1,4 +1,4 @@
-<div class="bg-white text-secondary p-3 shadow-sm" style="width: 260px;">
+<div class="bg-white text-secondary p-3 shadow-sm" style="width: 300px;">
   <h4 class="fw-bold text-center mb-4 border-bottom pb-2 text-dark">Quản lý tài khoản</h4>
 
   <!-- thong tin ca nhan
@@ -35,13 +35,20 @@
       </button>
       <div class="mt-2 ms-3 collapse" [class.show]="trangThai_HoSo">
         <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/trang-nguoi-tim-viec','trang-cv-ntv']">CV</a>
-        <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
-          [routerLink]="['/trang-nguoi-tim-viec','trang-lich-su-ung-tuyen']">Lịch sử ứng tuyển</a>
+          [routerLink]="['/trang-nguoi-tim-viec','trang-cv-ntv']">CV của tôi</a>
       </div>
     </div>
-
   </div>
+
+  <!-- ung tuyen -->
+  <div class="mb-3">
+    <div class="mt-2 ms-3 collapse" [class.show]="trangThai_TaiKhoan">
+      <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
+          [routerLink]="['/trang-nguoi-tim-viec','trang-lich-su-ung-tuyen']">Lịch sử ứng tuyển</a>
+    </div>
+  </div>
+
+
 </div>
 
 <!-- thong tin ca nhan

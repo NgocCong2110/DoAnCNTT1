@@ -7,11 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotNet_WEB.Class
 {
-    public class thong_tin_bai_dang
+    public class viec_lam_tinh_thanh
     {
-        public bai_dang? bai_Dang {get; set;}
+        public int ma_viec { get; set; }
+        [ForeignKey(nameof(ma_viec))]
         public viec_lam? viec_Lam { get; set; }
-        public List<int>? phuc_Loi { get; set; }
-        public List<int>? tinh_Thanh { get; set; }
+        public int ma_tinh { get; set; }
+        [ForeignKey(nameof(ma_tinh))]
+        public tinh_thanh? tinh_Thanh { get; set; }
     }
 }

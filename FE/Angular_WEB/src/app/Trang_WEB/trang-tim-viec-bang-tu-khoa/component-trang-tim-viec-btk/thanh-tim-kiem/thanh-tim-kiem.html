@@ -1,27 +1,32 @@
 <div class="search-wrapper d-flex justify-content-center my-4">
-  <form class="d-flex w-75 shadow-sm rounded-pill overflow-hidden" (ngSubmit)="thongTinTim()">
-    <input type="text" 
-           class="form-control form-control-lg border-0 text-dark px-4" 
-           style="background-color: white;"
-           placeholder="Nhập từ khóa tìm kiếm..." 
-           [(ngModel)]="tu_khoa_tim_kiem" 
-           name="tu_khoa_tim_kiem">
-    <button class="btn btn-secondary px-4" type="submit" style="background-color: #0d6efd; color: white; font-weight: bold;">
-      Tìm
-    </button>
+  <form class="search-box w-75 shadow-lg rounded-pill position-relative d-flex bg-white" (ngSubmit)="thongTinTim()">
+
+    <div class="d-flex align-items-center ps-4 pe-2 flex-grow-1">
+      <i class="bi bi-search text-secondary me-2"></i> <input type="text" class="form-control border-0 text-dark p-0"
+        placeholder="Nhập tên ngành nghề của bạn..." [(ngModel)]="tu_khoa_tim_kiem" name="tu_khoa_tim_kiem"
+        style="box-shadow: none;">
+    </div>
+
+    <div class="search-location-group d-flex align-items-center py-2 px-1">
+
+      <select class="form-select search-select fw-bold me-2" [(ngModel)]="ma_tinh_duoc_chon" name="ma_tinh_duoc_chon">
+        <option [value]="0" disabled selected>Tỉnh thành</option>
+        <option *ngFor="let tinh of danh_sach_tinh_thanh" [value]="tinh.ma_tinh">
+          {{ tinh.ten_tinh }}
+        </option>
+      </select>
+
+      <button type="submit" class="search-btn btn ms-1">Tìm Kiếm</button>
+    </div>
   </form>
 </div>
 
-<div class="toast-container position-fixed top-0 end-0 p-3"
-     *ngIf="pop_up_lay_thong_tin_that_bai">
+<div class="toast-container position-fixed top-0 end-0 p-3" *ngIf="pop_up_lay_thong_tin_that_bai">
   <div class="toast show text-bg-danger border-0">
     <div class="d-flex">
-      <div class="toast-body">
-        ❌ Lấy thông tin thất bại!
-      </div>
-      <button type="button"
-              class="btn-close btn-close-white me-2 m-auto"
-              (click)="pop_up_lay_thong_tin_that_bai=false"></button>
+      <div class="toast-body">Lấy thông tin thất bại!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+        (click)="pop_up_lay_thong_tin_that_bai=false"></button>
     </div>
   </div>
 </div>

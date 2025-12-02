@@ -183,9 +183,9 @@ namespace DotNet_WEB.Class
     public enum TrangThaiThanhToan
     {
         None = 0,
-        [Display(Name = "Thanh toán thành công")]
-        thanh_Cong = 1,
-        [Display(Name = "Thanh toán thất bại")]
-        that_Bai = 2
+        [Display(Name = "Chưa thanh toán")]
+        chua_Thanh_Toan = 1,
+        [Display(Name = "Đã thanh toán")]
+        da_Thanh_Toan = 2
     }
 }

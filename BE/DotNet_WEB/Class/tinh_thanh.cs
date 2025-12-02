@@ -7,12 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotNet_WEB.Class
 {
-    public class ma_otp
+    public class tinh_thanh
     {
-        [Key]
-        public int? ma_otp_id { get; set; }
-        public string? email { get; set; }
-        public int ma_otp_gui_di { get; set; }
-        public DateTime het_han_luc { get; set; }
+        public int ma_tinh { get; set; }
+        public string? ten_tinh { get; set; }
     }
 }

@@ -156,9 +156,9 @@ namespace DotNet_WEB.Module
         
         
         //dich vu
-        public static List<dich_vu> layDanhSachDichVu()
+        public static List<thanh_toan_dich_vu> layDanhSachDichVu(int ma_cong_ty)
         {
-            return chuc_nang_dich_vu_cong_ty_web.layDanhSachDichVu();
+            return chuc_nang_dich_vu_cong_ty_web.layDanhSachDichVu(ma_cong_ty);
         }
         //dich vu
 

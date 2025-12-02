@@ -163,7 +163,7 @@ ORDER BY bd.ngay_tao DESC;
         }
 
 
-        public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam, List<int> phuc_loi)
+        public static bool themBaiDangMoi(bai_dang bai_Dang, viec_lam viec_Lam, List<int> phuc_loi, List<int> tinh_Thanh)
         {
             using var coon = new MySqlConnection(chuoi_KetNoi);
             coon.Open();
@@ -217,6 +217,17 @@ ORDER BY bd.ngay_tao DESC;
                             using var cmdPhucLoi = new MySqlCommand(sql_Phuc_Loi, coon, trans);
                             cmdPhucLoi.Parameters.AddWithValue("@ma_viec", maViecLam);
                             cmdPhucLoi.Parameters.AddWithValue("@ma_phuc_loi", ma_phuc_loi);
+                            cmdPhucLoi.ExecuteNonQuery();
+                        }
+                    }
+                    if(tinh_Thanh != null && tinh_Thanh.Any())
+                    {
+                        string sql_Tinh_Thanh = "insert into viec_lam_tinh_thanh(ma_viec, ma_tinh) values(@ma_viec, @ma_tinh)";
+                        foreach(var ma_tinh in tinh_Thanh)
+                        {
+                            using var cmdPhucLoi = new MySqlCommand(sql_Tinh_Thanh, coon, trans);
+                            cmdPhucLoi.Parameters.AddWithValue("@ma_viec", maViecLam);
+                            cmdPhucLoi.Parameters.AddWithValue("@ma_tinh", ma_tinh);
                             cmdPhucLoi.ExecuteNonQuery();
                         }
                     }

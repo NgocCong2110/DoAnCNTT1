@@ -10,10 +10,9 @@ namespace DotNet_WEB.Class
     public class dich_vu
     {
         [Key]
-        public int ma_dich_vu {get; set;}
+        public string? ma_dich_vu {get; set;}
         public string? ten_dich_vu {get; set;}
-        public string? mo_ta {get; set;}
-        public decimal gia { get; set; }
-        public DateTime ngay_tao { get; set;    }
+        public decimal so_tien { get; set; }
+        public DateTime ngay_tao { get;  set; }
     }
 }

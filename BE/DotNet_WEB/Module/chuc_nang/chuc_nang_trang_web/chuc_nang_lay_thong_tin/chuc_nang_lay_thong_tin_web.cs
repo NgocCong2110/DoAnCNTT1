@@ -207,5 +207,25 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_lay_thong_ti
             }
             return thong_tin;
         }
+
+        public static List<tinh_thanh> layDanhSachTinhThanh()
+        {
+            using var coon = new MySqlConnection(chuoi_KetNoi);
+            coon.Open();
+            string sql = "select * from tinh_thanh";
+            using var cmd = new MySqlCommand(sql, coon);
+            using var reader = cmd.ExecuteReader();
+            var thong_tin = new List<tinh_thanh>();
+            while (reader.Read())
+            {
+                var tinh_Thanh = new tinh_thanh
+                {
+                    ma_tinh = reader.IsDBNull(reader.GetOrdinal("ma_tinh")) ? 0 : reader.GetInt32("ma_tinh"),
+                    ten_tinh = reader.IsDBNull(reader.GetOrdinal("ten_tinh")) ? string.Empty : reader.GetString("ten_tinh"),
+                };
+                thong_tin.Add(tinh_Thanh);
+            }
+            return thong_tin;
+        }
     }
 }

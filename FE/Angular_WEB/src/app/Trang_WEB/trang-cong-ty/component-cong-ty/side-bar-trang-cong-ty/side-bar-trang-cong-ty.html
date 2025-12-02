@@ -1,4 +1,4 @@
-<div class="bg-white text-secondary p-3 shadow-sm" style="width: 260px;">
+<div class="bg-white text-secondary p-3 shadow-sm" style="width: 300px;">
   <h4 class="fw-bold text-center mb-4 border-bottom pb-2 text-dark">Quản lý tài khoản</h4>
 
   <!-- xem danh sach ung vien
@@ -14,7 +14,7 @@
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTTaiKhoan()">
-      <span><i class="bi bi-person-circle me-2 text-primary"></i> Tài khoản <span>{{ trangThai_TaiKhoan ? '▾' : '▸'
+      <span><i class="bi bi-person-circle me-2 text-primary"></i> Quản lý tài khoản <span>{{ trangThai_TaiKhoan ? '▾' : '▸'
           }}</span></span>
     </button>
 
@@ -64,7 +64,7 @@
   </div>
 
   <!-- dich vu  -->
-  <!-- <div class="mb-3">
+  <div class="mb-3">
     <button
       class="nav-link card btn p-3 text-secondary text-start w-100 shadow-sm rounded-3 fw-semibold d-flex justify-content-between align-items-center sidebar-item"
       type="button" (click)="chuyenDoi_TTDichVu()">
@@ -75,5 +75,5 @@
       <a class="nav-link card p-2 text-decoration-none shadow-sm rounded-3 mb-2 small text-secondary sidebar-subitem"
         [routerLink]="['/trang-cong-ty', 'trang-danh-sach-goi-dich-vu-cong-ty']">Danh sách gói dịch vụ</a>
     </div>
-  </div> -->
+  </div>
 </div>

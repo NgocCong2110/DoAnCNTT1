@@ -9,10 +9,14 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
         <!-- <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-chu']">Trang chủ</a></li> -->
+        <div class="offcanvas-body">
+          <ul class="list-unstyled">
+            <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-tim-viec-theo-tu-khoa']"
+                *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == null">Tìm
+                việc làm</a></li>
+          </ul>
+        </div>
 
-        <li class="nav-item"><a class="nav-link text-dark" [routerLink]="['/trang-tim-viec-theo-tu-khoa']"
-            *ngIf="this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == 'nguoi_Tim_Viec' || this.auth.layThongTinNguoiDung()?.kieu_nguoi_dung == null">Tìm
-            việc làm</a></li>
 
       </ul>
 

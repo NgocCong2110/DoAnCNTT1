@@ -57,8 +57,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_dich_vu
             string sql = "insert into dich_vu (ten_dich_vu, mo_ta, gia) values (@ten_Dich_Vu, @mo_Ta, @gia)";
             using var cmd = new MySqlCommand(sql, coon);
             cmd.Parameters.AddWithValue("@ten_Dich_Vu", dich_Vu.ten_dich_vu);
-            cmd.Parameters.AddWithValue("@mo_Ta", dich_Vu.mo_ta);
-            cmd.Parameters.AddWithValue("@gia", dich_Vu.gia);
+            cmd.Parameters.AddWithValue("@gia", dich_Vu.so_tien);
             return cmd.ExecuteNonQuery() > 0;
         }
     }

@@ -72,13 +72,12 @@
 
     <button class="btn btn-secondary px-4 flex-shrink-0 flex-start" (click)="locCongViec()"
       style="background-color: #0d6efd; color: white; font-weight: bold;">Lọc</button>
-      
-      <button class="btn btn-secondary px-4 flex-shrink-0 flex-start"
-          *ngIf="nganh_nghe_label || muc_luong_label || kinh_nghiem_label || hinh_thuc_label || vi_tri_label"
-          style="background-color: red; color: white; font-weight: bold;"
-          (click)="xoaBoLoc()">
-    Xóa 
-  </button>
+
+    <button class="btn btn-secondary px-4 flex-shrink-0 flex-start"
+      *ngIf="nganh_nghe_label || muc_luong_label || kinh_nghiem_label || hinh_thuc_label || vi_tri_label"
+      style="background-color: red; color: white; font-weight: bold;" (click)="xoaBoLoc()">
+      Xóa
+    </button>
   </div>
 </div>
 
@@ -113,10 +112,12 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <button class="dropdown-item" type="button" (click)="boLocLuong('cao_Nhat'); sap_xep_luong_label = 'Cao nhất'">
+          <button class="dropdown-item" type="button"
+            (click)="boLocLuong('cao_Nhat'); sap_xep_luong_label = 'Cao nhất'">
             Cao nhất
           </button>
-          <button class="dropdown-item" type="button" (click)="boLocLuong('thap_Nhat'); sap_xep_luong_label = 'Thấp nhất'">
+          <button class="dropdown-item" type="button"
+            (click)="boLocLuong('thap_Nhat'); sap_xep_luong_label = 'Thấp nhất'">
             Thấp nhất
           </button>
         </li>
@@ -156,7 +157,11 @@
             <span class="text-danger fw-semibold fs-5">
               $ {{ job.viec_Lam?.muc_luong }}/tháng
             </span>
-            <span>{{ job.viec_Lam?.dia_diem }}</span>
+            <div style="white-space: nowrap;">
+              <ng-container *ngFor="let tinh of job.viec_Lam.tinh_Thanh; let last = last">
+                {{ tinh.ten_tinh }}<span *ngIf="!last">, </span>
+              </ng-container>
+            </div>
             <span>{{ job.viec_Lam?.kinh_nghiem }}</span>
           </div>
 
@@ -192,7 +197,11 @@
             <span class="text-danger fw-semibold fs-5">
               $ {{ job.viec_Lam?.muc_luong }}/tháng
             </span>
-            <span>{{ job.viec_Lam?.dia_diem }}</span>
+            <div style="white-space: nowrap;">
+              <ng-container *ngFor="let tinh of job.viec_Lam.tinh_Thanh; let last = last">
+                {{ tinh.ten_tinh }}<span *ngIf="!last">, </span>
+              </ng-container>
+            </div>
             <span>{{ job.viec_Lam?.kinh_nghiem }}</span>
           </div>
 
@@ -228,7 +237,11 @@
             <span class="text-danger fw-semibold fs-5">
               $ {{ job.viec_Lam?.muc_luong }}/tháng
             </span>
-            <span>{{ job.viec_Lam.dia_diem }}</span>
+            <div style="white-space: nowrap;">
+              <ng-container *ngFor="let tinh of job.viec_Lam.tinh_Thanh; let last = last">
+                {{ tinh.ten_tinh }}<span *ngIf="!last">, </span>
+              </ng-container>
+            </div>
             <span>{{ job.viec_Lam.kinh_nghiem }}</span>
           </div>
 

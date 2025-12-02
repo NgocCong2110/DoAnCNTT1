@@ -22,7 +22,7 @@ import { TrangThemGoiDichVuMoiQuanTri } from './Trang_WEB/trang-quan-tri/compone
 import { TrangGuiThongBao } from './Trang_WEB/trang-quan-tri/component-qtv/component-side-bar-quan-tri/thong-bao/trang-gui-thong-bao/trang-gui-thong-bao';
 import { TrangDanhSachThongBao } from './Trang_WEB/trang-quan-tri/component-qtv/component-side-bar-quan-tri/thong-bao/trang-danh-sach-thong-bao/trang-danh-sach-thong-bao';
 import { TrangThongTinTaiKhoanNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/tai-khoan/trang-thong-tin-tai-khoan-ntv/trang-thong-tin-tai-khoan-ntv';
-import { TrangLichSuUngTuyen } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ho-so/trang-lich-su-ung-tuyen/trang-lich-su-ung-tuyen';
+import { TrangLichSuUngTuyen } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ung-tuyen/trang-lich-su-ung-tuyen/trang-lich-su-ung-tuyen';
 import { TrangCvNtv } from './Trang_WEB/trang-nguoi-tim-viec/component-ntv/component-side-bar-ntv/ho-so/trang-cv-ntv/trang-cv-ntv';
 import { TrangThongTinTaiKhoanCongTy } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/tai-khoan/trang-thong-tin-tai-khoan-cong-ty/trang-thong-tin-tai-khoan-cong-ty';
 import { TrangDanhSachUngVien } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/ung-vien/trang-danh-sach-ung-vien/trang-danh-sach-ung-vien';
@@ -31,7 +31,6 @@ import { TrangDanhSachGoiDichVuCongTy } from './Trang_WEB/trang-cong-ty/componen
 import { TrangViecLamDaLuu } from './Trang_WEB/danh-muc/trang-viec-lam-da-luu/trang-viec-lam-da-luu';
 import { TrangThongBao } from './Trang_WEB/danh-muc/trang-thong-bao/trang-thong-bao';
 import { TrangChiTietViecLam } from './Trang_WEB/trang-tim-viec-bang-tu-khoa/component-trang-tim-viec-btk/trang-chi-tiet-viec-lam/trang-chi-tiet-viec-lam';
-import { TrangKetQuaThanhToan } from './Trang_WEB/trang-cong-ty/component-cong-ty/component-side-bar-trang-cong-ty/dich-vu/trang-danh-sach-goi-dich-vu-cong-ty/trang-ket-qua-thanh-toan/trang-ket-qua-thanh-toan';
 import { TrangQuenMatKhau } from './Trang_WEB/trang-dang-nhap/trang-quen-mat-khau/trang-quen-mat-khau';
 import { TrangDoiMatKhau } from './Trang_WEB/trang-doi-mat-khau/trang-doi-mat-khau';
 import { MauCvMacDinh } from './Trang_WEB/mau-cv/mau-cv-mac-dinh/mau-cv-mac-dinh';
@@ -58,7 +57,6 @@ export const routes: Routes = [
     { path: 'trang-tim-viec-theo-tu-khoa', component: TrangTimViecBangTuKhoa },
     { path: 'trang-viec-lam-da-luu', component: TrangViecLamDaLuu},
     { path: 'trang-thong-bao', component: TrangThongBao},
-    { path: 'trang-ket-qua-thanh-toan', component: TrangKetQuaThanhToan},
     { path: 'trang-chi-tiet-viec-lam', component: TrangChiTietViecLam},
     { path: 'trang-quen-mat-khau', component: TrangQuenMatKhau},
     { path: 'trang-doi-mat-khau/:email', component: TrangDoiMatKhau},

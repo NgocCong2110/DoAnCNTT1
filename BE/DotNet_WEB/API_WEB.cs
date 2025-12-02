@@ -17,6 +17,7 @@ using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_phuc_loi_con
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_mang_xa_hoi_cong_ty;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_quan_tri.chuc_nang_tai_khoan;
 using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_cong_ty.chuc_nang_bai_dang_cong_ty;
+using DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_viec_lam;
 
 namespace DotNet_WEB
 {
@@ -647,9 +648,9 @@ namespace DotNet_WEB
         }
 
         [HttpPost("layDanhSachDichVu")]
-        public IActionResult layDanhSachDichVu()
+        public IActionResult layDanhSachDichVu([FromBody] cong_ty cong_Ty)
         {
-            var danh_sach = Module_CTY.layDanhSachDichVu();
+            var danh_sach = Module_CTY.layDanhSachDichVu(cong_Ty.ma_cong_ty);
             if (danh_sach != null && danh_sach.Any())
             {
                 return Ok(new { success = true, danh_sach });
@@ -899,7 +900,8 @@ namespace DotNet_WEB
             var bai_d = thong_Tin.bai_Dang;
             var viec_l = thong_Tin.viec_Lam;
             var phuc_l = thong_Tin.phuc_Loi ?? new List<int>();
-            bool luu_bai_moi = ChucNang_WEB.themBaiDangMoi(bai_d, viec_l, phuc_l);
+            var tinh_t = thong_Tin.tinh_Thanh ?? new List<int>();
+            bool luu_bai_moi = ChucNang_WEB.themBaiDangMoi(bai_d, viec_l, phuc_l, tinh_t);
             if (luu_bai_moi)
             {
                 return Ok(new { success = true, message = "Thêm bài đăng thành công" });
@@ -1133,9 +1135,9 @@ namespace DotNet_WEB
         }
 
         [HttpPost("duaRaDeXuat")]
-        public IActionResult duaRaDeXuat([FromBody] string tu_khoa_tim_kiem)
+        public IActionResult duaRaDeXuat([FromBody] de_xuat_tuong_ung de_Xuat_Tuong_Ung)
         {
-            var thong_tin = ChucNang_WEB.duaRaDanhSachDeXuat(tu_khoa_tim_kiem);
+            var thong_tin = ChucNang_WEB.duaRaDanhSachDeXuat(de_Xuat_Tuong_Ung);
             if (thong_tin != null && thong_tin.Any())
             {
                 return Ok(new { success = true, thong_tin });
@@ -1200,6 +1202,17 @@ namespace DotNet_WEB
                 return Ok(new { success = true, danh_sach });
             }
             return Ok(new { success = false, message = "Lấy việc làm liên quan thất bại " });
+        }
+
+        [HttpPost("layDanhSachTinhThanh")]
+        public IActionResult layDanhSachTinhThanh()
+        {
+            var danh_sach = ChucNang_WEB.layDanhSachTinhThanh();
+            if (danh_sach != null && danh_sach.Any())
+            {
+                return Ok(new { success = true, danh_sach });
+            }
+            return Ok(new { success = false });
         }
 
 

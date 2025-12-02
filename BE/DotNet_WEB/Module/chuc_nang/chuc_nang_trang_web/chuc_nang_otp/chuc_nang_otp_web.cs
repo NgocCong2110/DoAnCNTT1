@@ -48,7 +48,7 @@ namespace DotNet_WEB.Module.chuc_nang.chuc_nang_trang_web.chuc_nang_otp
                     cmd.ExecuteNonQuery();
                 }
                 int ma_otp_rad = RanDomOTP();
-                string tao_otp_moi = "insert into ma_otp (email, ma_otp_gui_di, het_han_luc, da_su_dung, so_lan_thu) values(@email, @otp_rad, @thoi_gian_het_han, 0, 0)";
+                string tao_otp_moi = "insert into ma_otp (email, ma_otp_gui_di, het_han_luc) values(@email, @otp_rad, @thoi_gian_het_han)";
                 using (var cmd = new MySqlCommand(tao_otp_moi, coon, trans))
                 {
                     cmd.Parameters.AddWithValue("@email", email);
